@@ -1,0 +1,7 @@
+analysis_resolution
+data/
+output/
+tables/
+*.pdf
+*.root
+*.DS_Store
