@@ -107,44 +107,63 @@ int main(int argc, char ** argv) {
 	// Copying and editing histograms
 	const int p_25GeV = idx_from_vector(25.,TVT_mom_bin[0]);
 
-	TH1F * h1_dpp_v_et_p25GeV_20um_Beast_si     = (TH1F*) h1_dpp_v_et_p_bins[0][p_25GeV] -> Clone();
-	TH1F * h1_dpp_v_et_p25GeV_10um_Beast_si     = (TH1F*) h1_dpp_v_et_p_bins[1][p_25GeV] -> Clone();
-	TH1F * h1_dpp_v_et_p25GeV_20um_Beast_si_GEM = (TH1F*) h1_dpp_v_et_p_bins[2][p_25GeV] -> Clone();
-	TH1F * h1_dpp_v_et_p25GeV_10um_Beast_si_GEM = (TH1F*) h1_dpp_v_et_p_bins[3][p_25GeV] -> Clone();
+	TH1F * h1_dpp_v_et_p25GeV_20um_Beast_si       = (TH1F*) h1_dpp_v_et_p_bins[0][p_25GeV] -> Clone();	prettyTH1F(h1_dpp_v_et_p25GeV_20um_Beast_si      ,62,21,999,17);
+	TH1F * h1_dpp_v_et_p25GeV_10um_Beast_si       = (TH1F*) h1_dpp_v_et_p_bins[1][p_25GeV] -> Clone();	prettyTH1F(h1_dpp_v_et_p25GeV_10um_Beast_si      ,94,21,999,17);
+	TH1F * h1_dpp_v_et_p25GeV_20um_Beast_si_GEM   = (TH1F*) h1_dpp_v_et_p_bins[2][p_25GeV] -> Clone();	prettyTH1F(h1_dpp_v_et_p25GeV_20um_Beast_si_GEM  , 4,20,999,17);
+	TH1F * h1_dpp_v_et_p25GeV_10um_Beast_si_GEM   = (TH1F*) h1_dpp_v_et_p_bins[3][p_25GeV] -> Clone();	prettyTH1F(h1_dpp_v_et_p25GeV_10um_Beast_si_GEM  , 2,20,999,17);
 
-	prettyTH1F(h1_dpp_v_et_p25GeV_20um_Beast_si    ,62,21,999,17);
-	prettyTH1F(h1_dpp_v_et_p25GeV_10um_Beast_si    ,94,21,999,17);
-	prettyTH1F(h1_dpp_v_et_p25GeV_20um_Beast_si_GEM, 4,20,999,17);
-	prettyTH1F(h1_dpp_v_et_p25GeV_10um_Beast_si_GEM, 2,20,999,17);
+	TH1F * h1_dpp_v_et_p25GeV_20um_sPHENIX_si     = (TH1F*) h1_dpp_v_et_p_bins[4][p_25GeV] -> Clone();	prettyTH1F(h1_dpp_v_et_p25GeV_20um_sPHENIX_si    ,62,21,999,17);
+	TH1F * h1_dpp_v_et_p25GeV_10um_sPHENIX_si     = (TH1F*) h1_dpp_v_et_p_bins[5][p_25GeV] -> Clone();	prettyTH1F(h1_dpp_v_et_p25GeV_10um_sPHENIX_si    ,94,21,999,17);
+	TH1F * h1_dpp_v_et_p25GeV_20um_sPHENIX_si_GEM = (TH1F*) h1_dpp_v_et_p_bins[6][p_25GeV] -> Clone();	prettyTH1F(h1_dpp_v_et_p25GeV_20um_sPHENIX_si_GEM, 4,20,999,17);
+	TH1F * h1_dpp_v_et_p25GeV_10um_sPHENIX_si_GEM = (TH1F*) h1_dpp_v_et_p_bins[7][p_25GeV] -> Clone();	prettyTH1F(h1_dpp_v_et_p25GeV_10um_sPHENIX_si_GEM, 2,20,999,17);
 
-	TGraph * g_dpp_v_et_p25GeV_20um_Beast_si     = graph_from_histo( h1_dpp_v_et_p25GeV_20um_Beast_si     );
-	TGraph * g_dpp_v_et_p25GeV_10um_Beast_si     = graph_from_histo( h1_dpp_v_et_p25GeV_10um_Beast_si     );
-	TGraph * g_dpp_v_et_p25GeV_20um_Beast_si_GEM = graph_from_histo( h1_dpp_v_et_p25GeV_20um_Beast_si_GEM );
-	TGraph * g_dpp_v_et_p25GeV_10um_Beast_si_GEM = graph_from_histo( h1_dpp_v_et_p25GeV_10um_Beast_si_GEM );
+	TGraph * g_dpp_v_et_p25GeV_20um_Beast_si       = graph_from_histo( h1_dpp_v_et_p25GeV_20um_Beast_si       );
+	TGraph * g_dpp_v_et_p25GeV_10um_Beast_si       = graph_from_histo( h1_dpp_v_et_p25GeV_10um_Beast_si       );
+	TGraph * g_dpp_v_et_p25GeV_20um_Beast_si_GEM   = graph_from_histo( h1_dpp_v_et_p25GeV_20um_Beast_si_GEM   );
+	TGraph * g_dpp_v_et_p25GeV_10um_Beast_si_GEM   = graph_from_histo( h1_dpp_v_et_p25GeV_10um_Beast_si_GEM   );
+
+	TGraph * g_dpp_v_et_p25GeV_20um_sPHENIX_si     = graph_from_histo( h1_dpp_v_et_p25GeV_20um_sPHENIX_si     );
+	TGraph * g_dpp_v_et_p25GeV_10um_sPHENIX_si     = graph_from_histo( h1_dpp_v_et_p25GeV_10um_sPHENIX_si     );
+	TGraph * g_dpp_v_et_p25GeV_20um_sPHENIX_si_GEM = graph_from_histo( h1_dpp_v_et_p25GeV_20um_sPHENIX_si_GEM );
+	TGraph * g_dpp_v_et_p25GeV_10um_sPHENIX_si_GEM = graph_from_histo( h1_dpp_v_et_p25GeV_10um_sPHENIX_si_GEM );
 
 	// ------------------------------------------------------------------------------
 	// Plotting graphs
 	TCanvas * c1 = new TCanvas("c1","c1",1200,900);
-	gPad -> SetTopMargin(0.02); gPad -> SetRightMargin(0.02);
+	gPad -> SetRightMargin(0.02);
+	h1_dpp_v_et_p25GeV_20um_Beast_si -> SetTitle("Beast (3.0 T)");
 	h1_dpp_v_et_p25GeV_20um_Beast_si     -> Draw(      );	g_dpp_v_et_p25GeV_20um_Beast_si     -> Draw("sameL");
 	h1_dpp_v_et_p25GeV_10um_Beast_si     -> Draw("same");	g_dpp_v_et_p25GeV_10um_Beast_si     -> Draw("sameL");
 	h1_dpp_v_et_p25GeV_20um_Beast_si_GEM -> Draw("same");	g_dpp_v_et_p25GeV_20um_Beast_si_GEM -> Draw("sameL");
 	h1_dpp_v_et_p25GeV_10um_Beast_si_GEM -> Draw("same");	g_dpp_v_et_p25GeV_10um_Beast_si_GEM -> Draw("sameL");
-	// ----------------
-	TLegend * leg1 = new TLegend(0.3,0.4,0.7,0.9);
+	// ------------
+	TLegend * leg1 = new TLegend(0.3,0.4,0.7,0.85);
 	leg1 -> SetLineColor(0);
 	leg1 ->SetHeader(Form("%.1f < p < %.1f GeV/#it{c}",(*TVT_mom_bin[0])[p_25GeV],(*TVT_mom_bin[0])[p_25GeV+1]),"C");
 	leg1 -> AddEntry( h1_dpp_v_et_p25GeV_20um_Beast_si     , "All-Si (20 #mum)"       );
 	leg1 -> AddEntry( h1_dpp_v_et_p25GeV_10um_Beast_si     , "All-Si (10 #mum)"       );
 	leg1 -> AddEntry( h1_dpp_v_et_p25GeV_20um_Beast_si_GEM , "All-Si (20 #mum) + GEM" );
 	leg1 -> AddEntry( h1_dpp_v_et_p25GeV_10um_Beast_si_GEM , "All-Si (10 #mum) + GEM" );
+	// ------------
 	leg1 -> Draw("same");
 	c1 -> Modified();
 	c1 -> Update();
+	// ----------------------------------------------
+	TCanvas * c2 = new TCanvas("c2","c2",1200,900);
+	gPad -> SetRightMargin(0.02);
+	h1_dpp_v_et_p25GeV_20um_sPHENIX_si -> SetTitle("BaBar (1.4 T)");
+	h1_dpp_v_et_p25GeV_20um_sPHENIX_si     -> Draw(      );	g_dpp_v_et_p25GeV_20um_sPHENIX_si     -> Draw("sameL");
+	h1_dpp_v_et_p25GeV_10um_sPHENIX_si     -> Draw("same");	g_dpp_v_et_p25GeV_10um_sPHENIX_si     -> Draw("sameL");
+	h1_dpp_v_et_p25GeV_20um_sPHENIX_si_GEM -> Draw("same");	g_dpp_v_et_p25GeV_20um_sPHENIX_si_GEM -> Draw("sameL");
+	h1_dpp_v_et_p25GeV_10um_sPHENIX_si_GEM -> Draw("same");	g_dpp_v_et_p25GeV_10um_sPHENIX_si_GEM -> Draw("sameL");
+	leg1 -> Draw("same");
+	c2 -> Modified();
+	c2 -> Update();
 
 	// ------------------------------------------------------------------------------
 	// Saving results to pdf files
-	c1 -> Print("results_plotter1_c1.pdf");
+	c1 -> Print("results_plotter1.pdf(");
+	c2 -> Print("results_plotter1.pdf)");
 
 	myapp -> Run();
 	return 0;
@@ -182,20 +201,20 @@ int idx_from_vector( double value , TVectorT<double> * vec ){
 // ============================================================================================================================================
 TGraph * graph_from_histo( TH1F * h1 ){
 	float res[100] = {0};
-        float eta[100] = {0};
-        int ctr = 0;
+	float eta[100] = {0};
+	int ctr = 0;
 
 	int color = h1 -> GetMarkerColor();
 
-        for(int i = 0 ; i < h1 -> GetSize()-2 ; i++){
-                res[ctr] = h1 -> GetBinContent(i+1);
-                eta[ctr] = h1 -> GetXaxis() -> GetBinCenter(i+1);
-                ctr++;
-        }
+	for(int i = 0 ; i < h1 -> GetSize()-2 ; i++){
+		res[ctr] = h1 -> GetBinContent(i+1);
+		eta[ctr] = h1 -> GetXaxis() -> GetBinCenter(i+1);
+		ctr++;
+	}
 
-        TGraph * g_l1 = new TGraph(ctr,eta,res);
-        g_l1->SetLineColor(color);
-        g_l1->SetLineWidth(2);
+	TGraph * g_l1 = new TGraph(ctr,eta,res);
+	g_l1->SetLineColor(color);
+	g_l1->SetLineWidth(2);
 
-        return g_l1;
+	return g_l1;
 }
