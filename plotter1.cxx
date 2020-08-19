@@ -77,8 +77,8 @@ int main(int argc, char ** argv) {
 		TVT_eta_bin[f] = (TVectorT<double> *) Fin[f] -> Get("TVT_eta_bin");
 		TVT_mom_bin[f] = (TVectorT<double> *) Fin[f] -> Get("TVT_mom_bin");
 
-		num_eta_bin[f] = (*TVT_eta_bin[f]).NonZeros();
-		num_mom_bin[f] = (*TVT_mom_bin[f]).NonZeros();
+		num_eta_bin[f] = (*TVT_eta_bin[f]).GetNoElements()-1;
+		num_mom_bin[f] = (*TVT_mom_bin[f]).GetNoElements()-1;
 
 		h1_dpp_v_p_et_bins[f] = new TH1F * [num_eta_bin[f]];
 		h1_dth_v_p_et_bins[f] = new TH1F * [num_eta_bin[f]];
@@ -99,6 +99,10 @@ int main(int argc, char ** argv) {
 			h1_dph_v_et_p_bins[f][p ] = (TH1F*) Fin[f] -> Get(Form("h1_dph_v_et_p_bins_%i",p ));
 		}
 	}
+
+	cout << "\neta bin boundaries:\n"; for(int et = 0 ; et < num_eta_bin[0]+1 ; et++) cout << (*TVT_eta_bin[0])[et] << endl;
+	cout << "\np bin boundaries:\n"  ; for(int p  = 0 ; p  < num_mom_bin[0]+1 ; p ++) cout << (*TVT_mom_bin[0])[ p] << endl;
+
 	// ------------------------------------------------------------------------------
 	// Copying and editing histograms
 	const int p_25GeV = idx_from_vector(25.,TVT_mom_bin[0]);
@@ -159,7 +163,7 @@ void prettyTH1F( TH1F * h1 , int color , int marker , float min , float max ){
 }
 // ============================================================================================================================================
 int idx_from_vector( double value , TVectorT<double> * vec ){
-	int size_vec = (*vec).NonZeros();
+	int size_vec = (*vec).GetNoElements();
 	double diff = 999.;
 	int idx = -1;
 	for(int i = 0 ; i < size_vec ; i++){
