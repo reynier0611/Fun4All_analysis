@@ -112,10 +112,10 @@ int main(int argc, char ** argv) {
 	TH1F * h1_dpp_v_et_p25GeV_20um_Beast_si_GEM = (TH1F*) h1_dpp_v_et_p_bins[2][p_25GeV] -> Clone();
 	TH1F * h1_dpp_v_et_p25GeV_10um_Beast_si_GEM = (TH1F*) h1_dpp_v_et_p_bins[3][p_25GeV] -> Clone();
 
-	prettyTH1F(h1_dpp_v_et_p25GeV_20um_Beast_si    ,62,21,999,999);
-	prettyTH1F(h1_dpp_v_et_p25GeV_10um_Beast_si    ,94,21,999,999);
-	prettyTH1F(h1_dpp_v_et_p25GeV_20um_Beast_si_GEM, 4,20,999,999);
-	prettyTH1F(h1_dpp_v_et_p25GeV_10um_Beast_si_GEM, 2,20,999,999);
+	prettyTH1F(h1_dpp_v_et_p25GeV_20um_Beast_si    ,62,21,999,17);
+	prettyTH1F(h1_dpp_v_et_p25GeV_10um_Beast_si    ,94,21,999,17);
+	prettyTH1F(h1_dpp_v_et_p25GeV_20um_Beast_si_GEM, 4,20,999,17);
+	prettyTH1F(h1_dpp_v_et_p25GeV_10um_Beast_si_GEM, 2,20,999,17);
 
 	TGraph * g_dpp_v_et_p25GeV_20um_Beast_si     = graph_from_histo( h1_dpp_v_et_p25GeV_20um_Beast_si     );
 	TGraph * g_dpp_v_et_p25GeV_10um_Beast_si     = graph_from_histo( h1_dpp_v_et_p25GeV_10um_Beast_si     );
@@ -123,6 +123,7 @@ int main(int argc, char ** argv) {
 	TGraph * g_dpp_v_et_p25GeV_10um_Beast_si_GEM = graph_from_histo( h1_dpp_v_et_p25GeV_10um_Beast_si_GEM );
 
 	// ------------------------------------------------------------------------------
+	// Plotting graphs
 	TCanvas * c1 = new TCanvas("c1","c1",1200,900);
 	gPad -> SetTopMargin(0.02); gPad -> SetRightMargin(0.02);
 	h1_dpp_v_et_p25GeV_20um_Beast_si     -> Draw(      );	g_dpp_v_et_p25GeV_20um_Beast_si     -> Draw("sameL");
@@ -140,6 +141,10 @@ int main(int argc, char ** argv) {
 	leg1 -> Draw("same");
 	c1 -> Modified();
 	c1 -> Update();
+
+	// ------------------------------------------------------------------------------
+	// Saving results to pdf files
+	c1 -> Print("results_plotter1_c1.pdf");
 
 	myapp -> Run();
 	return 0;
