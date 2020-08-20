@@ -226,7 +226,6 @@ int main(int argc, char ** argv) {
 		// Filling histograms
 		for(int et = 0 ; et < size_eta_bin-1 ; et++){
 			if( geta >  eta_bin[et] &&  geta <= eta_bin[et+1] ){
-				//if( abs(geta) >  eta_bin[et] &&  abs(geta) <= eta_bin[et+1] ){
 				for(int p = 0 ; p < size_mom_bin-1 ; p++){
 					if( p_truth > mom_bin[p] && p_truth <= mom_bin[p+1] ){
 						h1_dpp_p_et_bins[et][p] -> Fill( dp_p );
@@ -235,190 +234,190 @@ int main(int argc, char ** argv) {
 					}	
 				}
 			}
-			}
 		}
-		cout << "\033[1;31m********************************************************************\033[0m\n";
-		// -------------------------------------------------------------
-		// Doing fits
-		TCanvas ** c_fits_p  = new TCanvas*[size_eta_bin-1];
-		TCanvas ** c_fits_th = new TCanvas*[size_eta_bin-1];
-		TCanvas ** c_fits_ph = new TCanvas*[size_eta_bin-1];
+	}
+	cout << "\033[1;31m********************************************************************\033[0m\n";
+	// -------------------------------------------------------------
+	// Doing fits
+	TCanvas ** c_fits_p  = new TCanvas*[size_eta_bin-1];
+	TCanvas ** c_fits_th = new TCanvas*[size_eta_bin-1];
+	TCanvas ** c_fits_ph = new TCanvas*[size_eta_bin-1];
 
-		for(int et = 0 ; et < size_eta_bin-1 ; et++){
-			c_fits_p [et] = new TCanvas(Form("c_fits_p_%i" ,et),Form("dp/p  , %.1f<eta<%.1f",eta_bin[et],eta_bin[et+1]),1000,800);	c_fits_p [et] -> Divide(5,2);
-			c_fits_th[et] = new TCanvas(Form("c_fits_th_%i",et),Form("dtheta, %.1f<eta<%.1f",eta_bin[et],eta_bin[et+1]),1000,800);	c_fits_th[et] -> Divide(5,2);
-			c_fits_ph[et] = new TCanvas(Form("c_fits_ph_%i",et),Form("dphi  , %.1f<eta<%.1f",eta_bin[et],eta_bin[et+1]),1000,800);	c_fits_ph[et] -> Divide(5,2);
+	for(int et = 0 ; et < size_eta_bin-1 ; et++){
+		c_fits_p [et] = new TCanvas(Form("c_fits_p_%i" ,et),Form("dp/p  , %.1f<eta<%.1f",eta_bin[et],eta_bin[et+1]),1000,800);	c_fits_p [et] -> Divide(5,2);
+		c_fits_th[et] = new TCanvas(Form("c_fits_th_%i",et),Form("dtheta, %.1f<eta<%.1f",eta_bin[et],eta_bin[et+1]),1000,800);	c_fits_th[et] -> Divide(5,2);
+		c_fits_ph[et] = new TCanvas(Form("c_fits_ph_%i",et),Form("dphi  , %.1f<eta<%.1f",eta_bin[et],eta_bin[et+1]),1000,800);	c_fits_ph[et] -> Divide(5,2);
 
-			for(int p = 0 ; p < size_mom_bin-1 ; p++){
-				// Momentum resolutions
-				c_fits_p [et] -> cd(p+1);
-				h1_dpp_p_et_bins[et][p] -> Draw();	h1_dpp_p_et_bins[et][p] -> Fit(Form("f_gaus_dpp_%i_%i",et,p),"RQ");
-				width_dpp[et][p] = f_gaus_dpp[et][p] -> GetParameter(2);
-				error_dpp[et][p] = (f_gaus_dpp[et][p] -> GetParError(2))*(f_gaus_dpp[et][p] -> GetChisquare())/(f_gaus_dpp[et][p] -> GetNDF());
-
-				// Theta resolution
-				c_fits_th[et] -> cd(p+1);
-				h1_dth_p_et_bins[et][p] -> Draw();	h1_dth_p_et_bins[et][p] -> Fit(Form("f_gaus_dth_%i_%i",et,p),"RQ");
-				width_dth[et][p] = f_gaus_dth[et][p] -> GetParameter(2);
-				error_dth[et][p] = (f_gaus_dth[et][p] -> GetParError(2))*(f_gaus_dth[et][p] -> GetChisquare())/(f_gaus_dth[et][p] -> GetNDF());
-
-				// Phi resolution
-				c_fits_ph[et] -> cd(p+1);
-				h1_dph_p_et_bins[et][p] -> Draw();	h1_dph_p_et_bins[et][p] -> Fit(Form("f_gaus_dph_%i_%i",et,p),"RQ");
-				width_dph[et][p] = f_gaus_dph[et][p] -> GetParameter(2);
-				error_dph[et][p] = (f_gaus_dph[et][p] -> GetParError(2))*(f_gaus_dph[et][p] -> GetChisquare())/(f_gaus_dph[et][p] -> GetNDF());
-
-				// ----
-
-				h1_dpp_v_p_et_bins[et] -> SetBinContent(p +1,width_dpp[et][p]*100. );
-				h1_dth_v_p_et_bins[et] -> SetBinContent(p +1,width_dth[et][p]*1000.);
-				h1_dph_v_p_et_bins[et] -> SetBinContent(p +1,width_dph[et][p]*1000.);
-				h1_dpp_v_et_p_bins[ p] -> SetBinContent(et+1,width_dpp[et][p]*100. );
-				h1_dth_v_et_p_bins[ p] -> SetBinContent(et+1,width_dth[et][p]*1000.);
-				h1_dph_v_et_p_bins[ p] -> SetBinContent(et+1,width_dph[et][p]*1000.);
-
-				h1_dpp_v_p_et_bins[et] -> SetBinError  (p +1,error_dpp[et][p]*100. );
-				h1_dth_v_p_et_bins[et] -> SetBinError  (p +1,error_dth[et][p]*1000.);
-				h1_dph_v_p_et_bins[et] -> SetBinError  (p +1,error_dph[et][p]*1000.);
-				h1_dpp_v_et_p_bins[ p] -> SetBinError  (et+1,error_dpp[et][p]*100. );
-				h1_dth_v_et_p_bins[ p] -> SetBinError  (et+1,error_dth[et][p]*1000.);
-				h1_dph_v_et_p_bins[ p] -> SetBinError  (et+1,error_dph[et][p]*1000.);
-			}
-			c_fits_p [et] -> Modified();	c_fits_p [et] -> Update();
-			c_fits_th[et] -> Modified();	c_fits_th[et] -> Update();
-			c_fits_ph[et] -> Modified();	c_fits_ph[et] -> Update();
-		}
-		// -------------------------------------------------------------
-		// Updating table with width values
-		ofstream updated_tab;
-		if(update_tab){
-			updated_tab.open(tab_name);
-			for(int et = 0 ; et < size_eta_bin-1 ; et++){
-				for(int p = 0 ; p < size_mom_bin-1 ; p++){
-					updated_tab << width_dpp[et][p];
-					if(p == size_mom_bin-2) updated_tab << "\n";
-					else updated_tab << "\t";
-				}
-			}
-			updated_tab << "\n";
-			for(int et = 0 ; et < size_eta_bin-1 ; et++){
-				for(int p = 0 ; p < size_mom_bin-1 ; p++){
-					updated_tab << width_dth[et][p];
-					if(p == size_mom_bin-2) updated_tab << "\n";
-					else updated_tab << "\t";
-				}
-			}
-			updated_tab << "\n";
-			for(int et = 0 ; et < size_eta_bin-1 ; et++){
-				for(int p = 0 ; p < size_mom_bin-1 ; p++){
-					updated_tab << width_dph[et][p];
-					if(p == size_mom_bin-2) updated_tab << "\n";
-					else updated_tab << "\t";
-				}
-			}
-			updated_tab.close();
-		}
-
-		h1_dpp_v_p_et_bins[0] -> SetMinimum(0.3 );	h1_dpp_v_p_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();	h1_dpp_v_p_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-		h1_dth_v_p_et_bins[0] -> SetMinimum(0.03);      h1_dth_v_p_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dth_v_p_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-		h1_dph_v_p_et_bins[0] -> SetMinimum(0.06);      h1_dph_v_p_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dph_v_p_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-		h1_dpp_v_et_p_bins[0] -> SetMinimum(0.3 );      h1_dpp_v_et_p_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dpp_v_et_p_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-		h1_dth_v_et_p_bins[0] -> SetMinimum(0.03);      h1_dth_v_et_p_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dth_v_et_p_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-		h1_dph_v_et_p_bins[0] -> SetMinimum(0.06);      h1_dph_v_et_p_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dph_v_et_p_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-
-		h1_dpp_v_p_et_bins[0] -> SetMaximum(20);
-		h1_dth_v_p_et_bins[0] -> SetMaximum(3 );
-		h1_dph_v_p_et_bins[0] -> SetMaximum(30);
-		h1_dpp_v_et_p_bins[0] -> SetMaximum(10.1);
-		h1_dth_v_et_p_bins[0] -> SetMaximum(4   );
-		h1_dph_v_et_p_bins[0] -> SetMaximum(40  );
-
-		// -------------------------------------------------------------
-		// Plotting histograms
-		TCanvas * c1 = new TCanvas("c1","c1",1300,900);
-		c1 -> Divide(3,2);
-
-		c1 -> cd(1); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
-		h1_dpp_v_p_et_bins[0] -> Draw();
-		for(int et = 0 ; et < size_eta_bin-1 ; et++) h1_dpp_v_p_et_bins[et] -> Draw("same");
-		c1 -> cd(2); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
-		h1_dth_v_p_et_bins[0] -> Draw();
-		for(int et = 0 ; et < size_eta_bin-1 ; et++) h1_dth_v_p_et_bins[et] -> Draw("same");
-		c1 -> cd(3); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
-		h1_dph_v_p_et_bins[0] -> Draw();
-		for(int et = 0 ; et < size_eta_bin-1 ; et++) h1_dph_v_p_et_bins[et] -> Draw("same");
-		c1 -> cd(4); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
-		h1_dpp_v_et_p_bins[0] -> Draw();
-		for(int p = 0 ; p < size_mom_bin-1 ; p++) h1_dpp_v_et_p_bins[p] -> Draw("same");
-		c1 -> cd(5); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
-		h1_dth_v_et_p_bins[0] -> Draw();
-		for(int p = 0 ; p < size_mom_bin-1 ; p++) h1_dth_v_et_p_bins[p] -> Draw("same");
-		c1 -> cd(6); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
-		h1_dph_v_et_p_bins[0] -> Draw();
-		for(int p = 0 ; p < size_mom_bin-1 ; p++) h1_dph_v_et_p_bins[p] -> Draw("same");
-		TLegend * leg1 = new TLegend(0.50,0.6,0.95,0.95);
-		leg1 -> SetLineColor(0);
-		for(int et = 0 ; et < size_eta_bin-1 ; et++) leg1 -> AddEntry(h1_dph_v_p_et_bins[et],Form("%.1f < |#eta| < %.1f",eta_bin[et],eta_bin[et+1]));
-		c1 -> cd(2); 
-		leg1 -> Draw("same");
-		TLegend * leg2 = new TLegend(0.20,0.5,0.65,0.95);
-		leg2 -> SetLineColor(0);
-		for(int p = 0 ; p < size_mom_bin-1 ; p++) leg2 -> AddEntry(h1_dph_v_et_p_bins[p],Form("%.1f < p < %.1f GeV/c",mom_bin[p],mom_bin[p+1]));
-		c1 -> cd(4);
-		leg2 -> Draw("same");
-		c1 -> Modified();
-		c1 -> Update();
-
-		// -------------------------------------------------------------
-		// Saving fits to pdf
-		for(int et = 0 ; et < size_eta_bin-1 ; et++){
-			TString fname = out_pdf;
-			if(et == 0) fname+="(";
-			else if(et == size_eta_bin-2) fname+=")";
-			c_fits_p [et] -> Print("fits/dpp_"+fname);
-			c_fits_th[et] -> Print("fits/dth_"+fname);
-			c_fits_ph[et] -> Print("fits/dph_"+fname);
-		}
-
-		// -------------------------------------------------------------
-		// Saving histograms
-		TFile * Fout = new TFile(outfile,"recreate");
-		for(int et = 0 ; et < size_eta_bin-1 ; et++){
-			h1_dpp_v_p_et_bins[et] -> Write(Form("h1_dpp_v_p_et_bins_%i",et));
-			h1_dth_v_p_et_bins[et] -> Write(Form("h1_dth_v_p_et_bins_%i",et));
-			h1_dph_v_p_et_bins[et] -> Write(Form("h1_dph_v_p_et_bins_%i",et));
-		}
 		for(int p = 0 ; p < size_mom_bin-1 ; p++){
-			h1_dpp_v_et_p_bins[p] -> Write(Form("h1_dpp_v_et_p_bins_%i",p));
-			h1_dth_v_et_p_bins[p] -> Write(Form("h1_dth_v_et_p_bins_%i",p));
-			h1_dph_v_et_p_bins[p] -> Write(Form("h1_dph_v_et_p_bins_%i",p));
+			// Momentum resolutions
+			c_fits_p [et] -> cd(p+1);
+			h1_dpp_p_et_bins[et][p] -> Draw();	h1_dpp_p_et_bins[et][p] -> Fit(Form("f_gaus_dpp_%i_%i",et,p),"RQ");
+			width_dpp[et][p] = f_gaus_dpp[et][p] -> GetParameter(2);
+			error_dpp[et][p] = (f_gaus_dpp[et][p] -> GetParError(2))*(f_gaus_dpp[et][p] -> GetChisquare())/(f_gaus_dpp[et][p] -> GetNDF());
+
+			// Theta resolution
+			c_fits_th[et] -> cd(p+1);
+			h1_dth_p_et_bins[et][p] -> Draw();	h1_dth_p_et_bins[et][p] -> Fit(Form("f_gaus_dth_%i_%i",et,p),"RQ");
+			width_dth[et][p] = f_gaus_dth[et][p] -> GetParameter(2);
+			error_dth[et][p] = (f_gaus_dth[et][p] -> GetParError(2))*(f_gaus_dth[et][p] -> GetChisquare())/(f_gaus_dth[et][p] -> GetNDF());
+
+			// Phi resolution
+			c_fits_ph[et] -> cd(p+1);
+			h1_dph_p_et_bins[et][p] -> Draw();	h1_dph_p_et_bins[et][p] -> Fit(Form("f_gaus_dph_%i_%i",et,p),"RQ");
+			width_dph[et][p] = f_gaus_dph[et][p] -> GetParameter(2);
+			error_dph[et][p] = (f_gaus_dph[et][p] -> GetParError(2))*(f_gaus_dph[et][p] -> GetChisquare())/(f_gaus_dph[et][p] -> GetNDF());
+
+			// ----
+
+			h1_dpp_v_p_et_bins[et] -> SetBinContent(p +1,width_dpp[et][p]*100. );
+			h1_dth_v_p_et_bins[et] -> SetBinContent(p +1,width_dth[et][p]*1000.);
+			h1_dph_v_p_et_bins[et] -> SetBinContent(p +1,width_dph[et][p]*1000.);
+			h1_dpp_v_et_p_bins[ p] -> SetBinContent(et+1,width_dpp[et][p]*100. );
+			h1_dth_v_et_p_bins[ p] -> SetBinContent(et+1,width_dth[et][p]*1000.);
+			h1_dph_v_et_p_bins[ p] -> SetBinContent(et+1,width_dph[et][p]*1000.);
+
+			h1_dpp_v_p_et_bins[et] -> SetBinError  (p +1,error_dpp[et][p]*100. );
+			h1_dth_v_p_et_bins[et] -> SetBinError  (p +1,error_dth[et][p]*1000.);
+			h1_dph_v_p_et_bins[et] -> SetBinError  (p +1,error_dph[et][p]*1000.);
+			h1_dpp_v_et_p_bins[ p] -> SetBinError  (et+1,error_dpp[et][p]*100. );
+			h1_dth_v_et_p_bins[ p] -> SetBinError  (et+1,error_dth[et][p]*1000.);
+			h1_dph_v_et_p_bins[ p] -> SetBinError  (et+1,error_dph[et][p]*1000.);
 		}
-		c1 -> Write("c1");
-		TVT_eta_bin.Write("TVT_eta_bin");
-		TVT_mom_bin.Write("TVT_mom_bin");
-		Fout -> Close();
-
-		// -------------------------------------------------------------
-		// Saving plots
-		c1 -> Print(out_pdf2);
-
-		myapp -> Run();
-		return 0;
+		c_fits_p [et] -> Modified();	c_fits_p [et] -> Update();
+		c_fits_th[et] -> Modified();	c_fits_th[et] -> Update();
+		c_fits_ph[et] -> Modified();	c_fits_ph[et] -> Update();
 	}
-	// ============================================================================================================================================
-	void prettyTH1F( TH1F * h1 , int color , int marker , float min , float max ){
-		h1 -> SetLineWidth(2);
-		h1 -> SetLineColor(color);
-		h1 -> SetMarkerStyle(marker);
-		h1 -> SetMarkerColor(color);
-
-		h1 -> SetMinimum(min);
-		h1 -> SetMaximum(max);
-
-		h1 -> GetXaxis() -> CenterTitle();
-		h1 -> GetXaxis() -> SetNdivisions(107); // to draw less tick marks
-		h1 -> GetYaxis() -> CenterTitle();
-		h1 -> GetYaxis() -> SetNdivisions(107); // to draw less tick marks
-
-		h1 -> SetMinimum(0.001);
+	// -------------------------------------------------------------
+	// Updating table with width values
+	ofstream updated_tab;
+	if(update_tab){
+		updated_tab.open(tab_name);
+		for(int et = 0 ; et < size_eta_bin-1 ; et++){
+			for(int p = 0 ; p < size_mom_bin-1 ; p++){
+				updated_tab << width_dpp[et][p];
+				if(p == size_mom_bin-2) updated_tab << "\n";
+				else updated_tab << "\t";
+			}
+		}
+		updated_tab << "\n";
+		for(int et = 0 ; et < size_eta_bin-1 ; et++){
+			for(int p = 0 ; p < size_mom_bin-1 ; p++){
+				updated_tab << width_dth[et][p];
+				if(p == size_mom_bin-2) updated_tab << "\n";
+				else updated_tab << "\t";
+			}
+		}
+		updated_tab << "\n";
+		for(int et = 0 ; et < size_eta_bin-1 ; et++){
+			for(int p = 0 ; p < size_mom_bin-1 ; p++){
+				updated_tab << width_dph[et][p];
+				if(p == size_mom_bin-2) updated_tab << "\n";
+				else updated_tab << "\t";
+			}
+		}
+		updated_tab.close();
 	}
+
+	h1_dpp_v_p_et_bins[0] -> SetMinimum(0.3 );	h1_dpp_v_p_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();	h1_dpp_v_p_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dth_v_p_et_bins[0] -> SetMinimum(0.03);      h1_dth_v_p_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dth_v_p_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dph_v_p_et_bins[0] -> SetMinimum(0.06);      h1_dph_v_p_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dph_v_p_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dpp_v_et_p_bins[0] -> SetMinimum(0.3 );      h1_dpp_v_et_p_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dpp_v_et_p_bins[0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dth_v_et_p_bins[0] -> SetMinimum(0.03);      h1_dth_v_et_p_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dth_v_et_p_bins[0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dph_v_et_p_bins[0] -> SetMinimum(0.06);      h1_dph_v_et_p_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dph_v_et_p_bins[0]->GetYaxis()->SetTitleOffset(2.3);
+
+	h1_dpp_v_p_et_bins[0] -> SetMaximum(20);
+	h1_dth_v_p_et_bins[0] -> SetMaximum(3 );
+	h1_dph_v_p_et_bins[0] -> SetMaximum(30);
+	h1_dpp_v_et_p_bins[0] -> SetMaximum(10.1);
+	h1_dth_v_et_p_bins[0] -> SetMaximum(4   );
+	h1_dph_v_et_p_bins[0] -> SetMaximum(40  );
+
+	// -------------------------------------------------------------
+	// Plotting histograms
+	TCanvas * c1 = new TCanvas("c1","c1",1300,900);
+	c1 -> Divide(3,2);
+
+	c1 -> cd(1); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
+	h1_dpp_v_p_et_bins[0] -> Draw();
+	for(int et = 0 ; et < size_eta_bin-1 ; et++) h1_dpp_v_p_et_bins[et] -> Draw("same");
+	c1 -> cd(2); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
+	h1_dth_v_p_et_bins[0] -> Draw();
+	for(int et = 0 ; et < size_eta_bin-1 ; et++) h1_dth_v_p_et_bins[et] -> Draw("same");
+	c1 -> cd(3); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
+	h1_dph_v_p_et_bins[0] -> Draw();
+	for(int et = 0 ; et < size_eta_bin-1 ; et++) h1_dph_v_p_et_bins[et] -> Draw("same");
+	c1 -> cd(4); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
+	h1_dpp_v_et_p_bins[0] -> Draw();
+	for(int p = 0 ; p < size_mom_bin-1 ; p++) h1_dpp_v_et_p_bins[p] -> Draw("same");
+	c1 -> cd(5); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
+	h1_dth_v_et_p_bins[0] -> Draw();
+	for(int p = 0 ; p < size_mom_bin-1 ; p++) h1_dth_v_et_p_bins[p] -> Draw("same");
+	c1 -> cd(6); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
+	h1_dph_v_et_p_bins[0] -> Draw();
+	for(int p = 0 ; p < size_mom_bin-1 ; p++) h1_dph_v_et_p_bins[p] -> Draw("same");
+	TLegend * leg1 = new TLegend(0.50,0.6,0.95,0.95);
+	leg1 -> SetLineColor(0);
+	for(int et = 0 ; et < size_eta_bin-1 ; et++) leg1 -> AddEntry(h1_dph_v_p_et_bins[et],Form("%.1f < |#eta| < %.1f",eta_bin[et],eta_bin[et+1]));
+	c1 -> cd(2); 
+	leg1 -> Draw("same");
+	TLegend * leg2 = new TLegend(0.20,0.5,0.65,0.95);
+	leg2 -> SetLineColor(0);
+	for(int p = 0 ; p < size_mom_bin-1 ; p++) leg2 -> AddEntry(h1_dph_v_et_p_bins[p],Form("%.1f < p < %.1f GeV/c",mom_bin[p],mom_bin[p+1]));
+	c1 -> cd(4);
+	leg2 -> Draw("same");
+	c1 -> Modified();
+	c1 -> Update();
+
+	// -------------------------------------------------------------
+	// Saving fits to pdf
+	for(int et = 0 ; et < size_eta_bin-1 ; et++){
+		TString fname = out_pdf;
+		if(et == 0) fname+="(";
+		else if(et == size_eta_bin-2) fname+=")";
+		c_fits_p [et] -> Print("fits/dpp_"+fname);
+		c_fits_th[et] -> Print("fits/dth_"+fname);
+		c_fits_ph[et] -> Print("fits/dph_"+fname);
+	}
+
+	// -------------------------------------------------------------
+	// Saving histograms
+	TFile * Fout = new TFile(outfile,"recreate");
+	for(int et = 0 ; et < size_eta_bin-1 ; et++){
+		h1_dpp_v_p_et_bins[et] -> Write(Form("h1_dpp_v_p_et_bins_%i",et));
+		h1_dth_v_p_et_bins[et] -> Write(Form("h1_dth_v_p_et_bins_%i",et));
+		h1_dph_v_p_et_bins[et] -> Write(Form("h1_dph_v_p_et_bins_%i",et));
+	}
+	for(int p = 0 ; p < size_mom_bin-1 ; p++){
+		h1_dpp_v_et_p_bins[p] -> Write(Form("h1_dpp_v_et_p_bins_%i",p));
+		h1_dth_v_et_p_bins[p] -> Write(Form("h1_dth_v_et_p_bins_%i",p));
+		h1_dph_v_et_p_bins[p] -> Write(Form("h1_dph_v_et_p_bins_%i",p));
+	}
+	c1 -> Write("c1");
+	TVT_eta_bin.Write("TVT_eta_bin");
+	TVT_mom_bin.Write("TVT_mom_bin");
+	Fout -> Close();
+
+	// -------------------------------------------------------------
+	// Saving plots
+	c1 -> Print(out_pdf2);
+
+	myapp -> Run();
+	return 0;
+}
+// ============================================================================================================================================
+void prettyTH1F( TH1F * h1 , int color , int marker , float min , float max ){
+	h1 -> SetLineWidth(2);
+	h1 -> SetLineColor(color);
+	h1 -> SetMarkerStyle(marker);
+	h1 -> SetMarkerColor(color);
+
+	h1 -> SetMinimum(min);
+	h1 -> SetMaximum(max);
+
+	h1 -> GetXaxis() -> CenterTitle();
+	h1 -> GetXaxis() -> SetNdivisions(107); // to draw less tick marks
+	h1 -> GetYaxis() -> CenterTitle();
+	h1 -> GetYaxis() -> SetNdivisions(107); // to draw less tick marks
+
+	h1 -> SetMinimum(0.001);
+}
