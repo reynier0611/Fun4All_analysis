@@ -129,16 +129,16 @@ int main(int argc, char ** argv) {
     	for(int i = 0 ; i < size_selected_bins ; i++){
 		double max_val = 0.46*mom_bin[i]+5.33;
 
-		g_dpp_v_et_selected_20um_Beast_si         [i] = graph_from_histo( h1_dpp_v_et_p_bins[0][selected_bins[i]] ,62,21,0,max_val);
+		g_dpp_v_et_selected_20um_Beast_si         [i] = graph_from_histo( h1_dpp_v_et_p_bins[0][selected_bins[i]] ,66,21,0,max_val);
 		g_dpp_v_et_selected_10um_Beast_si         [i] = graph_from_histo( h1_dpp_v_et_p_bins[1][selected_bins[i]] ,94,21,0,max_val);
-		g_dpp_v_et_selected_20um_Beast_si_GEM     [i] = graph_from_histo( h1_dpp_v_et_p_bins[2][selected_bins[i]] , 4,20,0,max_val);
+		g_dpp_v_et_selected_20um_Beast_si_GEM     [i] = graph_from_histo( h1_dpp_v_et_p_bins[2][selected_bins[i]] ,62,20,0,max_val);
 		g_dpp_v_et_selected_10um_Beast_si_GEM     [i] = graph_from_histo( h1_dpp_v_et_p_bins[3][selected_bins[i]] , 2,20,0,max_val);
-		g_dpp_v_et_selected_20um_Beast_si_GEM_RICH[i] = graph_from_histo( h1_dpp_v_et_p_bins[8][selected_bins[i]] ,66,22,0,max_val);
+		g_dpp_v_et_selected_20um_Beast_si_GEM_RICH[i] = graph_from_histo( h1_dpp_v_et_p_bins[8][selected_bins[i]] , 4,22,0,max_val);
 		g_dpp_v_et_selected_10um_Beast_si_GEM_RICH[i] = graph_from_histo( h1_dpp_v_et_p_bins[9][selected_bins[i]] ,50,22,0,max_val);
 	                                                                                                                       
-		g_dpp_v_et_selected_20um_sPHENIX_si       [i] = graph_from_histo( h1_dpp_v_et_p_bins[4][selected_bins[i]] ,62,21,0,max_val);
+		g_dpp_v_et_selected_20um_sPHENIX_si       [i] = graph_from_histo( h1_dpp_v_et_p_bins[4][selected_bins[i]] ,66,21,0,max_val);
 		g_dpp_v_et_selected_10um_sPHENIX_si       [i] = graph_from_histo( h1_dpp_v_et_p_bins[5][selected_bins[i]] ,94,21,0,max_val);
-		g_dpp_v_et_selected_20um_sPHENIX_si_GEM   [i] = graph_from_histo( h1_dpp_v_et_p_bins[6][selected_bins[i]] , 4,20,0,max_val);
+		g_dpp_v_et_selected_20um_sPHENIX_si_GEM   [i] = graph_from_histo( h1_dpp_v_et_p_bins[6][selected_bins[i]] ,62,20,0,max_val);
 		g_dpp_v_et_selected_10um_sPHENIX_si_GEM   [i] = graph_from_histo( h1_dpp_v_et_p_bins[7][selected_bins[i]] , 2,20,0,max_val);
 
 		g_dpp_v_et_selected_20um_Beast_si      [i] -> SetTitle(Form("Beast (3.0 T), %.1f < p < %.1f GeV/#it{c}",(*TVT_mom_bin[0])[selected_bins[i]],(*TVT_mom_bin[0])[selected_bins[i]+1]));
@@ -155,7 +155,7 @@ int main(int argc, char ** argv) {
 	// ------------------------------------------------------------------------------
 	// Plotting graphs
 	TCanvas * c1 = new TCanvas("c1","c1",1200,900);
-	gPad -> SetRightMargin(0.02); gPad -> SetGridx(); gPad -> SetGridy(); gPad -> SetBottomMargin(0.13);
+	gPad -> SetRightMargin(0.02); gPad -> SetGridx(); gPad -> SetGridy(); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.13);
 	g_dpp_v_et_selected_20um_Beast_si         [2] -> Draw(   "APL");
 	g_dpp_v_et_selected_10um_Beast_si         [2] -> Draw("samePL");
 	g_dpp_v_et_selected_20um_Beast_si_GEM     [2] -> Draw("samePL");
@@ -177,7 +177,7 @@ int main(int argc, char ** argv) {
 	c1 -> Update();
 	// ----------------------------------------------
 	TCanvas * c2 = new TCanvas("c2","c2",1200,900);
-	gPad -> SetRightMargin(0.02); gPad -> SetGridx(); gPad -> SetGridy(); gPad -> SetBottomMargin(0.13);
+	gPad -> SetRightMargin(0.02); gPad -> SetGridx(); gPad -> SetGridy(); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.13);
 	g_dpp_v_et_selected_20um_sPHENIX_si    [2] -> Draw(   "APL");
 	g_dpp_v_et_selected_10um_sPHENIX_si    [2] -> Draw("samePL");
 	g_dpp_v_et_selected_20um_sPHENIX_si_GEM[2] -> Draw("samePL");
@@ -189,7 +189,7 @@ int main(int argc, char ** argv) {
         TCanvas * c3 = new TCanvas("c3","c3",1200,900);
 	c3 -> Divide(2,2);
 	for(int i = 0 ; i < 3 ; i++){
-		c3 -> cd(i+1); gPad -> SetGridx(); gPad -> SetGridy(); gPad -> SetBottomMargin(0.13);
+		c3 -> cd(i+1); gPad -> SetGridx(); gPad -> SetGridy(); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.13);
         	g_dpp_v_et_selected_20um_Beast_si         [i] -> Draw(   "APL");
                 g_dpp_v_et_selected_10um_Beast_si         [i] -> Draw("samePL");
                 g_dpp_v_et_selected_20um_Beast_si_GEM     [i] -> Draw("samePL");
