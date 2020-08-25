@@ -280,10 +280,12 @@ TGraphErrors * graph_from_histo( TH1F * h1 , int color , int marker , float min 
 	const int nbin = h1 -> GetSize()-2;
 
 	for(int i = 0 ; i < nbin ; i++){
-		yval[ctr] = h1 -> GetBinContent(i+1);
-		xval[ctr] = h1 -> GetXaxis() -> GetBinCenter(i+1);
-		err[ctr] = h1 -> GetBinError(i+1);
-		ctr++;
+		if(h1 -> GetBinContent(i+1)>0){
+			yval[ctr] = h1 -> GetBinContent(i+1);
+			xval[ctr] = h1 -> GetXaxis() -> GetBinCenter(i+1);
+			err[ctr] = h1 -> GetBinError(i+1);
+			ctr++;
+		}
 	}
 
 	// Creating a TGraphErrors object that mirrors the histogram

@@ -268,20 +268,31 @@ int main(int argc, char ** argv) {
 			error_dph[et][p] = (f_gaus_dph[et][p] -> GetParError(2))*(f_gaus_dph[et][p] -> GetChisquare())/(f_gaus_dph[et][p] -> GetNDF());
 
 			// ----
+			if(h1_dpp_p_et_bins[et][p]->GetMaximum()>50.){
+				h1_dpp_v_p_et_bins[et] -> SetBinContent(p +1,width_dpp[et][p]*100. );
+				h1_dpp_v_p_et_bins[et] -> SetBinError  (p +1,error_dpp[et][p]*100. );
+			}
+			if(h1_dth_p_et_bins[et][p]->GetMaximum()>50.){
+				h1_dth_v_p_et_bins[et] -> SetBinContent(p +1,width_dth[et][p]*1000.);
+				h1_dth_v_p_et_bins[et] -> SetBinError  (p +1,error_dth[et][p]*1000.);
+			}
+			if(h1_dph_p_et_bins[et][p]->GetMaximum()>50.){
+				h1_dph_v_p_et_bins[et] -> SetBinContent(p +1,width_dph[et][p]*1000.);
+				h1_dph_v_p_et_bins[et] -> SetBinError  (p +1,error_dph[et][p]*1000.);
+			}
+			if(h1_dpp_p_et_bins[et][p]->GetMaximum()>50.){
+				h1_dpp_v_et_p_bins[ p] -> SetBinContent(et+1,width_dpp[et][p]*100. );
+				h1_dpp_v_et_p_bins[ p] -> SetBinError  (et+1,error_dpp[et][p]*100. );
+			}
+			if(h1_dth_p_et_bins[et][p]->GetMaximum()>50.){
+				h1_dth_v_et_p_bins[ p] -> SetBinContent(et+1,width_dth[et][p]*1000.);
+				h1_dth_v_et_p_bins[ p] -> SetBinError  (et+1,error_dth[et][p]*1000.);
+			}
+			if(h1_dph_p_et_bins[et][p]->GetMaximum()>50.){
+				h1_dph_v_et_p_bins[ p] -> SetBinContent(et+1,width_dph[et][p]*1000.);
+				h1_dph_v_et_p_bins[ p] -> SetBinError  (et+1,error_dph[et][p]*1000.);
+			}
 
-			h1_dpp_v_p_et_bins[et] -> SetBinContent(p +1,width_dpp[et][p]*100. );
-			h1_dth_v_p_et_bins[et] -> SetBinContent(p +1,width_dth[et][p]*1000.);
-			h1_dph_v_p_et_bins[et] -> SetBinContent(p +1,width_dph[et][p]*1000.);
-			h1_dpp_v_et_p_bins[ p] -> SetBinContent(et+1,width_dpp[et][p]*100. );
-			h1_dth_v_et_p_bins[ p] -> SetBinContent(et+1,width_dth[et][p]*1000.);
-			h1_dph_v_et_p_bins[ p] -> SetBinContent(et+1,width_dph[et][p]*1000.);
-
-			h1_dpp_v_p_et_bins[et] -> SetBinError  (p +1,error_dpp[et][p]*100. );
-			h1_dth_v_p_et_bins[et] -> SetBinError  (p +1,error_dth[et][p]*1000.);
-			h1_dph_v_p_et_bins[et] -> SetBinError  (p +1,error_dph[et][p]*1000.);
-			h1_dpp_v_et_p_bins[ p] -> SetBinError  (et+1,error_dpp[et][p]*100. );
-			h1_dth_v_et_p_bins[ p] -> SetBinError  (et+1,error_dth[et][p]*1000.);
-			h1_dph_v_et_p_bins[ p] -> SetBinError  (et+1,error_dph[et][p]*1000.);
 		}
 		c_fits_p [et] -> Modified();	c_fits_p [et] -> Update();
 		c_fits_th[et] -> Modified();	c_fits_th[et] -> Update();
