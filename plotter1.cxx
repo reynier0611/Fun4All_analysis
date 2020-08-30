@@ -51,8 +51,9 @@ int main(int argc, char ** argv) {
 		"output/output_skimmed_pi-_det2_both_GEMs_RICH_20x20_sPHENIX_FastTrackingEval.root",
                 "output/output_skimmed_pi-_det2_both_GEMs_RICH_10x10_sPHENIX_FastTrackingEval.root"
 	};
+	// #######################################################################################################################################
+	// YOU SHOULDN'T NEED TO MODIFY ANYTHING IN THE BLOCK OF CODE BELOW AND UNTIL AFTER THE NEXT LINE WITH ###...
 	const int size_loaded = sizeof(fnames)/sizeof(*fnames);
-
 	// ------------------------------------------------------------------------------
 	// Preparing variables that will later on be filled from root files
 	TVectorT<double> ** TVT_eta_bin = new TVectorT<double>*[size_loaded];
@@ -107,6 +108,8 @@ int main(int argc, char ** argv) {
 	cout << "\neta bin boundaries:\n"; for(int et = 0 ; et < num_eta_bin[0]+1 ; et++) cout << (*TVT_eta_bin[0])[et] << ", "; cout << "\n";
 	cout << "\np bin boundaries:\n"  ; for(int p  = 0 ; p  < num_mom_bin[0]+1 ; p ++) cout << (*TVT_mom_bin[0])[ p] << ", "; cout << "\n\n";
 
+	// #######################################################################################################################################
+        // EDIT THE CODE BELOW DEPENDING ON WHAT YOU WANT TO PLOT
 	// ------------------------------------------------------------------------------
 	// Copying and editing histograms
 	double mom_bin[] = {4.,10.,25.};
