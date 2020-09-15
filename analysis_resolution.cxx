@@ -148,17 +148,14 @@ int main(int argc, char ** argv) {
 		}
 	}
 	// -------------------------------------------------------------	
-	//int color[] = {1,2,62,8,95,52,6,28,209,92,15};
-	//int marker[] = {20,21,23,24,25,26,27,28,29,30};
-
 	TH1F ** h1_dpp_v_p_et_bins = new TH1F*[size_eta_bin-1];
 	TH1F ** h1_dth_v_p_et_bins = new TH1F*[size_eta_bin-1];
 	TH1F ** h1_dph_v_p_et_bins = new TH1F*[size_eta_bin-1];
 
 	for(int et = 0 ; et < size_eta_bin-1 ; et++){
-		h1_dpp_v_p_et_bins[et] = new TH1F(Form("h1_dpp_v_p_et_bins_%i",et),";p [GeV/c];dp/p [%]"      ,size_mom_bin-1,mom_bin);	prettyTH1F( h1_dpp_v_p_et_bins[et] , 50+et /*color[et]*/ , 20 /*marker[et]*/ , 0. , 10. );
-		h1_dth_v_p_et_bins[et] = new TH1F(Form("h1_dth_v_p_et_bins_%i",et),";p [GeV/c];d#theta [mrad]",size_mom_bin-1,mom_bin);	prettyTH1F( h1_dth_v_p_et_bins[et] , 50+et /*color[et]*/ , 20 /*marker[et]*/ , 0. , 1.  );
-		h1_dph_v_p_et_bins[et] = new TH1F(Form("h1_dph_v_p_et_bins_%i",et),";p [GeV/c];d#phi [mrad]"  ,size_mom_bin-1,mom_bin);	prettyTH1F( h1_dph_v_p_et_bins[et] , 50+et /*color[et]*/ , 20 /*marker[et]*/ , 0. , 25. );
+		h1_dpp_v_p_et_bins[et] = new TH1F(Form("h1_dpp_v_p_et_bins_%i",et),";p [GeV/c];dp/p [%]"      ,size_mom_bin-1,mom_bin);	prettyTH1F( h1_dpp_v_p_et_bins[et] , 50+et , 20 , 0. , 10. );
+		h1_dth_v_p_et_bins[et] = new TH1F(Form("h1_dth_v_p_et_bins_%i",et),";p [GeV/c];d#theta [mrad]",size_mom_bin-1,mom_bin);	prettyTH1F( h1_dth_v_p_et_bins[et] , 50+et , 20 , 0. , 1.  );
+		h1_dph_v_p_et_bins[et] = new TH1F(Form("h1_dph_v_p_et_bins_%i",et),";p [GeV/c];d#phi [mrad]"  ,size_mom_bin-1,mom_bin);	prettyTH1F( h1_dph_v_p_et_bins[et] , 50+et , 20 , 0. , 25. );
 	}
 
 	TH1F ** h1_dpp_v_et_p_bins = new TH1F*[size_mom_bin-1];
@@ -166,9 +163,9 @@ int main(int argc, char ** argv) {
 	TH1F ** h1_dph_v_et_p_bins = new TH1F*[size_mom_bin-1];
 
 	for(int p = 0 ; p < size_mom_bin-1 ; p++){
-		h1_dpp_v_et_p_bins[p] = new TH1F(Form("h1_dpp_v_et_p_bins_%i",p),";#eta;dp/p [%]"      ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dpp_v_et_p_bins[p] , 50+p /*color[p]*/ , 20 /*marker[p]*/ , 0. , 10. );
-		h1_dth_v_et_p_bins[p] = new TH1F(Form("h1_dth_v_et_p_bins_%i",p),";#eta;d#theta [mrad]",size_eta_bin-1,eta_bin);	prettyTH1F( h1_dth_v_et_p_bins[p] , 50+p /*color[p]*/ , 20 /*marker[p]*/ , 0. , 1.  );
-		h1_dph_v_et_p_bins[p] = new TH1F(Form("h1_dph_v_et_p_bins_%i",p),";#eta;d#phi [mrad]"  ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dph_v_et_p_bins[p] , 50+p /*color[p]*/ , 20 /*marker[p]*/ , 0. , 25. );
+		h1_dpp_v_et_p_bins[p] = new TH1F(Form("h1_dpp_v_et_p_bins_%i",p),";#eta;dp/p [%]"      ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dpp_v_et_p_bins[p] , 50+p , 20 , 0. , 10. );
+		h1_dth_v_et_p_bins[p] = new TH1F(Form("h1_dth_v_et_p_bins_%i",p),";#eta;d#theta [mrad]",size_eta_bin-1,eta_bin);	prettyTH1F( h1_dth_v_et_p_bins[p] , 50+p , 20 , 0. , 1.  );
+		h1_dph_v_et_p_bins[p] = new TH1F(Form("h1_dph_v_et_p_bins_%i",p),";#eta;d#phi [mrad]"  ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dph_v_et_p_bins[p] , 50+p , 20 , 0. , 25. );
 	}
 	// -------------------------------------------------------------
 	// Declaring other useful variables and functions
