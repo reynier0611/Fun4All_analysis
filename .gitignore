@@ -1,4 +1,5 @@
-analysis_resolution
+analysis_momentum_resolution
+analysis_vertex_resolution
 plotter1
 data/
 output/
