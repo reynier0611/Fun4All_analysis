@@ -15,11 +15,11 @@ do
 			# Do this three times to adjust tables
 			for i in {1..3}
 			do
-				./analysis_momentum_resolution 1 1 "skimmed_pi-_det2"$det"_"$pix"x"$pix"_"$B"_FastTrackingEval.root"
+				./analysis_momentum_resolution 1 1 1 "skimmed_pi-_det2"$det"_"$pix"x"$pix"_"$B"_FastTrackingEval.root"
 			done
 
 			# Do one last time without updating table
-			./analysis_momentum_resolution 1 2 "skimmed_pi-_det2"$det"_"$pix"x"$pix"_"$B"_FastTrackingEval.root"
+			./analysis_momentum_resolution 1 2 1 "skimmed_pi-_det2"$det"_"$pix"x"$pix"_"$B"_FastTrackingEval.root"
 		done
 	done
 done

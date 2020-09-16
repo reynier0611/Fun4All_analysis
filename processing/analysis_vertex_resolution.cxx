@@ -31,22 +31,24 @@ int main(int argc, char ** argv) {
 	TApplication *myapp = new TApplication("myapp",0,0);
 #endif
 
-	if(argc!=4){
-		cout << "Run this code as:\n\033[1;32m./analysis_vertex_resolution A B filename.root\033[0m\n";
+	if(argc!=5){
+		cout << "Run this code as:\n\033[1;32m./analysis_vertex_resolution A B C filename.root\033[0m\n";
 		cout << "where:\nA = 1 -> Widths from table will be used\n  = 2 -> Widths from table \033[1;31mwon't\033[0m be used\n";
 		cout << "B = 1 -> Table will be updated\n  = 2 -> Table \033[1;31mwon't\033[0m be updated\n";
+		cout << "C = 1 -> Run code and quit\n  = 2 -> Run code and show plots\n";
 		exit(0);
 	}
 
 	bool use_widths = true;
 	bool update_tab = false;
+	bool keep_plots = false;
 
 	if (!fs::is_directory("../data"  ) || !fs::exists("../data"  )) fs::create_directory("../data"  ); // Create directory if it does not exist
 	if (!fs::is_directory("tables"   ) || !fs::exists("tables"   )) fs::create_directory("tables"   );
 	if (!fs::is_directory("../output") || !fs::exists("../output")) fs::create_directory("../output");
 	if (!fs::is_directory("fits"     ) || !fs::exists("fits"     )) fs::create_directory("fits"     );
 
-	cout << "\033[1;31m********************************************************************\nUSEFUL INFO:\033[0m\nWill be loading data from file: '" << argv[3] << "' assumed to be in directory 'data'" << endl;
+	cout << "\033[1;31m********************************************************************\nUSEFUL INFO:\033[0m\nWill be loading data from file: '" << argv[4] << "' assumed to be in directory 'data'" << endl;
 
 	if     (atoi(argv[1])==1){use_widths = true ;	cout << "Will be using widths from table\n" ;}
 	else if(atoi(argv[1])==2){use_widths = false;	cout << "Won't be using widths from table\n";}
@@ -55,6 +57,10 @@ int main(int argc, char ** argv) {
 	if     (atoi(argv[2])==1){update_tab = true ;   cout << "Table will be updated\n" ;}
 	else if(atoi(argv[2])==2){update_tab = false;   cout << "Table won't be updated\n";}
 	else{cout << "Something wrong with your election of input parameter 'B'. Bailing out!\n"; exit(0);}
+
+	if     (atoi(argv[3])==1){keep_plots = false;   cout << "Will run and quit. Examine the output files for resulting plots\n";}
+        else if(atoi(argv[3])==2){keep_plots = true ;   cout << "Will run and show the plots\n" ;}
+        else{cout << "Something wrong with your election of input parameter 'C'. Bailing out!\n"; exit(0);}
 
 	// -------------------------
 	// Binning
@@ -68,7 +74,7 @@ int main(int argc, char ** argv) {
 	TVectorT<double> TVT_mom_bin(size_mom_bin);	for(int i = 0 ; i < size_mom_bin ; i++) TVT_mom_bin[i] = mom_bin[i];
 	// -------------------------
 	// useful strings
-	string raw_fname = argv[3];
+	string raw_fname = argv[4];
 	TString infile = "../data/" + raw_fname;
 	TString outfile = "../output/output_vtx_res_" + raw_fname;
 	raw_fname.resize(raw_fname.size()-5);
@@ -349,7 +355,8 @@ int main(int argc, char ** argv) {
 	// Saving plots
 	c1 -> Print(out_pdf2);
 
-	myapp -> Run();
+	if(keep_plots)
+		myapp -> Run();
 	return 0;
 }
 // ============================================================================================================================================
