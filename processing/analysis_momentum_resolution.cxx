@@ -32,7 +32,7 @@ int main(int argc, char ** argv) {
 #endif
 
 	if(argc!=4){
-		cout << "Run this code as:\n\033[1;32m./analysis_resolution A B filename.root\033[0m\n";
+		cout << "Run this code as:\n\033[1;32m./analysis_momentum_resolution A B filename.root\033[0m\n";
 		cout << "where:\nA = 1 -> Widths from table will be used\n  = 2 -> Widths from table \033[1;31mwon't\033[0m be used\n";
 		cout << "B = 1 -> Table will be updated\n  = 2 -> Table \033[1;31mwon't\033[0m be updated\n";
 		exit(0);
@@ -41,10 +41,10 @@ int main(int argc, char ** argv) {
 	bool use_widths = true;
 	bool update_tab = false;
 
-	if (!fs::is_directory("data"  ) || !fs::exists("data"  )) fs::create_directory("data"  ); // Create directory if it does not exist
-	if (!fs::is_directory("tables") || !fs::exists("tables")) fs::create_directory("tables");
-	if (!fs::is_directory("output") || !fs::exists("output")) fs::create_directory("output");
-	if (!fs::is_directory("fits"  ) || !fs::exists("fits"  )) fs::create_directory("fits"  );
+	if (!fs::is_directory("../data"  ) || !fs::exists("../data"  )) fs::create_directory("../data"  ); // Create directory if it does not exist
+	if (!fs::is_directory("tables"   ) || !fs::exists("tables"   )) fs::create_directory("tables"   );
+	if (!fs::is_directory("../output") || !fs::exists("../output")) fs::create_directory("../output");
+	if (!fs::is_directory("fits"     ) || !fs::exists("fits"     )) fs::create_directory("fits"     );
 
 	cout << "\033[1;31m********************************************************************\nUSEFUL INFO:\033[0m\nWill be loading data from file: '" << argv[3] << "' assumed to be in directory 'data'" << endl;
 
@@ -69,12 +69,12 @@ int main(int argc, char ** argv) {
 	// -------------------------
 	// useful strings
 	string raw_fname = argv[3];
-	TString infile = "data/" + raw_fname;
-	TString outfile = "output/output_" + raw_fname;
+	TString infile = "../data/" + raw_fname;
+	TString outfile = "../output/output_mom_res_" + raw_fname;
 	raw_fname.resize(raw_fname.size()-5);
-	TString tab_name = "tables/tab_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".txt";
-	TString out_pdf = "output_fits_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".pdf";
-	TString out_pdf2 = "results_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".pdf";
+	TString tab_name = "tables/tab_mom_res_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".txt";
+	TString out_pdf = "output_fits_mom_res_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".pdf";
+	TString out_pdf2 = "results_mom_res_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".pdf";
 	// -------------------------------------------------------------
 	// Some settings
 	TH1::SetDefaultSumw2();
