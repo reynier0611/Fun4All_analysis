@@ -1,6 +1,8 @@
 make clean
 make
 
+rm tables/tab_mom_res_*.txt
+
 # Loop over magnetic field setting
 for B in {"Beast","sPHENIX"}
 do
