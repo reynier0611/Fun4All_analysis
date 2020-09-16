@@ -38,18 +38,22 @@ int main(int argc, char ** argv) {
 	// ------------------------------------------------------------------------------
 	// List paths to files that will be loaded
 	TString fnames[] = {
-		"output/output_skimmed_pi-_det2_20x20_Beast_FastTrackingEval.root",
-		"output/output_skimmed_pi-_det2_10x10_Beast_FastTrackingEval.root",
-		"output/output_skimmed_pi-_det2_both_GEMs_20x20_Beast_FastTrackingEval.root",
-		"output/output_skimmed_pi-_det2_both_GEMs_10x10_Beast_FastTrackingEval.root",
-		"output/output_skimmed_pi-_det2_20x20_sPHENIX_FastTrackingEval.root",
-		"output/output_skimmed_pi-_det2_10x10_sPHENIX_FastTrackingEval.root",
-		"output/output_skimmed_pi-_det2_both_GEMs_20x20_sPHENIX_FastTrackingEval.root",
-		"output/output_skimmed_pi-_det2_both_GEMs_10x10_sPHENIX_FastTrackingEval.root",
-		"output/output_skimmed_pi-_det2_both_GEMs_RICH_20x20_Beast_FastTrackingEval.root",
-		"output/output_skimmed_pi-_det2_both_GEMs_RICH_10x10_Beast_FastTrackingEval.root",
-		"output/output_skimmed_pi-_det2_both_GEMs_RICH_20x20_sPHENIX_FastTrackingEval.root",
-                "output/output_skimmed_pi-_det2_both_GEMs_RICH_10x10_sPHENIX_FastTrackingEval.root"
+		"../output/output_skimmed_pi-_det2_20x20_Beast_FastTrackingEval.root",				//  0
+		"../output/output_skimmed_pi-_det2_10x10_Beast_FastTrackingEval.root",				//  1
+		"../output/output_skimmed_pi-_det2_both_GEMs_20x20_Beast_FastTrackingEval.root",		//  2
+		"../output/output_skimmed_pi-_det2_both_GEMs_10x10_Beast_FastTrackingEval.root",		//  3
+		"../output/output_skimmed_pi-_det2_20x20_sPHENIX_FastTrackingEval.root",			//  4
+		"../output/output_skimmed_pi-_det2_10x10_sPHENIX_FastTrackingEval.root",			//  5
+		"../output/output_skimmed_pi-_det2_both_GEMs_20x20_sPHENIX_FastTrackingEval.root",		//  6
+		"../output/output_skimmed_pi-_det2_both_GEMs_10x10_sPHENIX_FastTrackingEval.root",		//  7
+		"../output/output_skimmed_pi-_det2_both_GEMs_RICH_20x20_Beast_FastTrackingEval.root",		//  8
+		"../output/output_skimmed_pi-_det2_both_GEMs_RICH_10x10_Beast_FastTrackingEval.root",		//  9
+		"../output/output_skimmed_pi-_det2_both_GEMs_RICH_20x20_sPHENIX_FastTrackingEval.root",		// 10
+                "../output/output_skimmed_pi-_det2_both_GEMs_RICH_10x10_sPHENIX_FastTrackingEval.root",		// 11
+		"../output/output_skimmed_combined_pi-_det2_10umGEM_RICH_20x20_Beast_FastTrackingEval.root",	// 12
+		"../output/output_skimmed_combined_pi-_det2_10umGEM_RICH_10x10_Beast_FastTrackingEval.root",	// 13
+		"../output/output_skimmed_combined_pi-_det2_LoResGEM_RICH_20x20_Beast_FastTrackingEval.root",	// 14
+		"../output/output_skimmed_combined_pi-_det2_LoResGEM_RICH_10x10_Beast_FastTrackingEval.root"	// 15
 	};
 	// #######################################################################################################################################
 	// YOU SHOULDN'T NEED TO MODIFY ANYTHING IN THE BLOCK OF CODE BELOW AND UNTIL AFTER THE NEXT LINE WITH ###...
@@ -119,36 +123,44 @@ int main(int argc, char ** argv) {
 	int selected_bins[] = {p_4GeV,p_10GeV,p_25GeV};
 	int size_selected_bins = sizeof(selected_bins)/sizeof(*selected_bins);
 
-	TGraphErrors ** g_dpp_v_et_selected_20um_Beast_si            = new TGraphErrors * [size_selected_bins];
-        TGraphErrors ** g_dpp_v_et_selected_10um_Beast_si            = new TGraphErrors * [size_selected_bins];
-        TGraphErrors ** g_dpp_v_et_selected_20um_Beast_si_GEM        = new TGraphErrors * [size_selected_bins];
-        TGraphErrors ** g_dpp_v_et_selected_10um_Beast_si_GEM        = new TGraphErrors * [size_selected_bins];
-	TGraphErrors ** g_dpp_v_et_selected_20um_Beast_si_GEM_RICH   = new TGraphErrors * [size_selected_bins];
-	TGraphErrors ** g_dpp_v_et_selected_10um_Beast_si_GEM_RICH   = new TGraphErrors * [size_selected_bins];
+	TGraphErrors ** g_dpp_v_et_selected_20um_Beast_si              = new TGraphErrors * [size_selected_bins];
+        TGraphErrors ** g_dpp_v_et_selected_10um_Beast_si              = new TGraphErrors * [size_selected_bins];
+        TGraphErrors ** g_dpp_v_et_selected_20um_Beast_si_GEM          = new TGraphErrors * [size_selected_bins];
+        TGraphErrors ** g_dpp_v_et_selected_10um_Beast_si_GEM          = new TGraphErrors * [size_selected_bins];
+	TGraphErrors ** g_dpp_v_et_selected_20um_Beast_si_GEM_RICH     = new TGraphErrors * [size_selected_bins];
+	TGraphErrors ** g_dpp_v_et_selected_10um_Beast_si_GEM_RICH     = new TGraphErrors * [size_selected_bins];
+	TGraphErrors ** g_dpp_v_et_selected_20um_Beast_si_10umGEM_RICH = new TGraphErrors * [size_selected_bins];
+	TGraphErrors ** g_dpp_v_et_selected_10um_Beast_si_10umGEM_RICH = new TGraphErrors * [size_selected_bins];
+	TGraphErrors ** g_dpp_v_et_selected_20um_Beast_si_loReGEM_RICH = new TGraphErrors * [size_selected_bins];
+	TGraphErrors ** g_dpp_v_et_selected_10um_Beast_si_loReGEM_RICH = new TGraphErrors * [size_selected_bins];
 
-	TGraphErrors ** g_dpp_v_et_selected_20um_sPHENIX_si          = new TGraphErrors * [size_selected_bins];
-        TGraphErrors ** g_dpp_v_et_selected_10um_sPHENIX_si          = new TGraphErrors * [size_selected_bins];
-        TGraphErrors ** g_dpp_v_et_selected_20um_sPHENIX_si_GEM      = new TGraphErrors * [size_selected_bins];
-        TGraphErrors ** g_dpp_v_et_selected_10um_sPHENIX_si_GEM      = new TGraphErrors * [size_selected_bins];
-	TGraphErrors ** g_dpp_v_et_selected_20um_sPHENIX_si_GEM_RICH = new TGraphErrors * [size_selected_bins];
-        TGraphErrors ** g_dpp_v_et_selected_10um_sPHENIX_si_GEM_RICH = new TGraphErrors * [size_selected_bins];
+	TGraphErrors ** g_dpp_v_et_selected_20um_sPHENIX_si            = new TGraphErrors * [size_selected_bins];
+        TGraphErrors ** g_dpp_v_et_selected_10um_sPHENIX_si            = new TGraphErrors * [size_selected_bins];
+        TGraphErrors ** g_dpp_v_et_selected_20um_sPHENIX_si_GEM        = new TGraphErrors * [size_selected_bins];
+        TGraphErrors ** g_dpp_v_et_selected_10um_sPHENIX_si_GEM        = new TGraphErrors * [size_selected_bins];
+	TGraphErrors ** g_dpp_v_et_selected_20um_sPHENIX_si_GEM_RICH   = new TGraphErrors * [size_selected_bins];
+        TGraphErrors ** g_dpp_v_et_selected_10um_sPHENIX_si_GEM_RICH   = new TGraphErrors * [size_selected_bins];
         
     	for(int i = 0 ; i < size_selected_bins ; i++){
 		double max_val = 0.46*mom_bin[i]+5.33;
 
-		g_dpp_v_et_selected_20um_Beast_si           [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 0][selected_bins[i]] ,66,21,0,max_val);
-		g_dpp_v_et_selected_10um_Beast_si           [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 1][selected_bins[i]] ,94,21,0,max_val);
-		g_dpp_v_et_selected_20um_Beast_si_GEM       [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 2][selected_bins[i]] ,62,20,0,max_val);
-		g_dpp_v_et_selected_10um_Beast_si_GEM       [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 3][selected_bins[i]] , 2,20,0,max_val);
-		g_dpp_v_et_selected_20um_Beast_si_GEM_RICH  [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 8][selected_bins[i]] , 4,22,0,max_val);
-		g_dpp_v_et_selected_10um_Beast_si_GEM_RICH  [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 9][selected_bins[i]] ,50,22,0,max_val);
-	                                                                                                                       
-		g_dpp_v_et_selected_20um_sPHENIX_si         [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 4][selected_bins[i]] ,66,21,0,max_val);
-		g_dpp_v_et_selected_10um_sPHENIX_si         [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 5][selected_bins[i]] ,94,21,0,max_val);
-		g_dpp_v_et_selected_20um_sPHENIX_si_GEM     [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 6][selected_bins[i]] ,62,20,0,max_val);
-		g_dpp_v_et_selected_10um_sPHENIX_si_GEM     [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 7][selected_bins[i]] , 2,20,0,max_val);
-		g_dpp_v_et_selected_20um_sPHENIX_si_GEM_RICH[i] = graph_from_histo( h1_dpp_v_et_p_bins[10][selected_bins[i]] , 4,22,0,max_val);
-		g_dpp_v_et_selected_10um_sPHENIX_si_GEM_RICH[i] = graph_from_histo( h1_dpp_v_et_p_bins[11][selected_bins[i]] ,50,22,0,max_val);
+		g_dpp_v_et_selected_20um_Beast_si             [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 0][selected_bins[i]] ,66,21,0,max_val);
+		g_dpp_v_et_selected_10um_Beast_si             [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 1][selected_bins[i]] ,94,21,0,max_val);
+		g_dpp_v_et_selected_20um_Beast_si_GEM         [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 2][selected_bins[i]] ,62,20,0,max_val);
+		g_dpp_v_et_selected_10um_Beast_si_GEM         [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 3][selected_bins[i]] , 2,20,0,max_val);
+		g_dpp_v_et_selected_20um_Beast_si_GEM_RICH    [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 8][selected_bins[i]] , 4,22,0,max_val);
+		g_dpp_v_et_selected_10um_Beast_si_GEM_RICH    [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 9][selected_bins[i]] ,50,22,0,max_val);
+		g_dpp_v_et_selected_20um_Beast_si_10umGEM_RICH[i] = graph_from_histo( h1_dpp_v_et_p_bins[12][selected_bins[i]] , 1,20,0,max_val);
+		g_dpp_v_et_selected_10um_Beast_si_10umGEM_RICH[i] = graph_from_histo( h1_dpp_v_et_p_bins[13][selected_bins[i]] , 1,20,0,max_val);
+		g_dpp_v_et_selected_20um_Beast_si_loReGEM_RICH[i] = graph_from_histo( h1_dpp_v_et_p_bins[14][selected_bins[i]] , 8,23,0,max_val);
+		g_dpp_v_et_selected_10um_Beast_si_loReGEM_RICH[i] = graph_from_histo( h1_dpp_v_et_p_bins[15][selected_bins[i]] , 8,23,0,max_val);
+
+		g_dpp_v_et_selected_20um_sPHENIX_si           [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 4][selected_bins[i]] ,66,21,0,max_val);
+		g_dpp_v_et_selected_10um_sPHENIX_si           [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 5][selected_bins[i]] ,94,21,0,max_val);
+		g_dpp_v_et_selected_20um_sPHENIX_si_GEM       [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 6][selected_bins[i]] ,62,20,0,max_val);
+		g_dpp_v_et_selected_10um_sPHENIX_si_GEM       [i] = graph_from_histo( h1_dpp_v_et_p_bins[ 7][selected_bins[i]] , 2,20,0,max_val);
+		g_dpp_v_et_selected_20um_sPHENIX_si_GEM_RICH  [i] = graph_from_histo( h1_dpp_v_et_p_bins[10][selected_bins[i]] , 4,22,0,max_val);
+		g_dpp_v_et_selected_10um_sPHENIX_si_GEM_RICH  [i] = graph_from_histo( h1_dpp_v_et_p_bins[11][selected_bins[i]] ,50,22,0,max_val);
 
 		g_dpp_v_et_selected_20um_Beast_si      [i] -> SetTitle(Form("Beast (3.0 T), %.1f < p < %.1f GeV/#it{c}",(*TVT_mom_bin[0])[selected_bins[i]],(*TVT_mom_bin[0])[selected_bins[i]+1]));
                 g_dpp_v_et_selected_10um_Beast_si      [i] -> SetTitle(Form("Beast (3.0 T), %.1f < p < %.1f GeV/#it{c}",(*TVT_mom_bin[0])[selected_bins[i]],(*TVT_mom_bin[0])[selected_bins[i]+1]));
@@ -207,6 +219,7 @@ int main(int argc, char ** argv) {
                 g_dpp_v_et_selected_10um_Beast_si_GEM     [i] -> Draw("samePL");
                 g_dpp_v_et_selected_20um_Beast_si_GEM_RICH[i] -> Draw("samePL");
                 g_dpp_v_et_selected_10um_Beast_si_GEM_RICH[i] -> Draw("samePL");
+		g_dpp_v_et_selected_20um_Beast_si_10umGEM_RICH[i] -> Draw("samePL");
 	}
 	c3 -> cd(4);
 	leg1 -> Draw("same");
@@ -228,12 +241,73 @@ int main(int argc, char ** argv) {
         leg1 -> Draw("same");
         c4 -> Modified();
         c4 -> Update();
+	// ----------------------------------------------
+	double xDum1[] = { 1.5, 3.6};
+	double xDum2[] = {-3.6,-1.5};
+	double yDum [] = { 0.0, 17.};
+	TGraph * gDum1 = new TGraph(2.,xDum1,yDum);
+	TGraph * gDum2 = new TGraph(2.,xDum2,yDum);
+
+	int i = 2;
+	gDum1 -> SetTitle(Form("Beast (3.0 T), %.1f < p < %.1f GeV/#it{c}",(*TVT_mom_bin[0])[selected_bins[i]],(*TVT_mom_bin[0])[selected_bins[i]+1]));
+	gDum1 -> GetXaxis() -> SetTitle("#eta");
+	gDum1 -> GetXaxis() -> CenterTitle();
+	gDum1 -> GetXaxis() -> SetNdivisions(108);
+	gDum1 -> GetXaxis() -> SetLabelSize(0.06);
+	gDum1 -> GetXaxis() -> SetTitleSize(0.06);
+	gDum1 -> GetYaxis() -> SetTitle("dp / p [%]");
+	gDum1 -> GetYaxis() -> CenterTitle();
+	gDum1 -> GetYaxis() -> SetNdivisions(108);
+	gDum1 -> GetYaxis() -> SetLabelSize(0.06);
+        gDum1 -> GetYaxis() -> SetTitleSize(0.06);
+	gDum2 -> SetTitle("");
+        gDum2 -> GetXaxis() -> SetTitle("#eta");
+        gDum2 -> GetXaxis() -> CenterTitle();
+        gDum2 -> GetXaxis() -> SetNdivisions(108);
+        gDum2 -> GetXaxis() -> SetLabelSize(0.06);
+        gDum2 -> GetXaxis() -> SetTitleSize(0.06);
+	gDum2 -> GetYaxis() -> SetTitle("dp / p [%]");
+        gDum2 -> GetYaxis() -> CenterTitle();
+        gDum2 -> GetYaxis() -> SetNdivisions(108);
+	gDum2 -> GetYaxis() -> SetLabelSize(0.06);
+        gDum2 -> GetYaxis() -> SetTitleSize(0.06);
+
+        TCanvas * c5 = new TCanvas("c5","c5",1000,900);
+        c5 -> Divide(1,2);
+	c5 -> cd(1);
+	gPad -> SetRightMargin(0.02); gPad -> SetGridx(); gPad -> SetGridy(); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.11);
+	gDum1 -> Draw("AP");
+        g_dpp_v_et_selected_20um_Beast_si         [2] -> Draw("samePL");
+        //g_dpp_v_et_selected_20um_Beast_si_GEM     [2] -> Draw("samePL");
+        g_dpp_v_et_selected_20um_Beast_si_GEM_RICH[2] -> Draw("samePL");
+        g_dpp_v_et_selected_20um_Beast_si_10umGEM_RICH[2] -> Draw("samePL");
+	g_dpp_v_et_selected_20um_Beast_si_loReGEM_RICH[2] -> Draw("samePL");
+	// ------------
+        TLegend * leg2 = new TLegend(0.20,0.45,0.65,0.89);
+        leg2 -> SetLineColor(0);
+        leg2 -> AddEntry( g_dpp_v_et_selected_20um_Beast_si            [2] , "All-Si (20 #mum)"             );
+        //leg2 -> AddEntry( g_dpp_v_et_selected_20um_Beast_si_GEM        [2] , "All-Si (20 #mum) + GEM"       );
+        leg2 -> AddEntry( g_dpp_v_et_selected_20um_Beast_si_GEM_RICH   [2] , "All-Si (20 #mum) + RICH + GEM (#sigma = 50 #mum)");
+	leg2 -> AddEntry(g_dpp_v_et_selected_20um_Beast_si_10umGEM_RICH[2] , "All-Si (20 #mum) + RICH + Si disk (10 #mum)");
+	leg2 -> AddEntry(g_dpp_v_et_selected_20um_Beast_si_loReGEM_RICH[2] , "All-Si (20 #mum) + RICH + GEM (#sigma_{r} = 1cm/#sqrt{12}, #sigma_{#phi} = 70 #mum)");
+        // ------------
+        leg2 -> Draw("same");
+	c5 -> cd(2);
+        gPad -> SetRightMargin(0.02); gPad -> SetGridx(); gPad -> SetGridy(); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.11);
+        gDum2 -> Draw("AP");
+	g_dpp_v_et_selected_20um_Beast_si         [2] -> Draw("samePL");
+        //g_dpp_v_et_selected_20um_Beast_si_GEM     [2] -> Draw("samePL");
+        g_dpp_v_et_selected_20um_Beast_si_GEM_RICH[2] -> Draw("samePL");
+        g_dpp_v_et_selected_20um_Beast_si_10umGEM_RICH[2] -> Draw("samePL"); 
+	g_dpp_v_et_selected_20um_Beast_si_loReGEM_RICH[2] -> Draw("samePL");
+	c5 -> Modified();
+        c5 -> Update();
 	// ------------------------------------------------------------------------------
 	// Saving results to pdf files
-	c1 -> Print("results_plotter1.pdf(");
-	c2 -> Print("results_plotter1.pdf" );
-	c3 -> Print("results_plotter1.pdf" );
-	c4 -> Print("results_plotter1.pdf)");
+	c1 -> Print("results_Si_GEMS_RICH_mom_res.pdf(");
+	c2 -> Print("results_Si_GEMS_RICH_mom_res.pdf" );
+	c3 -> Print("results_Si_GEMS_RICH_mom_res.pdf" );
+	c4 -> Print("results_Si_GEMS_RICH_mom_res.pdf)");
 
 	myapp -> Run();
 	return 0;
