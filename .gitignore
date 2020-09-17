@@ -1,8 +1,8 @@
 analysis/Si_GEMS_RICH_mom_res
 analysis/vertex_resolution_comparisons
-analysis_momentum_resolution
-analysis_vertex_resolution
-plotter1
+analysis/mom_res_detector_vs_requirements
+processing/analysis_momentum_resolution
+processing/analysis_vertex_resolution
 data/
 output/
 tables/
