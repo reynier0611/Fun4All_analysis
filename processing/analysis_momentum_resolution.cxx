@@ -64,7 +64,7 @@ int main(int argc, char ** argv) {
 
 	// -------------------------
 	// Binning
-	float eta_bin[] = {-3.75,-3.5,-3.25,-3.0,-2.75,-2.5,-2.25,-2.0,-1.75,-1.5,-1.25,-1.0,-0.75,-0.5,-0.25,0.0,0.25,0.5,0.75,1.0,1.25,1.5,1.75,2.0,2.25,2.5,2.75,3.0,3.25,3.5,3.75};
+	float eta_bin[] = {-4.0,-3.5,-3.0,-2.5,-2.0,-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0};
 	float mom_bin[] = {0.,1.,2.,3.,4.,5.,10.,15.,20.,25.,30.};
 
 	const int size_eta_bin = sizeof(eta_bin)/sizeof(*eta_bin);
@@ -76,8 +76,8 @@ int main(int argc, char ** argv) {
 	// useful strings
 	string raw_fname = argv[4];
 	TString infile = "../data/" + raw_fname;
-	TString outfile = "../output/output_mom_res_" + raw_fname;
 	raw_fname.resize(raw_fname.size()-5);
+	TString outfile = "../output/output_mom_res_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".root";
 	TString tab_name = "tables/tab_mom_res_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".txt";
 	TString out_pdf = "output_fits_mom_res_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".pdf";
 	TString out_pdf2 = "results_mom_res_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".pdf";
