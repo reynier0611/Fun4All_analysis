@@ -10,7 +10,7 @@ do
 	for pix in {20,10}
 	do
 		# Loop over detector configuration
-		for det in {"","_both_GEMs","_both_GEMs_RICH"}
+		for det in {"","_both_GEMs","_both_GEMs_RICH","_10umGEM_RICH","_LoResGEM_RICH"}
 		do
 			# Do this three times to adjust tables
 			for i in {1..3}
