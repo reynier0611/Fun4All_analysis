@@ -76,8 +76,8 @@ int main(int argc, char ** argv) {
 	// useful strings
 	string raw_fname = argv[4];
 	TString infile = "../data/" + raw_fname;
-	TString outfile = "../output/output_vtx_res_" + raw_fname;
 	raw_fname.resize(raw_fname.size()-5);
+	TString outfile = "../output/output_vtx_res_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".root";
 	TString tab_name = "tables/tab_vtx_res_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".txt";
 	TString out_pdf = "output_fits_vtx_res_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".pdf";
 	TString out_pdf2 = "results_vtx_res_" + raw_fname + Form("sigma_eta_%i_p_%i_",size_eta_bin-1,size_mom_bin-1) + ".pdf";
@@ -205,7 +205,7 @@ int main(int argc, char ** argv) {
 
 		// Filling histograms
 		for(int et = 0 ; et < size_eta_bin-1 ; et++){
-			if( abs(geta) >  eta_bin[et] &&  abs(geta) <= eta_bin[et+1] ){
+			if( geta >  eta_bin[et] &&  geta <= eta_bin[et+1] ){
 				for(int p = 0 ; p < size_mom_bin-1 ; p++){
 					if( p_truth > mom_bin[p] && p_truth <= mom_bin[p+1] ){
 						h1_dvl_p_et_bins[et][p] -> Fill( dvl );
