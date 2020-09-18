@@ -152,33 +152,19 @@ int main(int argc, char ** argv) {
 
 	// ------------------------------------------------------------------------------
 	// Creating functions from the detector-matrix requirements
-	TF1 ** g_det_mtx = new TF1 * [16];
-	g_det_mtx[ 0] = new TF1("g_det_mtx_0" ,"-1"                    ,0,30);	// -4.0 -- -3.5
-	//g_det_mtx[ 1] = new TF1("g_det_mtx_1" ,"sqrt(sq(0.1)+sq(0.5))" ,0,30);	// -3.5 -- -3.0
-	//g_det_mtx[ 2] = new TF1("g_det_mtx_2" ,"sqrt(sq(0.1)+sq(0.5))" ,0,30);	// -3.0 -- -2.5
-	//g_det_mtx[ 3] = new TF1("g_det_mtx_3" ,"sqrt(sq(0.1)+sq(0.5))" ,0,30);	// -2.5 -- -2.0
-	//g_det_mtx[ 4] = new TF1("g_det_mtx_4" ,"sqrt(sq(0.05)+sq(0.5))",0,30);	// -2.0 -- -1.5
-	//g_det_mtx[ 5] = new TF1("g_det_mtx_5" ,"sqrt(sq(0.05)+sq(0.5))",0,30);	// -1.5 -- -1.0
+	double coefA[] = {0,0.10,0.10,0.10,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.10,0.10,0};
+	double coefB[] = {0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,1.0,1.0,1.0,2.0,2.0,0};
 	
-	g_det_mtx[ 1] = new TF1("g_det_mtx_1" ,"0.1*x+0.5"             ,0,30);        // -3.5 -- -3.0
-        g_det_mtx[ 2] = new TF1("g_det_mtx_2" ,"0.1*x+0.5"             ,0,30);        // -3.0 -- -2.5
-        g_det_mtx[ 3] = new TF1("g_det_mtx_3" ,"0.1*x+0.5"             ,0,30);        // -2.5 -- -2.0
-        g_det_mtx[ 4] = new TF1("g_det_mtx_4" ,"0.05*x+0.5"            ,0,30);        // -2.0 -- -1.5
-        g_det_mtx[ 5] = new TF1("g_det_mtx_5" ,"0.05*x+0.5"            ,0,30);        // -1.5 -- -1.0
-	g_det_mtx[ 6] = new TF1("g_det_mtx_6" ,"0.05*x+0.5"            ,0,30);	// -1.0 -- -0.5
-	g_det_mtx[ 7] = new TF1("g_det_mtx_7" ,"0.05*x+0.5"            ,0,30);	// -0.5 --  0.0
-	g_det_mtx[ 8] = new TF1("g_det_mtx_8" ,"0.05*x+0.5"            ,0,30);	//  0.0 -- +0.5
-	g_det_mtx[ 9] = new TF1("g_det_mtx_9" ,"0.05*x+0.5"            ,0,30);	// +0.5 -- +1.0
-	g_det_mtx[10] = new TF1("g_det_mtx_10","0.05*x+1.0"            ,0,30);	// +1.0 -- +1.5
-	g_det_mtx[11] = new TF1("g_det_mtx_11","0.05*x+1.0"            ,0,30);	// +1.5 -- +2.0
-	g_det_mtx[12] = new TF1("g_det_mtx_12","0.05*x+1.0"            ,0,30);	// +2.0 -- +2.5
-	g_det_mtx[13] = new TF1("g_det_mtx_13","0.10*x+2.0"            ,0,30);	// +2.5 -- +3.0
-	g_det_mtx[14] = new TF1("g_det_mtx_14","0.10*x+2.0"            ,0,30);	// +3.0 -- +3.5
-	g_det_mtx[15] = new TF1("g_det_mtx_15","-1"                    ,0,30);	// +3.5 -- +4.0
+	TF1 ** g_det_mtx = new TF1 * [16];
 	for(int i = 0 ; i < 16 ; i++){
+		//g_det_mtx[i] = new TF1(Form("g_det_mtx_%i",i),Form("%f*x+%f",coefA[i],coefB[i]),0,30);
+		g_det_mtx[i] = new TF1(Form("g_det_mtx_%i",i),Form("sqrt(sq(%f*x)+sq(%f))",coefA[i],coefB[i]),0,30);
 		g_det_mtx[i] -> SetLineWidth(2);
 		g_det_mtx[i] -> SetLineColor(1);
 		g_det_mtx[i] -> SetLineStyle(3);
+	
+		if(coefA[i]!=0&&coefB[i]!=0)
+			g_dpp_v_p_20um_sPHENIX_si[i] -> SetTitle(Form("%.1f < #eta < %.1f,    dp/p ~ %.2fp #oplus %.1f",(*TVT_eta_bin[0])[i],(*TVT_eta_bin[0])[i+1],coefA[i],coefB[i]));
 	}
 	// ------------------------------------------------------------------------------
 	// Plotting graphs
