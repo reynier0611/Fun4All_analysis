@@ -1,6 +1,7 @@
 analysis/Si_GEMS_RICH_mom_res
 analysis/vertex_resolution_comparisons
 analysis/mom_res_detector_vs_requirements
+analysis/mom_res_B_field_comp
 processing/analysis_momentum_resolution
 processing/analysis_vertex_resolution
 data/
