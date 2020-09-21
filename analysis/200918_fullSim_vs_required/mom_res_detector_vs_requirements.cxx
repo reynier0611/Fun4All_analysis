@@ -40,19 +40,19 @@ int main(int argc, char ** argv) {
 	// ------------------------------------------------------------------------------
 	// List paths to files that will be loaded
 	TString fnames[] = {
-		"../output/output_mom_res_skimmed_pi-_det2_20x20_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"                 ,	//  0
-		"../output/output_mom_res_skimmed_pi-_det2_10x10_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"                 ,	//  1
-		"../output/output_mom_res_skimmed_pi-_det2_both_GEMs_RICH_20x20_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"  ,	//  2
-		"../output/output_mom_res_skimmed_pi-_det2_both_GEMs_RICH_10x10_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"  ,	//  3
-		"../output/output_mom_res_skimmed_pi-_det2_10umGEM_RICH_20x20_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"    ,	//  4
-		"../output/output_mom_res_skimmed_pi-_det2_10umGEM_RICH_10x10_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"    ,	//  5
-		"../output/output_mom_res_skimmed_pi-_det2_LoResGEM_RICH_20x20_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"   ,	//  6
-		"../output/output_mom_res_skimmed_pi-_det2_LoResGEM_RICH_10x10_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"   ,	//  7
+		"../../output/output_mom_res_skimmed_pi-_det2_20x20_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"                 ,	//  0
+		"../../output/output_mom_res_skimmed_pi-_det2_10x10_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"                 ,	//  1
+		"../../output/output_mom_res_skimmed_pi-_det2_both_GEMs_RICH_20x20_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"  ,	//  2
+		"../../output/output_mom_res_skimmed_pi-_det2_both_GEMs_RICH_10x10_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"  ,	//  3
+		"../../output/output_mom_res_skimmed_pi-_det2_10umGEM_RICH_20x20_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"    ,	//  4
+		"../../output/output_mom_res_skimmed_pi-_det2_10umGEM_RICH_10x10_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"    ,	//  5
+		"../../output/output_mom_res_skimmed_pi-_det2_LoResGEM_RICH_20x20_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"   ,	//  6
+		"../../output/output_mom_res_skimmed_pi-_det2_LoResGEM_RICH_10x10_Beast_FastTrackingEvalsigma_eta_16_p_10_.root"   ,	//  7
 
-		"../output/output_mom_res_skimmed_pi-_det2_20x20_sPHENIX_FastTrackingEvalsigma_eta_16_p_10_.root"               ,	//  8
-		"../output/output_mom_res_skimmed_pi-_det2_10x10_sPHENIX_FastTrackingEvalsigma_eta_16_p_10_.root"               ,	//  9
-		"../output/output_mom_res_skimmed_pi-_det2_both_GEMs_RICH_20x20_sPHENIX_FastTrackingEvalsigma_eta_16_p_10_.root",	// 10
-		"../output/output_mom_res_skimmed_pi-_det2_both_GEMs_RICH_10x10_sPHENIX_FastTrackingEvalsigma_eta_16_p_10_.root"	// 11
+		"../../output/output_mom_res_skimmed_pi-_det2_20x20_sPHENIX_FastTrackingEvalsigma_eta_16_p_10_.root"               ,	//  8
+		"../../output/output_mom_res_skimmed_pi-_det2_10x10_sPHENIX_FastTrackingEvalsigma_eta_16_p_10_.root"               ,	//  9
+		"../../output/output_mom_res_skimmed_pi-_det2_both_GEMs_RICH_20x20_sPHENIX_FastTrackingEvalsigma_eta_16_p_10_.root",	// 10
+		"../../output/output_mom_res_skimmed_pi-_det2_both_GEMs_RICH_10x10_sPHENIX_FastTrackingEvalsigma_eta_16_p_10_.root"	// 11
 	};
 	// #######################################################################################################################################
 	// YOU SHOULDN'T NEED TO MODIFY ANYTHING IN THE BLOCK OF CODE BELOW AND UNTIL AFTER THE NEXT LINE WITH ###...
