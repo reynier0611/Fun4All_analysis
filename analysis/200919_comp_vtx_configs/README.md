@@ -2,6 +2,7 @@ On the Berkeley EIC meeting on Sept 15, 2020, I presented a graph of DCA_z vs. m
 1) original geometry by Ernst Sichtermann and Yue Shi Lai (2 vertexing layers, 0.3% X/X0),
 2) updated geometry to account for new projected EIC beampipe (just like in the previous configuration, but with larger radii), and
 3) new geometry (3 vertexing layers, 0.05% X/X0)
+
 It was correctly pointed out that comparing 1 or 2 vs. 3 was not straightforward, since in configuration 3 two parameters
 (# layers and stave material budget) had changed.
 In this directory, I study a simple geometry in which I created the barrel layers from the All-Si tracker geometry in a simplified way.
