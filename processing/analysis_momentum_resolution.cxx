@@ -59,7 +59,7 @@ int main(int argc, char ** argv) {
 	else if(atoi(argv[2])==2){update_tab = false;   cout << "Table won't be updated\n";}
 	else{cout << "Something wrong with your election of input parameter 'B'. Bailing out!\n"; exit(0);}
 
-	if     (atoi(argv[3])==1){keep_plots = false;	cout << "Will run and quit. Examine the output files for resulting plots\n";}
+	if     (atoi(argv[3])==1){keep_plots = false;	cout << "Will run and quit. Examine the output files for resulting plots\n"; gROOT->SetBatch(kTRUE);}
 	else if(atoi(argv[3])==2){keep_plots = true ;	cout << "Will run and show the plots\n" ;}
 	else{cout << "Something wrong with your election of input parameter 'C'. Bailing out!\n"; exit(0);}
 
