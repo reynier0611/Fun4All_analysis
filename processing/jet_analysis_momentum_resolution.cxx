@@ -16,7 +16,11 @@
 #include "TCanvas.h"
 #include "TLegend.h"
 #include "TVectorT.h"
-#include "Math/LorentzVector.h"
+#include "Math/Vector4D.h"
+#include "Math/VectorUtil.h"
+#include <TTreeReader.h>
+#include <TTreeReaderValue.h>
+#include <TTreeReaderArray.h>
 
 namespace fs = std::filesystem;
 using namespace std;
@@ -68,10 +72,10 @@ int main(int argc, char ** argv) {
 	// -------------------------
 	// Binning
 	//float eta_bin[] = {-4.0,-3.5,-3.0,-2.5,-2.0,-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0};
-	//float eta_bin[] = {0,0.25,0.5,0.75,1.07};
-	float eta_bin[] = {0,1.07};
-	float mom_bin[] = {1.,2.,3.,4.,5.,6.,7.};
-	//float mom_bin[] = {1.,7.};
+	//float eta_bin[] = {-1.,-0.5,0.,0.5, 1.};
+	float eta_bin[] = {-2.,2.};
+	float mom_bin[] = {4.,6.,8.,10.,15.,30.};
+
 	const int size_eta_bin = sizeof(eta_bin)/sizeof(*eta_bin);
 	const int size_mom_bin = sizeof(mom_bin)/sizeof(*mom_bin);
 
@@ -94,20 +98,42 @@ int main(int argc, char ** argv) {
 	// -------------------------------------------------------------
 	// Loading all the needed info from the root file
 	TFile * F = new TFile(infile);
-	TTree * T = (TTree*) F -> Get("tracks");
-	float gpx, gpy, gpz, px, py, pz;
-	T -> SetBranchAddress("gpx"  ,&gpx  );
-	T -> SetBranchAddress("gpy"  ,&gpy  );
-	T -> SetBranchAddress("gpz"  ,&gpz  );
-	T -> SetBranchAddress("px"   ,&px   );
-	T -> SetBranchAddress("py"   ,&py   );
-	T -> SetBranchAddress("pz"   ,&pz   ); 
-	int nEntries = T -> GetEntries();
+	//TTree * T = (TTree*) F -> Get("tracks");
+	// float gpx, gpy, gpz, px, py, pz;
+	// T -> SetBranchAddress("gpx"  ,&gpx  );
+	// T -> SetBranchAddress("gpy"  ,&gpy  );
+	// T -> SetBranchAddress("gpz"  ,&gpz  );
+	// T -> SetBranchAddress("px"   ,&px   );
+	// T -> SetBranchAddress("py"   ,&py   );
+	// T -> SetBranchAddress("pz"   ,&pz   ); 
+	//int nEntries = T -> GetEntries();
+
+	TTreeReader Tree("T",F);
+	int nEntries = Tree.GetEntries();
+	TTreeReaderValue<int> njets(Tree,"njets");
+	TTreeReaderArray<Int_t> NConst(Tree,"nComponent");
+	TTreeReaderArray<Float_t> E(Tree,"e");
+	TTreeReaderArray<Float_t> Eta(Tree,"eta");
+	TTreeReaderArray<Float_t> Phi(Tree,"phi");
+	TTreeReaderArray<Float_t> Pt(Tree,"pt");
+	
+	TTreeReaderArray<Int_t> gNConst(Tree,"matched_truthNComponent");
+	TTreeReaderArray<Float_t> gE(Tree,"matched_truthE");
+	TTreeReaderArray<Float_t> gEta(Tree,"matched_truthEta");
+	TTreeReaderArray<Float_t> gPhi(Tree,"matched_truthPhi");
+	TTreeReaderArray<Float_t> gPt(Tree,"matched_truthPt");
+	
+	
 	// -------------------------------------------------------------
 	fstream tab;
 	float approx_sig_dpp[size_eta_bin-1][size_mom_bin-1] = {{0}};
 	float approx_sig_dth[size_eta_bin-1][size_mom_bin-1] = {{0}};
 	float approx_sig_dph[size_eta_bin-1][size_mom_bin-1] = {{0}};
+
+	float approx_mean_dpp[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_mean_dth[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_mean_dph[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	
 	TString temp_str;
 	if(use_widths){
 		tab.open(tab_name);
@@ -117,6 +143,9 @@ int main(int argc, char ** argv) {
 			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_sig_dpp[et][p];}}
 			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_sig_dth[et][p];}}
 			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_sig_dph[et][p];}}
+			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_mean_dpp[et][p];}}
+			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_mean_dth[et][p];}}
+			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_mean_dph[et][p];}}
 		}
 		tab.close();
 	}
@@ -143,15 +172,18 @@ int main(int argc, char ** argv) {
 		h1_dph_p_et_bins[et] = new TH1F*[size_mom_bin-1];
 		for(int p = 0 ; p < size_mom_bin-1 ; p++){
 			if(use_widths){
-				h1_dpp_p_et_bins[et][p] = new TH1F(Form("h1_dpp_p_et_bins_%i_%i",et,p),";dp/p;Counts"         ,80,-approx_sig_dpp_3_0[et][p],approx_sig_dpp_3_0[et][p]);
-				h1_dth_p_et_bins[et][p] = new TH1F(Form("h1_dth_p_et_bins_%i_%i",et,p),";d#theta [rad];Counts",80,-approx_sig_dth_3_0[et][p],approx_sig_dth_3_0[et][p]);
-				h1_dph_p_et_bins[et][p] = new TH1F(Form("h1_dph_p_et_bins_%i_%i",et,p),";d#phi [rad];Counts"  ,80,-approx_sig_dph_3_0[et][p],approx_sig_dph_3_0[et][p]);
+				h1_dpp_p_et_bins[et][p] = new TH1F(Form("h1_dpp_p_et_bins_%i_%i",et,p),";dp/p;Counts",40,
+							  approx_mean_dpp[et][p]-approx_sig_dpp_3_0[et][p],approx_mean_dpp[et][p]+approx_sig_dpp_3_0[et][p]);
+				h1_dth_p_et_bins[et][p] = new TH1F(Form("h1_dth_p_et_bins_%i_%i",et,p),";d#theta [rad];Counts",40,
+							  approx_mean_dth[et][p]-approx_sig_dth_3_0[et][p],approx_mean_dth[et][p]+approx_sig_dth_3_0[et][p]);
+				h1_dph_p_et_bins[et][p] = new TH1F(Form("h1_dph_p_et_bins_%i_%i",et,p),";d#phi [rad];Counts",40,
+							  approx_mean_dph[et][p]-approx_sig_dph_3_0[et][p],approx_mean_dph[et][p]+approx_sig_dph_3_0[et][p]);
 			}
 			else{
-				h1_dpp_p_et_bins[et][p] = new TH1F(Form("h1_dpp_p_et_bins_%i_%i",et,p),";dp/p;Counts"         ,80,-0.08  ,0.08  );
-				h1_dth_p_et_bins[et][p] = new TH1F(Form("h1_dth_p_et_bins_%i_%i",et,p),";d#theta [rad];Counts",80,-0.0014,0.0014);
-				h1_dph_p_et_bins[et][p] = new TH1F(Form("h1_dph_p_et_bins_%i_%i",et,p),";d#phi [rad];Counts"  ,80,-0.04  ,0.04  );
-			}
+			  h1_dpp_p_et_bins[et][p] = new TH1F(Form("h1_dpp_p_et_bins_%i_%i",et,p),";dp/p;Counts"         ,40,-0.5  ,1.5  );
+				h1_dth_p_et_bins[et][p] = new TH1F(Form("h1_dth_p_et_bins_%i_%i",et,p),";d#theta [rad];Counts",40,-0.2,0.2);
+				h1_dph_p_et_bins[et][p] = new TH1F(Form("h1_dph_p_et_bins_%i_%i",et,p),";d#phi [rad];Counts"  ,40,-0.2  ,0.2  );
+}
 
 			h1_dpp_p_et_bins[et][p] -> SetTitle(Form("%.1f < |#eta| < %.1f, %.1f < p < %.1f GeV/c",eta_bin[et],eta_bin[et+1],mom_bin[p],mom_bin[p+1]));
 			h1_dth_p_et_bins[et][p] -> SetTitle(Form("%.1f < |#eta| < %.1f, %.1f < p < %.1f GeV/c",eta_bin[et],eta_bin[et+1],mom_bin[p],mom_bin[p+1]));
@@ -162,14 +194,11 @@ int main(int argc, char ** argv) {
 	TH1F ** h1_dpp_v_p_et_bins = new TH1F*[size_eta_bin-1];
 	TH1F ** h1_dth_v_p_et_bins = new TH1F*[size_eta_bin-1];
 	TH1F ** h1_dph_v_p_et_bins = new TH1F*[size_eta_bin-1];
-	
+
 	for(int et = 0 ; et < size_eta_bin-1 ; et++){
-	  h1_dpp_v_p_et_bins[et] = new TH1F(Form("h1_dpp_v_p_et_bins_%i",et),";p [GeV/c];dp/p [%]",size_mom_bin-1,mom_bin);
-	  prettyTH1F( h1_dpp_v_p_et_bins[et] , 50+et , 20 , 0. , 10. );
-		h1_dth_v_p_et_bins[et] = new TH1F(Form("h1_dth_v_p_et_bins_%i",et),";p [GeV/c];d#theta [mrad]",size_mom_bin-1,mom_bin);
-		prettyTH1F( h1_dth_v_p_et_bins[et] , 50+et , 20 , 0. , 1.  );
-		h1_dph_v_p_et_bins[et] = new TH1F(Form("h1_dph_v_p_et_bins_%i",et),";p [GeV/c];d#phi [mrad]",size_mom_bin-1,mom_bin);
-		prettyTH1F( h1_dph_v_p_et_bins[et] , 50+et , 20 , 0. , 25. );
+		h1_dpp_v_p_et_bins[et] = new TH1F(Form("h1_dpp_v_p_et_bins_%i",et),";p [GeV/c];dp/p [%]"      ,size_mom_bin-1,mom_bin);	prettyTH1F( h1_dpp_v_p_et_bins[et] , 50+et , 20 , 1. , 100. );
+		h1_dth_v_p_et_bins[et] = new TH1F(Form("h1_dth_v_p_et_bins_%i",et),";p [GeV/c];d#theta [rad]",size_mom_bin-1,mom_bin);	prettyTH1F( h1_dth_v_p_et_bins[et] , 50+et , 20 , 0.001 , 1.  );
+		h1_dph_v_p_et_bins[et] = new TH1F(Form("h1_dph_v_p_et_bins_%i",et),";p [GeV/c];d#phi [rad]"  ,size_mom_bin-1,mom_bin);	prettyTH1F( h1_dph_v_p_et_bins[et] , 50+et , 20 , 0.001 , 1. );
 	}
 
 	TH1F ** h1_dpp_v_et_p_bins = new TH1F*[size_mom_bin-1];
@@ -177,12 +206,9 @@ int main(int argc, char ** argv) {
 	TH1F ** h1_dph_v_et_p_bins = new TH1F*[size_mom_bin-1];
 
 	for(int p = 0 ; p < size_mom_bin-1 ; p++){
-		h1_dpp_v_et_p_bins[p] = new TH1F(Form("h1_dpp_v_et_p_bins_%i",p),";#eta;dp/p [%]",size_eta_bin-1,eta_bin);
-		prettyTH1F( h1_dpp_v_et_p_bins[p] , 50+p , 20 , 0. , 10. );
-		h1_dth_v_et_p_bins[p] = new TH1F(Form("h1_dth_v_et_p_bins_%i",p),";#eta;d#theta [mrad]",size_eta_bin-1,eta_bin);
-		prettyTH1F( h1_dth_v_et_p_bins[p] , 50+p , 20 , 0. , 1.  );
-		h1_dph_v_et_p_bins[p] = new TH1F(Form("h1_dph_v_et_p_bins_%i",p),";#eta;d#phi [mrad]"  ,size_eta_bin-1,eta_bin);
-		prettyTH1F( h1_dph_v_et_p_bins[p] , 50+p , 20 , 0. , 25. );
+		h1_dpp_v_et_p_bins[p] = new TH1F(Form("h1_dpp_v_et_p_bins_%i",p),";#eta;dp/p [%]"      ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dpp_v_et_p_bins[p] , 50+p , 20 , 1. , 100. );
+		h1_dth_v_et_p_bins[p] = new TH1F(Form("h1_dth_v_et_p_bins_%i",p),";#eta;d#theta [rad]",size_eta_bin-1,eta_bin);	prettyTH1F( h1_dth_v_et_p_bins[p] , 50+p , 20 , 0.001 , 1.  );
+		h1_dph_v_et_p_bins[p] = new TH1F(Form("h1_dph_v_et_p_bins_%i",p),";#eta;d#phi [rad]"  ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dph_v_et_p_bins[p] , 50+p , 20 , 0.001 , 1000. );
 	}
 	// -------------------------------------------------------------
 	// Declaring other useful variables and functions
@@ -192,7 +218,10 @@ int main(int argc, char ** argv) {
 	float error_dth[size_eta_bin-1][size_mom_bin-1] = {{0}};
 	float width_dph[size_eta_bin-1][size_mom_bin-1] = {{0}};
 	float error_dph[size_eta_bin-1][size_mom_bin-1] = {{0}};
-
+	float mean_dpp[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float mean_dth[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float mean_dph[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	
 	TF1 *** f_gaus_dpp = new TF1**[size_eta_bin-1];
 	TF1 *** f_gaus_dth = new TF1**[size_eta_bin-1];
 	TF1 *** f_gaus_dph = new TF1**[size_eta_bin-1];
@@ -204,40 +233,48 @@ int main(int argc, char ** argv) {
 
 		for(int p = 0 ; p < size_mom_bin-1 ; p++){
 			if(use_widths){
-				f_gaus_dpp[et][p] = new TF1(Form("f_gaus_dpp_%i_%i",et,p),"gaus",-approx_sig_dpp_1_1[et][p],approx_sig_dpp_1_1[et][p]);
-				f_gaus_dth[et][p] = new TF1(Form("f_gaus_dth_%i_%i",et,p),"gaus",-approx_sig_dth_1_1[et][p],approx_sig_dth_1_1[et][p]);
-				f_gaus_dph[et][p] = new TF1(Form("f_gaus_dph_%i_%i",et,p),"gaus",-approx_sig_dph_1_1[et][p],approx_sig_dph_1_1[et][p]);
+				f_gaus_dpp[et][p] = new TF1(Form("f_gaus_dpp_%i_%i",et,p),"gaus",
+						    approx_mean_dpp[et][p]-approx_sig_dpp_1_1[et][p],approx_mean_dpp[et][p]+approx_sig_dpp_1_1[et][p]);
+				f_gaus_dth[et][p] = new TF1(Form("f_gaus_dth_%i_%i",et,p),"gaus",
+						    approx_mean_dth[et][p]-approx_sig_dth_1_1[et][p],approx_mean_dth[et][p]+approx_sig_dth_1_1[et][p]);
+				f_gaus_dph[et][p] = new TF1(Form("f_gaus_dph_%i_%i",et,p),"gaus",
+						    approx_mean_dph[et][p]-approx_sig_dph_1_1[et][p],approx_mean_dph[et][p]+approx_sig_dph_1_1[et][p]);
 			}
 			else{
-				f_gaus_dpp[et][p] = new TF1(Form("f_gaus_dpp_%i_%i",et,p),"gaus",-0.007 ,0.007 );
-				f_gaus_dth[et][p] = new TF1(Form("f_gaus_dth_%i_%i",et,p),"gaus",-0.0007,0.0007);
-				f_gaus_dph[et][p] = new TF1(Form("f_gaus_dph_%i_%i",et,p),"gaus",-0.02  ,0.02  );
+				f_gaus_dpp[et][p] = new TF1(Form("f_gaus_dpp_%i_%i",et,p),"gaus",-0.25 ,1.25 );
+				f_gaus_dth[et][p] = new TF1(Form("f_gaus_dth_%i_%i",et,p),"gaus",-0.2,0.2);
+				f_gaus_dph[et][p] = new TF1(Form("f_gaus_dph_%i_%i",et,p),"gaus",-0.2  ,0.2  );
 			}
 		}
 	}
 	cout << "\033[1;31m********************************************************************\033[0m\n";
 	// -------------------------------------------------------------
 	// Loop over entries of the tree	
-	for(int ev = 0 ; ev < nEntries ; ev++){
-		T -> GetEntry(ev);
-		if(ev%1000000==0) cout << "Looping over entry " << ev << " out of " << nEntries << endl;
+	int ev = 0;
+	while ( Tree.Next() ){
+	  if (ev%1000==0) fprintf(stderr,"%d: Entry %i out of %d\n",__LINE__,ev,nEntries);
 
-		// Calculating some variables
-		float gtheta = TMath::ACos(gpz/sqrt(gpx*gpx+gpy*gpy+gpz*gpz));	
-		float theta = TMath::ACos(pz/sqrt(px*px+py*py+pz*pz));
-		float dth = theta - gtheta;
+	  for (int n = 0; n < *njets; ++n) {
 
-		float geta = -TMath::Log(TMath::Tan(gtheta/2.));
+	    if (NConst[n] < 3) continue;
+	    if (isnan(gE[n])) continue;
 
-		float p_reco = sqrt(px*px+py*py+pz*pz);
-		float p_truth = sqrt(gpx*gpx+gpy*gpy+gpz*gpz);
-		float dp_p = (p_reco-p_truth)/p_truth;
+	    ROOT::Math::PtEtaPhiEVector Lorentz(Pt[n],Eta[n],Phi[n],E[n]);
+	    ROOT::Math::PtEtaPhiEVector gLorentz(gPt[n],gEta[n],gPhi[n],gE[n]);
+		  
+	    float dth = Lorentz.Theta() - gLorentz.Theta();
+	    
+	    float geta = gLorentz.Eta();
+	    
+	    float p_reco = Lorentz.P();
+	    float p_truth = gLorentz.P();
+	    float dp_p = (p_reco-p_truth)/p_truth;		
+	    
+	    float dph = Lorentz.Phi() - gLorentz.Phi();
 
-		float gphi = TMath::ATan(gpy/gpx);
-		float phi = TMath::ATan(py/px);
-		float dph = phi - gphi;
-
-		// Filling histograms
+	    cout<<"Delta Theta = "<< dth <<" dp_p = " << dp_p << " Delta Phi = " << dph << endl;
+	    
+	    // Filling histograms
 		for(int et = 0 ; et < size_eta_bin-1 ; et++){
 			if( geta >  eta_bin[et] &&  geta <= eta_bin[et+1] ){
 				for(int p = 0 ; p < size_mom_bin-1 ; p++){
@@ -249,6 +286,8 @@ int main(int argc, char ** argv) {
 				}
 			}
 		}
+	  }
+	  ++ev;
 	}
 	cout << "\033[1;31m********************************************************************\033[0m\n";
 	// -------------------------------------------------------------
@@ -268,46 +307,56 @@ int main(int argc, char ** argv) {
 			h1_dpp_p_et_bins[et][p] -> Draw();	h1_dpp_p_et_bins[et][p] -> Fit(Form("f_gaus_dpp_%i_%i",et,p),"RQ");
 			width_dpp[et][p] = f_gaus_dpp[et][p] -> GetParameter(2);
 			error_dpp[et][p] = (f_gaus_dpp[et][p] -> GetParError(2))*(f_gaus_dpp[et][p] -> GetChisquare())/(f_gaus_dpp[et][p] -> GetNDF());
-
+			mean_dpp[et][p] = f_gaus_dpp[et][p] -> GetParameter(1);
+			
 			// Theta resolution
 			c_fits_th[et] -> cd(p+1);
 			h1_dth_p_et_bins[et][p] -> Draw();	h1_dth_p_et_bins[et][p] -> Fit(Form("f_gaus_dth_%i_%i",et,p),"RQ");
 			width_dth[et][p] = f_gaus_dth[et][p] -> GetParameter(2);
 			error_dth[et][p] = (f_gaus_dth[et][p] -> GetParError(2))*(f_gaus_dth[et][p] -> GetChisquare())/(f_gaus_dth[et][p] -> GetNDF());
-
+			mean_dth[et][p] = f_gaus_dth[et][p] -> GetParameter(1);
+			
 			// Phi resolution
 			c_fits_ph[et] -> cd(p+1);
 			h1_dph_p_et_bins[et][p] -> Draw();	h1_dph_p_et_bins[et][p] -> Fit(Form("f_gaus_dph_%i_%i",et,p),"RQ");
 			width_dph[et][p] = f_gaus_dph[et][p] -> GetParameter(2);
 			error_dph[et][p] = (f_gaus_dph[et][p] -> GetParError(2))*(f_gaus_dph[et][p] -> GetChisquare())/(f_gaus_dph[et][p] -> GetNDF());
-
+			mean_dph[et][p] = f_gaus_dph[et][p] -> GetParameter(1);
+			cout<<__LINE__<<": dph width = "<<width_dph[et][p]<<endl;
+			cout<<__LINE__<<": dpp width = "<<width_dpp[et][p]<<endl;
+			cout<<__LINE__<<": dth width = "<<width_dth[et][p]<<endl;
 			// ----
 			if(h1_dpp_p_et_bins[et][p]->GetMaximum()>50.){
 				h1_dpp_v_p_et_bins[et] -> SetBinContent(p +1,width_dpp[et][p]*100. );
 				h1_dpp_v_p_et_bins[et] -> SetBinError  (p +1,error_dpp[et][p]*100. );
+				cout<<"Bin set to "<<h1_dpp_v_p_et_bins[et] -> GetBinContent(p +1)<<endl;;
 			}
 			if(h1_dth_p_et_bins[et][p]->GetMaximum()>50.){
-				h1_dth_v_p_et_bins[et] -> SetBinContent(p +1,width_dth[et][p]*1000.);
-				h1_dth_v_p_et_bins[et] -> SetBinError  (p +1,error_dth[et][p]*1000.);
+				h1_dth_v_p_et_bins[et] -> SetBinContent(p +1,width_dth[et][p]);
+				h1_dth_v_p_et_bins[et] -> SetBinError  (p +1,error_dth[et][p]);
 			}
 			if(h1_dph_p_et_bins[et][p]->GetMaximum()>50.){
-				h1_dph_v_p_et_bins[et] -> SetBinContent(p +1,width_dph[et][p]*1000.);
-				h1_dph_v_p_et_bins[et] -> SetBinError  (p +1,error_dph[et][p]*1000.);
+				h1_dph_v_p_et_bins[et] -> SetBinContent(p +1,width_dph[et][p]);
+				h1_dph_v_p_et_bins[et] -> SetBinError  (p +1,error_dph[et][p]);
 			}
 			if(h1_dpp_p_et_bins[et][p]->GetMaximum()>50.){
 				h1_dpp_v_et_p_bins[ p] -> SetBinContent(et+1,width_dpp[et][p]*100. );
 				h1_dpp_v_et_p_bins[ p] -> SetBinError  (et+1,error_dpp[et][p]*100. );
 			}
 			if(h1_dth_p_et_bins[et][p]->GetMaximum()>50.){
-				h1_dth_v_et_p_bins[ p] -> SetBinContent(et+1,width_dth[et][p]*1000.);
-				h1_dth_v_et_p_bins[ p] -> SetBinError  (et+1,error_dth[et][p]*1000.);
+				h1_dth_v_et_p_bins[ p] -> SetBinContent(et+1,width_dth[et][p]);
+				h1_dth_v_et_p_bins[ p] -> SetBinError  (et+1,error_dth[et][p]);
 			}
 			if(h1_dph_p_et_bins[et][p]->GetMaximum()>50.){
-				h1_dph_v_et_p_bins[ p] -> SetBinContent(et+1,width_dph[et][p]*1000.);
-				h1_dph_v_et_p_bins[ p] -> SetBinError  (et+1,error_dph[et][p]*1000.);
+				h1_dph_v_et_p_bins[ p] -> SetBinContent(et+1,width_dph[et][p]);
+				h1_dph_v_et_p_bins[ p] -> SetBinError  (et+1,error_dph[et][p]);
 			}
 
+			// cout<<"In Block max = "<<h1_dpp_v_et_p_bins[p]->GetMaximum()<<endl; //This is just giving the output of pretty_th1
+			// cout<<"In Block min = "<<h1_dpp_v_et_p_bins[p]->GetMinimum()<<endl;
+		
 		}
+	
 		c_fits_p [et] -> Modified();	c_fits_p [et] -> Update();
 		c_fits_th[et] -> Modified();	c_fits_th[et] -> Update();
 		c_fits_ph[et] -> Modified();	c_fits_ph[et] -> Update();
@@ -317,6 +366,7 @@ int main(int argc, char ** argv) {
 	ofstream updated_tab;
 	if(update_tab){
 		updated_tab.open(tab_name);
+		//widths
 		for(int et = 0 ; et < size_eta_bin-1 ; et++){
 			for(int p = 0 ; p < size_mom_bin-1 ; p++){
 				updated_tab << width_dpp[et][p];
@@ -340,42 +390,58 @@ int main(int argc, char ** argv) {
 				else updated_tab << "\t";
 			}
 		}
+		//Means
+		for(int et = 0 ; et < size_eta_bin-1 ; et++){
+			for(int p = 0 ; p < size_mom_bin-1 ; p++){
+				updated_tab << mean_dpp[et][p];
+				if(p == size_mom_bin-2) updated_tab << "\n";
+				else updated_tab << "\t";
+			}
+		}
+		updated_tab << "\n";
+		for(int et = 0 ; et < size_eta_bin-1 ; et++){
+			for(int p = 0 ; p < size_mom_bin-1 ; p++){
+				updated_tab << mean_dth[et][p];
+				if(p == size_mom_bin-2) updated_tab << "\n";
+				else updated_tab << "\t";
+			}
+		}
+		updated_tab << "\n";
+		for(int et = 0 ; et < size_eta_bin-1 ; et++){
+			for(int p = 0 ; p < size_mom_bin-1 ; p++){
+				updated_tab << mean_dph[et][p];
+				if(p == size_mom_bin-2) updated_tab << "\n";
+				else updated_tab << "\t";
+			}
+		}
 		updated_tab.close();
 	}
-
-	//Set Y-axis Min/Max for Plot overlays
-	// set_h1_range(h1_dpp_v_p_et_bins,size_eta_bin-1);
-	// set_h1_range(h1_dth_v_p_et_bins,size_eta_bin-1);
-	// set_h1_range(h1_dph_v_p_et_bins,size_eta_bin-1);
-	// set_h1_range(h1_dpp_v_et_p_bins,size_mom_bin-1);
-	// set_h1_range(h1_dth_v_et_p_bins,size_mom_bin-1);
-	// set_h1_range(h1_dph_v_et_p_bins,size_mom_bin-1);
+        // set_h1_range(h1_dpp_v_p_et_bins,size_eta_bin-1);
+        // set_h1_range(h1_dth_v_p_et_bins,size_eta_bin-1);
+        // set_h1_range(h1_dph_v_p_et_bins,size_eta_bin-1);
+        // set_h1_range(h1_dpp_v_et_p_bins,size_mom_bin-1);
+        // set_h1_range(h1_dth_v_et_p_bins,size_mom_bin-1);
+        // set_h1_range(h1_dph_v_et_p_bins,size_mom_bin-1);
 	
-	// h1_dpp_v_p_et_bins[0]->SetAxisRange(dpp_v_p_range.first,dpp_v_p_range.second,"Y");
-	// h1_dth_v_p_et_bins[0]->SetAxisRange(dth_v_p_range.first,dth_v_p_range.second,"Y");
-	// h1_dph_v_p_et_bins[0]->SetAxisRange(dph_v_p_range.first,dph_v_p_range.second,"Y");
-	// h1_dpp_v_p_et_bins[0]->SetAxisRange(dpp_v_et_range.first,dpp_v_et_range.second,"Y");
-	// h1_dth_v_p_et_bins[0]->SetAxisRange(dth_v_et_range.first,dth_v_et_range.second,"Y");
-	// h1_dph_v_p_et_bins[0]->SetAxisRange(dph_v_et_range.first,dph_v_et_range.second,"Y");
-	float c = 1.0;
-	h1_dpp_v_p_et_bins[0] -> SetMinimum(0.15*c);
 	h1_dpp_v_p_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();	h1_dpp_v_p_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-	h1_dth_v_p_et_bins[0] -> SetMinimum(0.06*c);
 	h1_dth_v_p_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dth_v_p_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-	h1_dph_v_p_et_bins[0] -> SetMinimum(0.06*c);
 	h1_dph_v_p_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dph_v_p_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-	h1_dpp_v_et_p_bins[0] -> SetMinimum(0.15*c);
 	h1_dpp_v_et_p_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dpp_v_et_p_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-	h1_dth_v_et_p_bins[0] -> SetMinimum(0.03*c);
 	h1_dth_v_et_p_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dth_v_et_p_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-	h1_dph_v_et_p_bins[0] -> SetMinimum(0.03*c);
 	h1_dph_v_et_p_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dph_v_et_p_bins[0]->GetYaxis()->SetTitleOffset(2.3);
 
-	h1_dpp_v_p_et_bins[0] -> SetMaximum(0.9*c);
-	h1_dth_v_p_et_bins[0] -> SetMaximum(0.6*c);
-	h1_dph_v_p_et_bins[0] -> SetMaximum(0.8*c);
-	h1_dpp_v_et_p_bins[0] -> SetMaximum(0.8*c);
-        //h1_dth_v_et_p_bins[0] -> SetMaximum(4   );
+	//h1_dpp_v_p_et_bins[0] -> SetMinimum(0.00003 );
+	//h1_dth_v_p_et_bins[0] -> SetMinimum(0.03);
+	//h1_dph_v_p_et_bins[0] -> SetMinimum(0.06);
+	//h1_dpp_v_et_p_bins[0] -> SetMinimum(0.3 );
+	//h1_dth_v_et_p_bins[0] -> SetMinimum(0.03);
+	//h1_dph_v_et_p_bins[0] -> SetMinimum(0.06);
+
+	//h1_dpp_v_p_et_bins[0] -> SetMaximum(0.003);
+	// h1_dth_v_p_et_bins[0] -> SetMaximum(3 );
+	// h1_dph_v_p_et_bins[0] -> SetMaximum(30);
+	// h1_dpp_v_et_p_bins[0] -> SetMaximum(10.1);
+	// h1_dth_v_et_p_bins[0] -> SetMaximum(4   );
 	// h1_dph_v_et_p_bins[0] -> SetMaximum(40  );
 
 	// -------------------------------------------------------------
@@ -458,35 +524,43 @@ void prettyTH1F( TH1F * h1 , int color , int marker , float min , float max ){
 	h1 -> SetMarkerStyle(marker);
 	h1 -> SetMarkerColor(color);
 
-	//h1 -> SetMinimum(min);
-	//h1 -> SetMaximum(max);
+	h1 -> SetMinimum(min);
+	h1 -> SetMaximum(max);
 
 	h1 -> GetXaxis() -> CenterTitle();
 	h1 -> GetXaxis() -> SetNdivisions(107); // to draw less tick marks
 	h1 -> GetYaxis() -> CenterTitle();
 	h1 -> GetYaxis() -> SetNdivisions(107); // to draw less tick marks
 
-	h1 -> SetMinimum(0.001);
+	//h1 -> SetMinimum(0.001);
 }
 
 void set_h1_range(TH1F ** h1_array,int array_size){
   float min = 999;
-  float max = -999;//init large min, small max
+  float max = -999;//init large min, small max                                                                                                   
   for(int i = 0 ; i < array_size; i++){
-    float temp_min = h1_array[i]->GetMinimum();
+    float temp_min = h1_array[i]->GetBinContent(0);
     float temp_max = h1_array[i]->GetMaximum();
+    cout<<"setfunction: "<<temp_max<<endl;
+    //cout<<"Reading minimum from vs_p_plot = "<<temp_min<<endl;
     if (min > temp_min)
       min = temp_min;
-    if (max < temp_max)
-      max = temp_max;
+    if (max < temp_max){
+      if(temp_max == 0.0008)
+        continue;
+      else
+        max = temp_max;
+    }
    }
 
   max = 1.2*max;
   min = 0.8*min;
-  //for(int i = 0 ; i < array_size; i++){
-    h1_array[0]->SetMaximum(max);
-    h1_array[0]->SetMinimum(min);
-    //}
-  
+  cout<<min<<endl;
+  for(int i = 0 ; i < array_size; i++){
+    //h1_array[i]->SetMaximum(max);
+    //h1_array[i]->SetMinimum(min);
+    h1_array[i] -> SetMinimum(0.01);
+    h1_array[i] -> SetMinimum(.1);
+  }
   return;
 }
