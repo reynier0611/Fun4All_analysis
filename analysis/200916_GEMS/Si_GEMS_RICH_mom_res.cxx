@@ -38,22 +38,22 @@ int main(int argc, char ** argv) {
 	// ------------------------------------------------------------------------------
 	// List paths to files that will be loaded
 	TString fnames[] = {
-		"../output/output_skimmed_pi-_det2_20x20_Beast_FastTrackingEval.root",				//  0
-		"../output/output_skimmed_pi-_det2_10x10_Beast_FastTrackingEval.root",				//  1
-		"../output/output_skimmed_pi-_det2_both_GEMs_20x20_Beast_FastTrackingEval.root",		//  2
-		"../output/output_skimmed_pi-_det2_both_GEMs_10x10_Beast_FastTrackingEval.root",		//  3
-		"../output/output_skimmed_pi-_det2_20x20_sPHENIX_FastTrackingEval.root",			//  4
-		"../output/output_skimmed_pi-_det2_10x10_sPHENIX_FastTrackingEval.root",			//  5
-		"../output/output_skimmed_pi-_det2_both_GEMs_20x20_sPHENIX_FastTrackingEval.root",		//  6
-		"../output/output_skimmed_pi-_det2_both_GEMs_10x10_sPHENIX_FastTrackingEval.root",		//  7
-		"../output/output_skimmed_pi-_det2_both_GEMs_RICH_20x20_Beast_FastTrackingEval.root",		//  8
-		"../output/output_skimmed_pi-_det2_both_GEMs_RICH_10x10_Beast_FastTrackingEval.root",		//  9
-		"../output/output_skimmed_pi-_det2_both_GEMs_RICH_20x20_sPHENIX_FastTrackingEval.root",		// 10
-                "../output/output_skimmed_pi-_det2_both_GEMs_RICH_10x10_sPHENIX_FastTrackingEval.root",		// 11
-		"../output/output_skimmed_combined_pi-_det2_10umGEM_RICH_20x20_Beast_FastTrackingEval.root",	// 12
-		"../output/output_skimmed_combined_pi-_det2_10umGEM_RICH_10x10_Beast_FastTrackingEval.root",	// 13
-		"../output/output_skimmed_combined_pi-_det2_LoResGEM_RICH_20x20_Beast_FastTrackingEval.root",	// 14
-		"../output/output_skimmed_combined_pi-_det2_LoResGEM_RICH_10x10_Beast_FastTrackingEval.root"	// 15
+		"../../output/output_skimmed_pi-_det2_20x20_Beast_FastTrackingEval.root",			//  0
+		"../../output/output_skimmed_pi-_det2_10x10_Beast_FastTrackingEval.root",			//  1
+		"../../output/output_skimmed_pi-_det2_both_GEMs_20x20_Beast_FastTrackingEval.root",		//  2
+		"../../output/output_skimmed_pi-_det2_both_GEMs_10x10_Beast_FastTrackingEval.root",		//  3
+		"../../output/output_skimmed_pi-_det2_20x20_sPHENIX_FastTrackingEval.root",			//  4
+		"../../output/output_skimmed_pi-_det2_10x10_sPHENIX_FastTrackingEval.root",			//  5
+		"../../output/output_skimmed_pi-_det2_both_GEMs_20x20_sPHENIX_FastTrackingEval.root",		//  6
+		"../../output/output_skimmed_pi-_det2_both_GEMs_10x10_sPHENIX_FastTrackingEval.root",		//  7
+		"../../output/output_skimmed_pi-_det2_both_GEMs_RICH_20x20_Beast_FastTrackingEval.root",	//  8
+		"../../output/output_skimmed_pi-_det2_both_GEMs_RICH_10x10_Beast_FastTrackingEval.root",	//  9
+		"../../output/output_skimmed_pi-_det2_both_GEMs_RICH_20x20_sPHENIX_FastTrackingEval.root",	// 10
+                "../../output/output_skimmed_pi-_det2_both_GEMs_RICH_10x10_sPHENIX_FastTrackingEval.root",	// 11
+		"../../output/output_skimmed_combined_pi-_det2_10umGEM_RICH_20x20_Beast_FastTrackingEval.root",	// 12
+		"../../output/output_skimmed_combined_pi-_det2_10umGEM_RICH_10x10_Beast_FastTrackingEval.root",	// 13
+		"../../output/output_skimmed_combined_pi-_det2_LoResGEM_RICH_20x20_Beast_FastTrackingEval.root",// 14
+		"../../output/output_skimmed_combined_pi-_det2_LoResGEM_RICH_10x10_Beast_FastTrackingEval.root"	// 15
 	};
 	// #######################################################################################################################################
 	// YOU SHOULDN'T NEED TO MODIFY ANYTHING IN THE BLOCK OF CODE BELOW AND UNTIL AFTER THE NEXT LINE WITH ###...
@@ -275,39 +275,75 @@ int main(int argc, char ** argv) {
         TCanvas * c5 = new TCanvas("c5","c5",1000,900);
         c5 -> Divide(1,2);
 	c5 -> cd(1);
-	gPad -> SetRightMargin(0.02); gPad -> SetGridx(); gPad -> SetGridy(); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.11);
+	gPad -> SetRightMargin(0.02); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.15); gPad -> SetTopMargin(0.01);
 	gDum1 -> Draw("AP");
         g_dpp_v_et_selected_20um_Beast_si         [2] -> Draw("samePL");
         //g_dpp_v_et_selected_20um_Beast_si_GEM     [2] -> Draw("samePL");
         g_dpp_v_et_selected_20um_Beast_si_GEM_RICH[2] -> Draw("samePL");
         g_dpp_v_et_selected_20um_Beast_si_10umGEM_RICH[2] -> Draw("samePL");
-	g_dpp_v_et_selected_20um_Beast_si_loReGEM_RICH[2] -> Draw("samePL");
+	//g_dpp_v_et_selected_20um_Beast_si_loReGEM_RICH[2] -> Draw("samePL");
 	// ------------
         TLegend * leg2 = new TLegend(0.20,0.45,0.65,0.89);
         leg2 -> SetLineColor(0);
         leg2 -> AddEntry( g_dpp_v_et_selected_20um_Beast_si            [2] , "All-Si (20 #mum)"             );
-        //leg2 -> AddEntry( g_dpp_v_et_selected_20um_Beast_si_GEM        [2] , "All-Si (20 #mum) + GEM"       );
-        leg2 -> AddEntry( g_dpp_v_et_selected_20um_Beast_si_GEM_RICH   [2] , "All-Si (20 #mum) + RICH + GEM (#sigma = 50 #mum)");
-	leg2 -> AddEntry(g_dpp_v_et_selected_20um_Beast_si_10umGEM_RICH[2] , "All-Si (20 #mum) + RICH + Si disk (10 #mum)");
-	leg2 -> AddEntry(g_dpp_v_et_selected_20um_Beast_si_loReGEM_RICH[2] , "All-Si (20 #mum) + RICH + GEM (#sigma_{r} = 1cm/#sqrt{12}, #sigma_{#phi} = 70 #mum)");
+	//leg2 -> AddEntry(g_dpp_v_et_selected_20um_Beast_si_loReGEM_RICH[2] , "All-Si (20 #mum) + GEM (#sigma_{r} = 1cm/#sqrt{12}, #sigma_{#phi} = 70 #mum)");
+        leg2 -> AddEntry( g_dpp_v_et_selected_20um_Beast_si_GEM_RICH   [2] , "All-Si (20 #mum) + GEM (#sigma = 50 #mum)");
+	leg2 -> AddEntry(g_dpp_v_et_selected_20um_Beast_si_10umGEM_RICH[2] , "All-Si (20 #mum) + Si disk (10 #mum)");
         // ------------
         leg2 -> Draw("same");
+	// ------------
 	c5 -> cd(2);
-        gPad -> SetRightMargin(0.02); gPad -> SetGridx(); gPad -> SetGridy(); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.11);
+        gPad -> SetRightMargin(0.02); /*gPad -> SetGridx(); gPad -> SetGridy();*/ gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.15); gPad -> SetTopMargin(0.02);
         gDum2 -> Draw("AP");
 	g_dpp_v_et_selected_20um_Beast_si         [2] -> Draw("samePL");
-        //g_dpp_v_et_selected_20um_Beast_si_GEM     [2] -> Draw("samePL");
         g_dpp_v_et_selected_20um_Beast_si_GEM_RICH[2] -> Draw("samePL");
         g_dpp_v_et_selected_20um_Beast_si_10umGEM_RICH[2] -> Draw("samePL"); 
-	g_dpp_v_et_selected_20um_Beast_si_loReGEM_RICH[2] -> Draw("samePL");
+	//g_dpp_v_et_selected_20um_Beast_si_loReGEM_RICH[2] -> Draw("samePL");
 	c5 -> Modified();
         c5 -> Update();
+	// ------------------
+	TCanvas * c6 = new TCanvas("c6","c6",1000,900);
+        c6 -> Divide(1,2);
+        c6 -> cd(1);
+        gPad -> SetRightMargin(0.02); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.15); gPad -> SetTopMargin(0.01);
+        gDum1 -> Draw("AP");
+        g_dpp_v_et_selected_10um_Beast_si         [2] -> Draw("samePL");
+        g_dpp_v_et_selected_10um_Beast_si_GEM_RICH[2] -> Draw("samePL");
+        g_dpp_v_et_selected_10um_Beast_si_10umGEM_RICH[2] -> Draw("samePL");
+        //g_dpp_v_et_selected_10um_Beast_si_loReGEM_RICH[2] -> Draw("samePL");
+        // ------------
+	TLegend * leg3 = new TLegend(0.20,0.45,0.65,0.89);
+        leg3 -> SetLineColor(0);
+        leg3 -> AddEntry( g_dpp_v_et_selected_10um_Beast_si            [2] , "All-Si (10 #mum)"             );
+        leg3 -> AddEntry( g_dpp_v_et_selected_10um_Beast_si_GEM_RICH   [2] , "All-Si (10 #mum) + GEM (#sigma = 50 #mum)");
+        leg3 -> AddEntry(g_dpp_v_et_selected_10um_Beast_si_10umGEM_RICH[2] , "All-Si (10 #mum) + Si disk (10 #mum)");
+	// ------------
+        leg3 -> Draw("same");
+        // ------------
+        c6 -> cd(2);
+        gPad -> SetRightMargin(0.02); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.15); gPad -> SetTopMargin(0.02);
+        gDum2 -> Draw("AP");
+        g_dpp_v_et_selected_10um_Beast_si         [2] -> Draw("samePL"); 
+        g_dpp_v_et_selected_10um_Beast_si_GEM_RICH[2] -> Draw("samePL");
+        g_dpp_v_et_selected_10um_Beast_si_10umGEM_RICH[2] -> Draw("samePL");
+        //g_dpp_v_et_selected_10um_Beast_si_loReGEM_RICH[2] -> Draw("samePL");
+        c6 -> Modified();
+        c6 -> Update();
+	// ------------------------------------------------------------------------------
+	double etas_to_check[] = {-3.5,-3.0,-2.5,-2.0,-1.5,1.5,2.0,2.5,3.0,3.5};
+	for(int i = 0 ; i < sizeof(etas_to_check)/sizeof(*etas_to_check) ; i++){
+		cout << etas_to_check[i] << "\t";
+		cout << 100*(1-g_dpp_v_et_selected_20um_Beast_si_GEM_RICH    [2]->Eval(etas_to_check[i])/g_dpp_v_et_selected_20um_Beast_si[2]->Eval(etas_to_check[i])) << "\t";
+		cout << 100*(1-g_dpp_v_et_selected_20um_Beast_si_10umGEM_RICH[2]->Eval(etas_to_check[i])/g_dpp_v_et_selected_20um_Beast_si[2]->Eval(etas_to_check[i])) << "\t";
+		cout << 100*(1-g_dpp_v_et_selected_20um_Beast_si_loReGEM_RICH[2]->Eval(etas_to_check[i])/g_dpp_v_et_selected_20um_Beast_si[2]->Eval(etas_to_check[i])) << "\n";
+	}
 	// ------------------------------------------------------------------------------
 	// Saving results to pdf files
 	c1 -> Print("results_Si_GEMS_RICH_mom_res.pdf(");
 	c2 -> Print("results_Si_GEMS_RICH_mom_res.pdf" );
 	c3 -> Print("results_Si_GEMS_RICH_mom_res.pdf" );
-	c4 -> Print("results_Si_GEMS_RICH_mom_res.pdf)");
+	c4 -> Print("results_Si_GEMS_RICH_mom_res.pdf" );
+	c5 -> Print("results_Si_GEMS_RICH_mom_res.pdf)");
 
 	myapp -> Run();
 	return 0;

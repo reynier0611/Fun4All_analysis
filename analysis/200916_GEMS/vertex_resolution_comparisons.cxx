@@ -38,12 +38,12 @@ int main(int argc, char ** argv) {
 	// ------------------------------------------------------------------------------
 	// List paths to files that will be loaded
 	TString fnames[] = {
-		"../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det1_20x20_Beast_FastTrackingEval.root",
-		"../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det1_10x10_Beast_FastTrackingEval.root",
-		"../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det2_20x20_Beast_FastTrackingEval.root",
-		"../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det2_10x10_Beast_FastTrackingEval.root",
-		"../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det3_20x20_Beast_FastTrackingEval.root",
-		"../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det3_10x10_Beast_FastTrackingEval.root"
+		"../../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det1_20x20_Beast_FastTrackingEval.root",
+		"../../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det1_10x10_Beast_FastTrackingEval.root",
+		"../../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det2_20x20_Beast_FastTrackingEval.root",
+		"../../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det2_10x10_Beast_FastTrackingEval.root",
+		"../../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det3_20x20_Beast_FastTrackingEval.root",
+		"../../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det3_10x10_Beast_FastTrackingEval.root"
 	};
 	// #######################################################################################################################################
 	// YOU SHOULDN'T NEED TO MODIFY ANYTHING IN THE BLOCK OF CODE BELOW AND UNTIL AFTER THE NEXT LINE WITH ###...
