@@ -101,107 +101,128 @@ int main(int argc, char ** argv) {
 	int nEntries = T -> GetEntries();
 	// -------------------------------------------------------------
 	fstream tab;
-	float approx_sig_dpp[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dth[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dph[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_sig_dpp [size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_sig_dth [size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_sig_dph [size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_sig_dppT[size_eta_bin-1][size_mom_bin-1] = {{0}};
 	TString temp_str;
 	if(use_widths){
 		tab.open(tab_name);
 		if(!tab){cout << "Could not find file '" << tab_name << "'" << endl; use_widths = false; update_tab = true;}
 		else{
 			cout << "Loading parameters from file '" << tab_name << "'" << endl;
-			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_sig_dpp[et][p];}}
-			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_sig_dth[et][p];}}
-			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_sig_dph[et][p];}}
+			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_sig_dpp [et][p];}}
+			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_sig_dth [et][p];}}
+			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_sig_dph [et][p];}}
+			for(int et = 0 ; et < size_eta_bin-1 ; et++){ for(int p = 0 ; p < size_mom_bin-1 ; p++){tab >> approx_sig_dppT[et][p];}}
 		}
 		tab.close();
 	}
 
-	float approx_sig_dpp_3_0[size_eta_bin-1][size_mom_bin-1] = {{0}}; float approx_sig_dpp_1_1[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dth_3_0[size_eta_bin-1][size_mom_bin-1] = {{0}}; float approx_sig_dth_1_1[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dph_3_0[size_eta_bin-1][size_mom_bin-1] = {{0}}; float approx_sig_dph_1_1[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_sig_dpp_3_0 [size_eta_bin-1][size_mom_bin-1] = {{0}};	float approx_sig_dpp_1_1 [size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_sig_dth_3_0 [size_eta_bin-1][size_mom_bin-1] = {{0}};	float approx_sig_dth_1_1 [size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_sig_dph_3_0 [size_eta_bin-1][size_mom_bin-1] = {{0}};	float approx_sig_dph_1_1 [size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_sig_dppT_3_0[size_eta_bin-1][size_mom_bin-1] = {{0}};	float approx_sig_dppT_1_1[size_eta_bin-1][size_mom_bin-1] = {{0}};
 
 	for(int et = 0 ; et < size_eta_bin-1 ; et++){
 		for(int p = 0 ; p < size_mom_bin-1 ; p++){
-			approx_sig_dpp_3_0[et][p] = 3.0*approx_sig_dpp[et][p]; approx_sig_dpp_1_1[et][p] = 1.1*approx_sig_dpp[et][p];
-			approx_sig_dth_3_0[et][p] = 3.0*approx_sig_dth[et][p]; approx_sig_dth_1_1[et][p] = 1.1*approx_sig_dth[et][p];
-			approx_sig_dph_3_0[et][p] = 3.0*approx_sig_dph[et][p]; approx_sig_dph_1_1[et][p] = 1.1*approx_sig_dph[et][p];
+			approx_sig_dpp_3_0 [et][p] = 3.0*approx_sig_dpp [et][p];	approx_sig_dpp_1_1 [et][p] = 1.1*approx_sig_dpp [et][p];
+			approx_sig_dth_3_0 [et][p] = 3.0*approx_sig_dth [et][p];	approx_sig_dth_1_1 [et][p] = 1.1*approx_sig_dth [et][p];
+			approx_sig_dph_3_0 [et][p] = 3.0*approx_sig_dph [et][p];	approx_sig_dph_1_1 [et][p] = 1.1*approx_sig_dph [et][p];
+			approx_sig_dppT_3_0[et][p] = 3.0*approx_sig_dppT[et][p];	approx_sig_dppT_1_1[et][p] = 1.1*approx_sig_dppT[et][p];
 		}
 	}
 	// -------------------------------------------------------------
-	// Defining histograms
-	TH1F *** h1_dpp_p_et_bins = new TH1F**[size_eta_bin-1];	// delta p / p vs. p in eta bins
-	TH1F *** h1_dth_p_et_bins = new TH1F**[size_eta_bin-1];	// delta theta vs. p in eta bins
-	TH1F *** h1_dph_p_et_bins = new TH1F**[size_eta_bin-1];	// delta phi   vs. p in eta bins
+	// Defining histograms for resolution distributions per p and eta bins
+	TH1F *** h1_dpp_p_et_bins   = new TH1F**[size_eta_bin-1];	// delta p / p   in p, eta bins
+	TH1F *** h1_dth_p_et_bins   = new TH1F**[size_eta_bin-1];	// delta theta   in p, eta bins
+	TH1F *** h1_dph_p_et_bins   = new TH1F**[size_eta_bin-1];	// delta phi     in p, eta bins
+	TH1F *** h1_dppT_pt_et_bins = new TH1F**[size_eta_bin-1];	// delta pT / pT in p, eta bins
+
 	for(int et = 0 ; et < size_eta_bin-1 ; et++){
-		h1_dpp_p_et_bins[et] = new TH1F*[size_mom_bin-1];
-		h1_dth_p_et_bins[et] = new TH1F*[size_mom_bin-1];
-		h1_dph_p_et_bins[et] = new TH1F*[size_mom_bin-1];
+		h1_dpp_p_et_bins  [et] = new TH1F*[size_mom_bin-1];
+		h1_dth_p_et_bins  [et] = new TH1F*[size_mom_bin-1];
+		h1_dph_p_et_bins  [et] = new TH1F*[size_mom_bin-1];
+		h1_dppT_pt_et_bins[et] = new TH1F*[size_mom_bin-1];
 		for(int p = 0 ; p < size_mom_bin-1 ; p++){
 			if(use_widths){
-				h1_dpp_p_et_bins[et][p] = new TH1F(Form("h1_dpp_p_et_bins_%i_%i",et,p),";dp/p;Counts"         ,80,-approx_sig_dpp_3_0[et][p],approx_sig_dpp_3_0[et][p]);
-				h1_dth_p_et_bins[et][p] = new TH1F(Form("h1_dth_p_et_bins_%i_%i",et,p),";d#theta [rad];Counts",80,-approx_sig_dth_3_0[et][p],approx_sig_dth_3_0[et][p]);
-				h1_dph_p_et_bins[et][p] = new TH1F(Form("h1_dph_p_et_bins_%i_%i",et,p),";d#phi [rad];Counts"  ,80,-approx_sig_dph_3_0[et][p],approx_sig_dph_3_0[et][p]);
+				h1_dpp_p_et_bins  [et][p] = new TH1F(Form("h1_dpp_p_et_bins_%i_%i"  ,et,p),";dp/p;Counts"         ,60,-approx_sig_dpp_3_0 [et][p],approx_sig_dpp_3_0 [et][p]);
+				h1_dth_p_et_bins  [et][p] = new TH1F(Form("h1_dth_p_et_bins_%i_%i"  ,et,p),";d#theta [rad];Counts",60,-approx_sig_dth_3_0 [et][p],approx_sig_dth_3_0 [et][p]);
+				h1_dph_p_et_bins  [et][p] = new TH1F(Form("h1_dph_p_et_bins_%i_%i"  ,et,p),";d#phi [rad];Counts"  ,60,-approx_sig_dph_3_0 [et][p],approx_sig_dph_3_0 [et][p]);
+				h1_dppT_pt_et_bins[et][p] = new TH1F(Form("h1_dppT_pt_et_bins_%i_%i",et,p),";dpT/pT;Counts"       ,60,-approx_sig_dppT_3_0[et][p],approx_sig_dppT_3_0[et][p]);
 			}
 			else{
-				h1_dpp_p_et_bins[et][p] = new TH1F(Form("h1_dpp_p_et_bins_%i_%i",et,p),";dp/p;Counts"         ,80,-0.08  ,0.08  );
-				h1_dth_p_et_bins[et][p] = new TH1F(Form("h1_dth_p_et_bins_%i_%i",et,p),";d#theta [rad];Counts",80,-0.0014,0.0014);
-				h1_dph_p_et_bins[et][p] = new TH1F(Form("h1_dph_p_et_bins_%i_%i",et,p),";d#phi [rad];Counts"  ,80,-0.04  ,0.04  );
+				h1_dpp_p_et_bins  [et][p] = new TH1F(Form("h1_dpp_p_et_bins_%i_%i"  ,et,p),";dp/p;Counts"         ,60,-0.15  ,0.15  );
+				h1_dth_p_et_bins  [et][p] = new TH1F(Form("h1_dth_p_et_bins_%i_%i"  ,et,p),";d#theta [rad];Counts",60,-0.0014,0.0014);
+				h1_dph_p_et_bins  [et][p] = new TH1F(Form("h1_dph_p_et_bins_%i_%i"  ,et,p),";d#phi [rad];Counts"  ,60,-0.04  ,0.04  );
+				h1_dppT_pt_et_bins[et][p] = new TH1F(Form("h1_dppT_pt_et_bins_%i_%i",et,p),";dpT/pT;Counts"       ,60,-0.15  ,0.15  );
 			}
 
-			h1_dpp_p_et_bins[et][p] -> SetTitle(Form("%.1f < |#eta| < %.1f, %.1f < p < %.1f GeV/c",eta_bin[et],eta_bin[et+1],mom_bin[p],mom_bin[p+1]));
-			h1_dth_p_et_bins[et][p] -> SetTitle(Form("%.1f < |#eta| < %.1f, %.1f < p < %.1f GeV/c",eta_bin[et],eta_bin[et+1],mom_bin[p],mom_bin[p+1]));
-			h1_dph_p_et_bins[et][p] -> SetTitle(Form("%.1f < |#eta| < %.1f, %.1f < p < %.1f GeV/c",eta_bin[et],eta_bin[et+1],mom_bin[p],mom_bin[p+1]));
+			h1_dpp_p_et_bins  [et][p] -> SetTitle(Form("%.1f < |#eta| < %.1f, %.1f < p < %.1f GeV/c" ,eta_bin[et],eta_bin[et+1],mom_bin[p],mom_bin[p+1]));
+			h1_dth_p_et_bins  [et][p] -> SetTitle(Form("%.1f < |#eta| < %.1f, %.1f < p < %.1f GeV/c" ,eta_bin[et],eta_bin[et+1],mom_bin[p],mom_bin[p+1]));
+			h1_dph_p_et_bins  [et][p] -> SetTitle(Form("%.1f < |#eta| < %.1f, %.1f < p < %.1f GeV/c" ,eta_bin[et],eta_bin[et+1],mom_bin[p],mom_bin[p+1]));
+			h1_dppT_pt_et_bins[et][p] -> SetTitle(Form("%.1f < |#eta| < %.1f, %.1f < pT < %.1f GeV/c",eta_bin[et],eta_bin[et+1],mom_bin[p],mom_bin[p+1]));
 		}
 	}
-	// -------------------------------------------------------------	
-	TH1F ** h1_dpp_v_p_et_bins = new TH1F*[size_eta_bin-1];
-	TH1F ** h1_dth_v_p_et_bins = new TH1F*[size_eta_bin-1];
-	TH1F ** h1_dph_v_p_et_bins = new TH1F*[size_eta_bin-1];
+	// -------------------------------------------------------------
+	// Defining histograms for final (already extracted) resolutions	
+	TH1F ** h1_dpp_v_p_et_bins   = new TH1F*[size_eta_bin-1];
+	TH1F ** h1_dth_v_p_et_bins   = new TH1F*[size_eta_bin-1];
+	TH1F ** h1_dph_v_p_et_bins   = new TH1F*[size_eta_bin-1];
+	TH1F ** h1_dppT_v_pT_et_bins = new TH1F*[size_eta_bin-1]; 
 
 	for(int et = 0 ; et < size_eta_bin-1 ; et++){
-		h1_dpp_v_p_et_bins[et] = new TH1F(Form("h1_dpp_v_p_et_bins_%i",et),";p [GeV/c];dp/p [%]"      ,size_mom_bin-1,mom_bin);	prettyTH1F( h1_dpp_v_p_et_bins[et] , 50+et , 20 , 0. , 10. );
-		h1_dth_v_p_et_bins[et] = new TH1F(Form("h1_dth_v_p_et_bins_%i",et),";p [GeV/c];d#theta [mrad]",size_mom_bin-1,mom_bin);	prettyTH1F( h1_dth_v_p_et_bins[et] , 50+et , 20 , 0. , 1.  );
-		h1_dph_v_p_et_bins[et] = new TH1F(Form("h1_dph_v_p_et_bins_%i",et),";p [GeV/c];d#phi [mrad]"  ,size_mom_bin-1,mom_bin);	prettyTH1F( h1_dph_v_p_et_bins[et] , 50+et , 20 , 0. , 25. );
+		h1_dpp_v_p_et_bins  [et] = new TH1F(Form("h1_dpp_v_p_et_bins_%i"  ,et),";p [GeV/c];dp/p [%]"            ,size_mom_bin-1,mom_bin);	prettyTH1F( h1_dpp_v_p_et_bins  [et] , 50+et*2 , 20 , 0. , 10. );
+		h1_dth_v_p_et_bins  [et] = new TH1F(Form("h1_dth_v_p_et_bins_%i"  ,et),";p [GeV/c];d#theta [mrad]"      ,size_mom_bin-1,mom_bin);	prettyTH1F( h1_dth_v_p_et_bins  [et] , 50+et*2 , 20 , 0. , 1.  );
+		h1_dph_v_p_et_bins  [et] = new TH1F(Form("h1_dph_v_p_et_bins_%i"  ,et),";p [GeV/c];d#phi [mrad]"        ,size_mom_bin-1,mom_bin);	prettyTH1F( h1_dph_v_p_et_bins  [et] , 50+et*2 , 20 , 0. , 25. );
+		h1_dppT_v_pT_et_bins[et] = new TH1F(Form("h1_dppT_v_pT_et_bins_%i",et),";p_{T} [GeV/c];dp_{T}/p_{T} [%]",size_mom_bin-1,mom_bin);	prettyTH1F( h1_dppT_v_pT_et_bins[et] , 50+et*2 , 20 , 0. , 10. );
 	}
 
-	TH1F ** h1_dpp_v_et_p_bins = new TH1F*[size_mom_bin-1];
-	TH1F ** h1_dth_v_et_p_bins = new TH1F*[size_mom_bin-1];
-	TH1F ** h1_dph_v_et_p_bins = new TH1F*[size_mom_bin-1];
+	TH1F ** h1_dpp_v_et_p_bins   = new TH1F*[size_mom_bin-1];
+	TH1F ** h1_dth_v_et_p_bins   = new TH1F*[size_mom_bin-1];
+	TH1F ** h1_dph_v_et_p_bins   = new TH1F*[size_mom_bin-1];
+	TH1F ** h1_dppT_v_et_pT_bins = new TH1F*[size_mom_bin-1];
 
 	for(int p = 0 ; p < size_mom_bin-1 ; p++){
-		h1_dpp_v_et_p_bins[p] = new TH1F(Form("h1_dpp_v_et_p_bins_%i",p),";#eta;dp/p [%]"      ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dpp_v_et_p_bins[p] , 50+p , 20 , 0. , 10. );
-		h1_dth_v_et_p_bins[p] = new TH1F(Form("h1_dth_v_et_p_bins_%i",p),";#eta;d#theta [mrad]",size_eta_bin-1,eta_bin);	prettyTH1F( h1_dth_v_et_p_bins[p] , 50+p , 20 , 0. , 1.  );
-		h1_dph_v_et_p_bins[p] = new TH1F(Form("h1_dph_v_et_p_bins_%i",p),";#eta;d#phi [mrad]"  ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dph_v_et_p_bins[p] , 50+p , 20 , 0. , 25. );
+		h1_dpp_v_et_p_bins  [p] = new TH1F(Form("h1_dpp_v_et_p_bins_%i"  ,p),";#eta;dp/p [%]"        ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dpp_v_et_p_bins[p] , 50+p*2 , 20 , 0. , 10. );
+		h1_dth_v_et_p_bins  [p] = new TH1F(Form("h1_dth_v_et_p_bins_%i"  ,p),";#eta;d#theta [mrad]"  ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dth_v_et_p_bins[p] , 50+p*2 , 20 , 0. , 1.  );
+		h1_dph_v_et_p_bins  [p] = new TH1F(Form("h1_dph_v_et_p_bins_%i"  ,p),";#eta;d#phi [mrad]"    ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dph_v_et_p_bins[p] , 50+p*2 , 20 , 0. , 25. );
+		h1_dppT_v_et_pT_bins[p] = new TH1F(Form("h1_dppT_v_et_pT_bins_%i",p),";#eta;dp_{T}/p_{T} [%]",size_eta_bin-1,eta_bin);	prettyTH1F( h1_dph_v_et_p_bins[p] , 50+p*2 , 20 , 0. , 10. );
 	}
 	// -------------------------------------------------------------
 	// Declaring other useful variables and functions
-	float width_dpp[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float error_dpp[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float width_dth[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float error_dth[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float width_dph[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float error_dph[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float width_dpp [size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float error_dpp [size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float width_dth [size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float error_dth [size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float width_dph [size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float error_dph [size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float width_dppT[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float error_dppT[size_eta_bin-1][size_mom_bin-1] = {{0}};
 
-	TF1 *** f_gaus_dpp = new TF1**[size_eta_bin-1];
-	TF1 *** f_gaus_dth = new TF1**[size_eta_bin-1];
-	TF1 *** f_gaus_dph = new TF1**[size_eta_bin-1];
+	TF1 *** f_gaus_dpp  = new TF1**[size_eta_bin-1];
+	TF1 *** f_gaus_dth  = new TF1**[size_eta_bin-1];
+	TF1 *** f_gaus_dph  = new TF1**[size_eta_bin-1];
+	TF1 *** f_gaus_dppT = new TF1**[size_eta_bin-1];
 
 	for(int et = 0 ; et < size_eta_bin-1 ; et++){
-		f_gaus_dpp[et] = new TF1*[size_mom_bin-1];
-		f_gaus_dth[et] = new TF1*[size_mom_bin-1];
-		f_gaus_dph[et] = new TF1*[size_mom_bin-1];
+		f_gaus_dpp [et] = new TF1*[size_mom_bin-1];
+		f_gaus_dth [et] = new TF1*[size_mom_bin-1];
+		f_gaus_dph [et] = new TF1*[size_mom_bin-1];
+		f_gaus_dppT[et] = new TF1*[size_mom_bin-1];
 
 		for(int p = 0 ; p < size_mom_bin-1 ; p++){
 			if(use_widths){
-				f_gaus_dpp[et][p] = new TF1(Form("f_gaus_dpp_%i_%i",et,p),"gaus",-approx_sig_dpp_1_1[et][p],approx_sig_dpp_1_1[et][p]);
-				f_gaus_dth[et][p] = new TF1(Form("f_gaus_dth_%i_%i",et,p),"gaus",-approx_sig_dth_1_1[et][p],approx_sig_dth_1_1[et][p]);
-				f_gaus_dph[et][p] = new TF1(Form("f_gaus_dph_%i_%i",et,p),"gaus",-approx_sig_dph_1_1[et][p],approx_sig_dph_1_1[et][p]);
+				f_gaus_dpp [et][p] = new TF1(Form("f_gaus_dpp_%i_%i" ,et,p),"gaus",-approx_sig_dpp_1_1 [et][p],approx_sig_dpp_1_1 [et][p]);
+				f_gaus_dth [et][p] = new TF1(Form("f_gaus_dth_%i_%i" ,et,p),"gaus",-approx_sig_dth_1_1 [et][p],approx_sig_dth_1_1 [et][p]);
+				f_gaus_dph [et][p] = new TF1(Form("f_gaus_dph_%i_%i" ,et,p),"gaus",-approx_sig_dph_1_1 [et][p],approx_sig_dph_1_1 [et][p]);
+				f_gaus_dppT[et][p] = new TF1(Form("f_gaus_dppT_%i_%i",et,p),"gaus",-approx_sig_dppT_1_1[et][p],approx_sig_dppT_1_1[et][p]);
 			}
 			else{
-				f_gaus_dpp[et][p] = new TF1(Form("f_gaus_dpp_%i_%i",et,p),"gaus",-0.007 ,0.007 );
-				f_gaus_dth[et][p] = new TF1(Form("f_gaus_dth_%i_%i",et,p),"gaus",-0.0007,0.0007);
-				f_gaus_dph[et][p] = new TF1(Form("f_gaus_dph_%i_%i",et,p),"gaus",-0.02  ,0.02  );
+				f_gaus_dpp [et][p] = new TF1(Form("f_gaus_dpp_%i_%i" ,et,p),"gaus",-0.05  ,0.05  );
+				f_gaus_dth [et][p] = new TF1(Form("f_gaus_dth_%i_%i" ,et,p),"gaus",-0.0007,0.0007);
+				f_gaus_dph [et][p] = new TF1(Form("f_gaus_dph_%i_%i" ,et,p),"gaus",-0.02  ,0.02  );
+				f_gaus_dppT[et][p] = new TF1(Form("f_gaus_dppT_%i_%i",et,p),"gaus",-0.05  ,0.05  );
 			}
 		}
 	}
@@ -223,6 +244,10 @@ int main(int argc, char ** argv) {
 		float p_truth = sqrt(gpx*gpx+gpy*gpy+gpz*gpz);
 		float dp_p = (p_reco-p_truth)/p_truth;
 
+		float pt_reco = sqrt(px*px+py*py);
+		float pt_truth = sqrt(gpx*gpx+gpy*gpy);
+		float dpt_pt = (pt_reco-pt_truth)/pt_truth;
+
 		float gphi = TMath::ATan(gpy/gpx);
 		float phi = TMath::ATan(py/px);
 		float dph = phi - gphi;
@@ -235,6 +260,10 @@ int main(int argc, char ** argv) {
 						h1_dpp_p_et_bins[et][p] -> Fill( dp_p );
 						h1_dth_p_et_bins[et][p] -> Fill( dth  );
 						h1_dph_p_et_bins[et][p] -> Fill( dph  );
+					}
+					
+					if( pt_truth > mom_bin[p] && pt_truth <= mom_bin[p+1] ){
+						h1_dppT_pt_et_bins[et][p] -> Fill( dpt_pt );
 					}	
 				}
 			}
@@ -246,11 +275,13 @@ int main(int argc, char ** argv) {
 	TCanvas ** c_fits_p  = new TCanvas*[size_eta_bin-1];
 	TCanvas ** c_fits_th = new TCanvas*[size_eta_bin-1];
 	TCanvas ** c_fits_ph = new TCanvas*[size_eta_bin-1];
+	TCanvas ** c_fits_pT = new TCanvas*[size_eta_bin-1];
 
 	for(int et = 0 ; et < size_eta_bin-1 ; et++){
 		c_fits_p [et] = new TCanvas(Form("c_fits_p_%i" ,et),Form("dp/p  , %.1f<eta<%.1f",eta_bin[et],eta_bin[et+1]),1000,800);	c_fits_p [et] -> Divide(5,2);
 		c_fits_th[et] = new TCanvas(Form("c_fits_th_%i",et),Form("dtheta, %.1f<eta<%.1f",eta_bin[et],eta_bin[et+1]),1000,800);	c_fits_th[et] -> Divide(5,2);
 		c_fits_ph[et] = new TCanvas(Form("c_fits_ph_%i",et),Form("dphi  , %.1f<eta<%.1f",eta_bin[et],eta_bin[et+1]),1000,800);	c_fits_ph[et] -> Divide(5,2);
+		c_fits_pT[et] = new TCanvas(Form("c_fits_pT_%i",et),Form("dpT/pT, %.1f<eta<%.1f",eta_bin[et],eta_bin[et+1]),1000,800);	c_fits_pT[et] -> Divide(5,2);
 
 		for(int p = 0 ; p < size_mom_bin-1 ; p++){
 			// Momentum resolutions
@@ -271,36 +302,44 @@ int main(int argc, char ** argv) {
 			width_dph[et][p] = f_gaus_dph[et][p] -> GetParameter(2);
 			error_dph[et][p] = (f_gaus_dph[et][p] -> GetParError(2))*(f_gaus_dph[et][p] -> GetChisquare())/(f_gaus_dph[et][p] -> GetNDF());
 
+			// pT resolutions
+			c_fits_pT[et] -> cd(p+1);
+			h1_dppT_pt_et_bins[et][p] -> Draw();	h1_dppT_pt_et_bins[et][p] -> Fit(Form("f_gaus_dppT_%i_%i",et,p),"RQ");
+                        width_dppT[et][p] = f_gaus_dppT[et][p] -> GetParameter(2);
+                        error_dppT[et][p] = (f_gaus_dppT[et][p] -> GetParError(2))*(f_gaus_dppT[et][p] -> GetChisquare())/(f_gaus_dppT[et][p] -> GetNDF());
+
 			// ----
+			// If enough statistics, add info to final histogram
 			if(h1_dpp_p_et_bins[et][p]->GetMaximum()>50.){
-				h1_dpp_v_p_et_bins[et] -> SetBinContent(p +1,width_dpp[et][p]*100. );
+				h1_dpp_v_p_et_bins[et] -> SetBinContent(p +1,width_dpp[et][p]*100. ); // the factor of 100 is to go from fraction to %
 				h1_dpp_v_p_et_bins[et] -> SetBinError  (p +1,error_dpp[et][p]*100. );
-			}
-			if(h1_dth_p_et_bins[et][p]->GetMaximum()>50.){
-				h1_dth_v_p_et_bins[et] -> SetBinContent(p +1,width_dth[et][p]*1000.);
-				h1_dth_v_p_et_bins[et] -> SetBinError  (p +1,error_dth[et][p]*1000.);
-			}
-			if(h1_dph_p_et_bins[et][p]->GetMaximum()>50.){
-				h1_dph_v_p_et_bins[et] -> SetBinContent(p +1,width_dph[et][p]*1000.);
-				h1_dph_v_p_et_bins[et] -> SetBinError  (p +1,error_dph[et][p]*1000.);
-			}
-			if(h1_dpp_p_et_bins[et][p]->GetMaximum()>50.){
 				h1_dpp_v_et_p_bins[ p] -> SetBinContent(et+1,width_dpp[et][p]*100. );
-				h1_dpp_v_et_p_bins[ p] -> SetBinError  (et+1,error_dpp[et][p]*100. );
+                                h1_dpp_v_et_p_bins[ p] -> SetBinError  (et+1,error_dpp[et][p]*100. );
 			}
 			if(h1_dth_p_et_bins[et][p]->GetMaximum()>50.){
+				h1_dth_v_p_et_bins[et] -> SetBinContent(p +1,width_dth[et][p]*1000.); // the factor of 1000 is to go from rad to mrad
+				h1_dth_v_p_et_bins[et] -> SetBinError  (p +1,error_dth[et][p]*1000.);
 				h1_dth_v_et_p_bins[ p] -> SetBinContent(et+1,width_dth[et][p]*1000.);
-				h1_dth_v_et_p_bins[ p] -> SetBinError  (et+1,error_dth[et][p]*1000.);
+                                h1_dth_v_et_p_bins[ p] -> SetBinError  (et+1,error_dth[et][p]*1000.);
 			}
 			if(h1_dph_p_et_bins[et][p]->GetMaximum()>50.){
+				h1_dph_v_p_et_bins[et] -> SetBinContent(p +1,width_dph[et][p]*1000.); // the factor of 1000 is to go from rad to mrad
+				h1_dph_v_p_et_bins[et] -> SetBinError  (p +1,error_dph[et][p]*1000.);
 				h1_dph_v_et_p_bins[ p] -> SetBinContent(et+1,width_dph[et][p]*1000.);
-				h1_dph_v_et_p_bins[ p] -> SetBinError  (et+1,error_dph[et][p]*1000.);
+                                h1_dph_v_et_p_bins[ p] -> SetBinError  (et+1,error_dph[et][p]*1000.);
+			}
+			if(h1_dppT_pt_et_bins[et][p]->GetMaximum()>50.){
+				h1_dppT_v_pT_et_bins[et] -> SetBinContent(p +1,width_dppT[et][p]*100. ); // the factor of 100 is to go from fraction to %
+				h1_dppT_v_pT_et_bins[et] -> SetBinError  (p +1,error_dppT[et][p]*100. );
+				h1_dppT_v_et_pT_bins[ p] -> SetBinContent(et+1,width_dppT[et][p]*100. );
+                                h1_dppT_v_et_pT_bins[ p] -> SetBinError  (et+1,error_dppT[et][p]*100. );
 			}
 
 		}
 		c_fits_p [et] -> Modified();	c_fits_p [et] -> Update();
 		c_fits_th[et] -> Modified();	c_fits_th[et] -> Update();
 		c_fits_ph[et] -> Modified();	c_fits_ph[et] -> Update();
+		c_fits_pT[et] -> Modified();	c_fits_pT[et] -> Update();
 	}
 	// -------------------------------------------------------------
 	// Updating table with width values
@@ -315,14 +354,16 @@ int main(int argc, char ** argv) {
 			}
 		}
 		updated_tab << "\n";
+		// ---
 		for(int et = 0 ; et < size_eta_bin-1 ; et++){
 			for(int p = 0 ; p < size_mom_bin-1 ; p++){
 				updated_tab << width_dth[et][p];
 				if(p == size_mom_bin-2) updated_tab << "\n";
 				else updated_tab << "\t";
 			}
-		}
+		}	
 		updated_tab << "\n";
+		// ---
 		for(int et = 0 ; et < size_eta_bin-1 ; et++){
 			for(int p = 0 ; p < size_mom_bin-1 ; p++){
 				updated_tab << width_dph[et][p];
@@ -330,27 +371,40 @@ int main(int argc, char ** argv) {
 				else updated_tab << "\t";
 			}
 		}
+		updated_tab << "\n";
+		// ---
+		for(int et = 0 ; et < size_eta_bin-1 ; et++){
+                        for(int p = 0 ; p < size_mom_bin-1 ; p++){
+				updated_tab << width_dppT[et][p];
+				if(p == size_mom_bin-2) updated_tab << "\n";
+                                else updated_tab << "\t";
+			}
+		}
 		updated_tab.close();
 	}
 
-	h1_dpp_v_p_et_bins[0] -> SetMinimum(0.3 );	h1_dpp_v_p_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();	h1_dpp_v_p_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-	h1_dth_v_p_et_bins[0] -> SetMinimum(0.03);      h1_dth_v_p_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dth_v_p_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-	h1_dph_v_p_et_bins[0] -> SetMinimum(0.06);      h1_dph_v_p_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dph_v_p_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-	h1_dpp_v_et_p_bins[0] -> SetMinimum(0.3 );      h1_dpp_v_et_p_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dpp_v_et_p_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-	h1_dth_v_et_p_bins[0] -> SetMinimum(0.03);      h1_dth_v_et_p_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dth_v_et_p_bins[0]->GetYaxis()->SetTitleOffset(2.3);
-	h1_dph_v_et_p_bins[0] -> SetMinimum(0.06);      h1_dph_v_et_p_bins[0] -> GetYaxis() -> SetMoreLogLabels();      h1_dph_v_et_p_bins[0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dpp_v_p_et_bins  [0] -> SetMinimum(0.3 );	h1_dpp_v_p_et_bins  [0] -> GetYaxis() -> SetMoreLogLabels();	h1_dpp_v_p_et_bins  [0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dth_v_p_et_bins  [0] -> SetMinimum(0.03);	h1_dth_v_p_et_bins  [0] -> GetYaxis() -> SetMoreLogLabels();	h1_dth_v_p_et_bins  [0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dph_v_p_et_bins  [0] -> SetMinimum(0.06);	h1_dph_v_p_et_bins  [0] -> GetYaxis() -> SetMoreLogLabels();	h1_dph_v_p_et_bins  [0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dppT_v_pT_et_bins[0] -> SetMinimum(0.3 );	h1_dppT_v_pT_et_bins[0] -> GetYaxis() -> SetMoreLogLabels();	h1_dppT_v_pT_et_bins[0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dpp_v_et_p_bins  [0] -> SetMinimum(0.3 );	h1_dpp_v_et_p_bins  [0] -> GetYaxis() -> SetMoreLogLabels();	h1_dpp_v_et_p_bins  [0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dth_v_et_p_bins  [0] -> SetMinimum(0.03);	h1_dth_v_et_p_bins  [0] -> GetYaxis() -> SetMoreLogLabels();	h1_dth_v_et_p_bins  [0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dph_v_et_p_bins  [0] -> SetMinimum(0.06);	h1_dph_v_et_p_bins  [0] -> GetYaxis() -> SetMoreLogLabels();	h1_dph_v_et_p_bins  [0]->GetYaxis()->SetTitleOffset(2.3);
+	h1_dppT_v_et_pT_bins[0] -> SetMinimum(0.3 );	h1_dppT_v_et_pT_bins[0] -> GetYaxis() -> SetMoreLogLabels();	h1_dppT_v_et_pT_bins[0]->GetYaxis()->SetTitleOffset(2.3);
 
-	h1_dpp_v_p_et_bins[0] -> SetMaximum(20);
-	h1_dth_v_p_et_bins[0] -> SetMaximum(3 );
-	h1_dph_v_p_et_bins[0] -> SetMaximum(30);
-	h1_dpp_v_et_p_bins[0] -> SetMaximum(10.1);
-	h1_dth_v_et_p_bins[0] -> SetMaximum(4   );
-	h1_dph_v_et_p_bins[0] -> SetMaximum(40  );
+	h1_dpp_v_p_et_bins  [0] -> SetMaximum(20);
+	h1_dth_v_p_et_bins  [0] -> SetMaximum(3 );
+	h1_dph_v_p_et_bins  [0] -> SetMaximum(30);
+	h1_dppT_v_pT_et_bins[0] -> SetMaximum(20);
+	h1_dpp_v_et_p_bins  [0] -> SetMaximum(10.1);
+	h1_dth_v_et_p_bins  [0] -> SetMaximum(4 );
+	h1_dph_v_et_p_bins  [0] -> SetMaximum(40);
+	h1_dppT_v_et_pT_bins[0] -> SetMaximum(20);
 
 	// -------------------------------------------------------------
 	// Plotting histograms
 	TCanvas * c1 = new TCanvas("c1","c1",1300,900);
-	c1 -> Divide(3,2);
+	c1 -> Divide(4,2);
 
 	c1 -> cd(1); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
 	h1_dpp_v_p_et_bins[0] -> Draw();
@@ -361,15 +415,22 @@ int main(int argc, char ** argv) {
 	c1 -> cd(3); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
 	h1_dph_v_p_et_bins[0] -> Draw();
 	for(int et = 0 ; et < size_eta_bin-1 ; et++) h1_dph_v_p_et_bins[et] -> Draw("same");
-	c1 -> cd(4); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
+	c1 -> cd(4);
+	h1_dppT_v_pT_et_bins[0] -> Draw();
+	for(int et = 0 ; et < size_eta_bin-1 ; et++) h1_dppT_v_pT_et_bins[et] -> Draw("same");
+	c1 -> cd(5); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
 	h1_dpp_v_et_p_bins[0] -> Draw();
 	for(int p = 0 ; p < size_mom_bin-1 ; p++) h1_dpp_v_et_p_bins[p] -> Draw("same");
-	c1 -> cd(5); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
+	c1 -> cd(6); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
 	h1_dth_v_et_p_bins[0] -> Draw();
 	for(int p = 0 ; p < size_mom_bin-1 ; p++) h1_dth_v_et_p_bins[p] -> Draw("same");
-	c1 -> cd(6); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
+	c1 -> cd(7); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
 	h1_dph_v_et_p_bins[0] -> Draw();
 	for(int p = 0 ; p < size_mom_bin-1 ; p++) h1_dph_v_et_p_bins[p] -> Draw("same");
+	c1 -> cd(8);
+	h1_dppT_v_et_pT_bins[0] -> Draw();
+	for(int p = 0 ; p < size_mom_bin-1 ; p++) h1_dppT_v_et_pT_bins[p] -> Draw("same");
+
 	TLegend * leg1 = new TLegend(0.50,0.6,0.95,0.95);
 	leg1 -> SetLineColor(0);
 	for(int et = 0 ; et < size_eta_bin-1 ; et++) leg1 -> AddEntry(h1_dph_v_p_et_bins[et],Form("%.1f < |#eta| < %.1f",eta_bin[et],eta_bin[et+1]));
@@ -389,23 +450,26 @@ int main(int argc, char ** argv) {
 		TString fname = out_pdf;
 		if(et == 0) fname+="(";
 		else if(et == size_eta_bin-2) fname+=")";
-		c_fits_p [et] -> Print("fits/dpp_"+fname);
-		c_fits_th[et] -> Print("fits/dth_"+fname);
-		c_fits_ph[et] -> Print("fits/dph_"+fname);
+		c_fits_p [et] -> Print("fits/dpp_" +fname);
+		c_fits_th[et] -> Print("fits/dth_" +fname);
+		c_fits_ph[et] -> Print("fits/dph_" +fname);
+		c_fits_pT[et] -> Print("fits/dppT_"+fname);
 	}
 
 	// -------------------------------------------------------------
 	// Saving histograms
 	TFile * Fout = new TFile(outfile,"recreate");
 	for(int et = 0 ; et < size_eta_bin-1 ; et++){
-		h1_dpp_v_p_et_bins[et] -> Write(Form("h1_dpp_v_p_et_bins_%i",et));
-		h1_dth_v_p_et_bins[et] -> Write(Form("h1_dth_v_p_et_bins_%i",et));
-		h1_dph_v_p_et_bins[et] -> Write(Form("h1_dph_v_p_et_bins_%i",et));
+		h1_dpp_v_p_et_bins  [et] -> Write(Form("h1_dpp_v_p_et_bins_%i"  ,et));
+		h1_dth_v_p_et_bins  [et] -> Write(Form("h1_dth_v_p_et_bins_%i"  ,et));
+		h1_dph_v_p_et_bins  [et] -> Write(Form("h1_dph_v_p_et_bins_%i"  ,et));
+		h1_dppT_v_pT_et_bins[et] -> Write(Form("h1_dppT_v_pT_et_bins_%i",et));
 	}
 	for(int p = 0 ; p < size_mom_bin-1 ; p++){
-		h1_dpp_v_et_p_bins[p] -> Write(Form("h1_dpp_v_et_p_bins_%i",p));
-		h1_dth_v_et_p_bins[p] -> Write(Form("h1_dth_v_et_p_bins_%i",p));
-		h1_dph_v_et_p_bins[p] -> Write(Form("h1_dph_v_et_p_bins_%i",p));
+		h1_dpp_v_et_p_bins  [p] -> Write(Form("h1_dpp_v_et_p_bins_%i"  ,p));
+		h1_dth_v_et_p_bins  [p] -> Write(Form("h1_dth_v_et_p_bins_%i"  ,p));
+		h1_dph_v_et_p_bins  [p] -> Write(Form("h1_dph_v_et_p_bins_%i"  ,p));
+		h1_dppT_v_et_pT_bins[p] -> Write(Form("h1_dppT_v_et_pT_bins_%i",p));
 	}
 	c1 -> Write("c1");
 	TVT_eta_bin.Write("TVT_eta_bin");
