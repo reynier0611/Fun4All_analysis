@@ -6,6 +6,7 @@
 #include <filesystem>
 
 // Root includes
+#include <TROOT.h>
 #include "TRint.h"
 #include "TH1.h"
 #include "TH2.h"
@@ -16,14 +17,13 @@
 #include "TCanvas.h"
 #include "TLegend.h"
 #include "TVectorT.h"
-#include "Math/LorentzVector.h"
 
 namespace fs = std::filesystem;
 using namespace std;
 
 // Forward-declaring functions
 void prettyTH1F( TH1F * h1 , int color , int marker , float min , float max );
-void set_h1_range(TH1F ** h1_array,int array_size);
+void better_yaxis(TH1F ** h1_array, int array_size);
 // ============================================================================================================================================
 int main(int argc, char ** argv) {
 
@@ -64,7 +64,7 @@ int main(int argc, char ** argv) {
 	else if(atoi(argv[2])==2){update_tab = false;   cout << "Table won't be updated\n";}
 	else{cout << "Something wrong with your election of input parameter 'B'. Bailing out!\n"; exit(0);}
 
-	if     (atoi(argv[3])==1){keep_plots = false;	cout << "Will run and quit. Examine the output files for resulting plots\n";}
+	if     (atoi(argv[3])==1){keep_plots = false;	cout << "Will run and quit. Examine the output files for resulting plots\n"; gROOT->SetBatch(kTRUE);}
 	else if(atoi(argv[3])==2){keep_plots = true ;	cout << "Will run and show the plots\n" ;}
 	else{cout << "Something wrong with your election of input parameter 'C'. Bailing out!\n"; exit(0);}
 
@@ -194,7 +194,6 @@ int main(int argc, char ** argv) {
 			h1_dppT_pt_et_bins[et][p] -> SetTitle(Form("%.1f < |#eta| < %.1f, %.1f < pT < %.1f GeV/c",eta_bin[et],eta_bin[et+1],mom_bin[p],mom_bin[p+1]));
 		}
 	}
-
 	// -------------------------------------------------------------
 	// Defining histograms for final (already extracted) resolutions	
 	TH1F ** h1_dpp_v_p_et_bins   = new TH1F*[size_eta_bin-1];
@@ -215,7 +214,6 @@ int main(int argc, char ** argv) {
 	TH1F ** h1_dppT_v_et_pT_bins = new TH1F*[size_mom_bin-1];
 
 	for(int p = 0 ; p < size_mom_bin-1 ; p++){
-
 		h1_dpp_v_et_p_bins  [p] = new TH1F(Form("h1_dpp_v_et_p_bins_%i"  ,p),";#eta;dp/p [%]"        ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dpp_v_et_p_bins  [p] , 50+p*2 , 20 , 0. , 10. );
 		h1_dth_v_et_p_bins  [p] = new TH1F(Form("h1_dth_v_et_p_bins_%i"  ,p),";#eta;d#theta [mrad]"  ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dth_v_et_p_bins  [p] , 50+p*2 , 20 , 0. , 1.  );
 		h1_dph_v_et_p_bins  [p] = new TH1F(Form("h1_dph_v_et_p_bins_%i"  ,p),";#eta;d#phi [mrad]"    ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dph_v_et_p_bins  [p] , 50+p*2 , 20 , 0. , 25. );
@@ -415,6 +413,13 @@ int main(int argc, char ** argv) {
 		updated_tab.close();
 	}
 
+        better_yaxis(h1_dpp_v_p_et_bins,size_eta_bin-1);
+        // better_yaxis(h1_dth_v_p_et_bins,size_eta_bin-1);
+        // better_yaxis(h1_dph_v_p_et_bins,size_eta_bin-1);
+        // better_yaxis(h1_dpp_v_et_p_bins,size_mom_bin-1);
+        // better_yaxis(h1_dth_v_et_p_bins,size_mom_bin-1);
+        // better_yaxis(h1_dph_v_et_p_bins,size_mom_bin-1);
+	
 	h1_dpp_v_p_et_bins  [0] -> SetMinimum(0.3 );	h1_dpp_v_p_et_bins  [0] -> GetYaxis() -> SetMoreLogLabels();	h1_dpp_v_p_et_bins  [0]->GetYaxis()->SetTitleOffset(2.3);
 	h1_dth_v_p_et_bins  [0] -> SetMinimum(0.03);	h1_dth_v_p_et_bins  [0] -> GetYaxis() -> SetMoreLogLabels();	h1_dth_v_p_et_bins  [0]->GetYaxis()->SetTitleOffset(2.3);
 	h1_dph_v_p_et_bins  [0] -> SetMinimum(0.06);	h1_dph_v_p_et_bins  [0] -> GetYaxis() -> SetMoreLogLabels();	h1_dph_v_p_et_bins  [0]->GetYaxis()->SetTitleOffset(2.3);
@@ -523,8 +528,8 @@ void prettyTH1F( TH1F * h1 , int color , int marker , float min , float max ){
 	h1 -> SetMarkerStyle(marker);
 	h1 -> SetMarkerColor(color);
 
-	//h1 -> SetMinimum(min);
-	//h1 -> SetMaximum(max);
+	h1 -> SetMinimum(min);
+	h1 -> SetMaximum(max);
 
 	h1 -> GetXaxis() -> CenterTitle();
 	h1 -> GetXaxis() -> SetNdivisions(107); // to draw less tick marks
@@ -534,24 +539,45 @@ void prettyTH1F( TH1F * h1 , int color , int marker , float min , float max ){
 	h1 -> SetMinimum(0.001);
 }
 
-void set_h1_range(TH1F ** h1_array,int array_size){
-  float min = 999;
-  float max = -999;//init large min, small max
-  for(int i = 0 ; i < array_size; i++){
-    float temp_min = h1_array[i]->GetMinimum();
-    float temp_max = h1_array[i]->GetMaximum();
-    if (min > temp_min)
-      min = temp_min;
-    if (max < temp_max)
-      max = temp_max;
-   }
 
+void better_yaxis(TH1F ** h1_array,int array_size){
+
+  //-----------------------------------------------                                                                                                                                          
+  //Determine the Y-axis min and max                                                                                                                                                         
+  float min = 999;
+  float max = -999;
+
+  for(int i = 0 ; i < array_size; i++){
+    int min_bin = h1_array[i]->GetMinimumBin();
+    int max_bin = h1_array[i]->GetMaximumBin();
+
+    float temp_min = h1_array[i]->GetBinContent(min_bin)
+                     - h1_array[i]->GetBinError(min_bin);
+
+    if (temp_min < 0)
+      temp_min = h1_array[i]->GetBinContent(min_bin);
+
+    float temp_max = h1_array[i]->GetBinContent(max_bin)
+                     + h1_array[i]->GetBinError(max_bin);
+
+    if ((temp_min > 0) && (min > temp_min))
+      min = temp_min;
+    if (max < temp_max){
+      max = temp_max;
+    }
+   }
+  cout<<"Minimum = "<<min<<", Maximum = "<<max<<endl;
   max = 1.2*max;
   min = 0.8*min;
-  //for(int i = 0 ; i < array_size; i++){
-    h1_array[0]->SetMaximum(max);
-    h1_array[0]->SetMinimum(min);
-    //}
-  
+  //-----------------------------------------------                                                                                                                                          
+  //Set the Y-axis Range                                                                                                                                                                     
+  for(int i = 0 ; i < array_size; i++){
+    h1_array[i]->GetYaxis()->SetRangeUser(min,max);
+  }
+  //-----------------------------------------------                                                                                                                                          
+  //Labels                                                                                                                                                                                   
+  h1_array[0]->GetYaxis()->SetTitleOffset(2.3);
+  h1_array[0]->GetYaxis()->SetMoreLogLabels();
+
   return;
 }
