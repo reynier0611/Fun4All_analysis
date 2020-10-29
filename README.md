@@ -9,7 +9,8 @@ The first step is done in this repository. Codes here loop over root files expec
 The codes here should be run the following way:
 
 ```
-./codename A B C filename.root
+Run this code as:
+./analysis_momentum_resolution A B C filename.root config.txt
 where:
 A = 1 -> Widths from table will be used
   = 2 -> Widths from table won't be used
@@ -17,6 +18,7 @@ B = 1 -> Table will be updated
   = 2 -> Table won't be updated
 C = 1 -> Run code and quit
   = 2 -> Run code and show plots
+The files 'filename.root' and 'config.txt' are expected to be in the directories '../data' and 'config' respectively
 ```
 
 ## analysis
