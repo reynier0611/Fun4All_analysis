@@ -17,6 +17,7 @@
 #include "TCanvas.h"
 #include "TLegend.h"
 #include "TVectorT.h"
+#include "Math/LorentzVector.h"
 
 namespace fs = std::filesystem;
 using namespace std;
@@ -24,6 +25,7 @@ using namespace std;
 // Forward-declaring functions
 void prettyTH1F( TH1F * h1 , int color , int marker , float min , float max );
 void better_yaxis(TH1F ** h1_array, int array_size);
+
 // ============================================================================================================================================
 int main(int argc, char ** argv) {
 
@@ -64,12 +66,13 @@ int main(int argc, char ** argv) {
 	else if(atoi(argv[2])==2){update_tab = false;   cout << "Table won't be updated\n";}
 	else{cout << "Something wrong with your election of input parameter 'B'. Bailing out!\n"; exit(0);}
 
-	if     (atoi(argv[3])==1){keep_plots = false;	cout << "Will run and quit. Examine the output files for resulting plots\n"; gROOT->SetBatch(kTRUE);}
+	if     (atoi(argv[3])==1){keep_plots = false;	cout << "Will run and quit. Examine the output files for resulting plots\n";}
 	else if(atoi(argv[3])==2){keep_plots = true ;	cout << "Will run and show the plots\n" ;}
 	else{cout << "Something wrong with your election of input parameter 'C'. Bailing out!\n"; exit(0);}
 
 	// -------------------------
 	// Binning
+
 	float eta_bin[100] = {0};
         float mom_bin[100] = {0};
         int ctr_eta = 0;
@@ -194,6 +197,7 @@ int main(int argc, char ** argv) {
 			h1_dppT_pt_et_bins[et][p] -> SetTitle(Form("%.1f < |#eta| < %.1f, %.1f < pT < %.1f GeV/c",eta_bin[et],eta_bin[et+1],mom_bin[p],mom_bin[p+1]));
 		}
 	}
+
 	// -------------------------------------------------------------
 	// Defining histograms for final (already extracted) resolutions	
 	TH1F ** h1_dpp_v_p_et_bins   = new TH1F*[size_eta_bin-1];
@@ -214,6 +218,7 @@ int main(int argc, char ** argv) {
 	TH1F ** h1_dppT_v_et_pT_bins = new TH1F*[size_mom_bin-1];
 
 	for(int p = 0 ; p < size_mom_bin-1 ; p++){
+
 		h1_dpp_v_et_p_bins  [p] = new TH1F(Form("h1_dpp_v_et_p_bins_%i"  ,p),";#eta;dp/p [%]"        ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dpp_v_et_p_bins  [p] , 50+p*2 , 20 , 0. , 10. );
 		h1_dth_v_et_p_bins  [p] = new TH1F(Form("h1_dth_v_et_p_bins_%i"  ,p),";#eta;d#theta [mrad]"  ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dth_v_et_p_bins  [p] , 50+p*2 , 20 , 0. , 1.  );
 		h1_dph_v_et_p_bins  [p] = new TH1F(Form("h1_dph_v_et_p_bins_%i"  ,p),";#eta;d#phi [mrad]"    ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dph_v_et_p_bins  [p] , 50+p*2 , 20 , 0. , 25. );
@@ -528,8 +533,8 @@ void prettyTH1F( TH1F * h1 , int color , int marker , float min , float max ){
 	h1 -> SetMarkerStyle(marker);
 	h1 -> SetMarkerColor(color);
 
-	h1 -> SetMinimum(min);
-	h1 -> SetMaximum(max);
+	//h1 -> SetMinimum(min);
+	//h1 -> SetMaximum(max);
 
 	h1 -> GetXaxis() -> CenterTitle();
 	h1 -> GetXaxis() -> SetNdivisions(107); // to draw less tick marks
