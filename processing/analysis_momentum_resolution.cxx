@@ -31,11 +31,12 @@ int main(int argc, char ** argv) {
 	TApplication *myapp = new TApplication("myapp",0,0);
 #endif
 
-	if(argc!=5){
-		cout << "Run this code as:\n\033[1;32m./analysis_momentum_resolution A B C filename.root\033[0m\n";
+	if(argc!=6){
+		cout << "Run this code as:\n\033[1;32m./analysis_momentum_resolution A B C filename.root config.txt\033[0m\n";
 		cout << "where:\nA = 1 -> Widths from table will be used\n  = 2 -> Widths from table \033[1;31mwon't\033[0m be used\n";
 		cout << "B = 1 -> Table will be updated\n  = 2 -> Table \033[1;31mwon't\033[0m be updated\n";
 		cout << "C = 1 -> Run code and quit\n  = 2 -> Run code and show plots\n";
+		cout << "The files 'filename.root' and 'config.txt' are expected to be in the directories '../data' and 'config' respectively\n";
 		exit(0);
 	}
 
@@ -51,6 +52,8 @@ int main(int argc, char ** argv) {
 
 	cout << "\033[1;31m********************************************************************\nUSEFUL INFO:\033[0m\nWill be loading data from file: '" << argv[4] << "' assumed to be in directory 'data'" << endl;
 
+	cout << "Will be loading configuration from file: '" << argv[5] << "' assumed to be in directory 'config'" << endl;
+
 	if     (atoi(argv[1])==1){use_widths = true ;	cout << "Will be using widths from table\n" ;}
 	else if(atoi(argv[1])==2){use_widths = false;	cout << "Won't be using widths from table\n";}
 	else{cout << "Something wrong with your election of input parameter 'A'. Bailing out!\n"; exit(0);}
@@ -65,11 +68,36 @@ int main(int argc, char ** argv) {
 
 	// -------------------------
 	// Binning
-	float eta_bin[] = {-4.0,-3.5,-3.0,-2.5,-2.0,-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0};
-	float mom_bin[] = {0.,1.,2.,3.,4.,5.,10.,15.,20.,25.,30.};
-
-	const int size_eta_bin = sizeof(eta_bin)/sizeof(*eta_bin);
-	const int size_mom_bin = sizeof(mom_bin)/sizeof(*mom_bin);
+	float eta_bin[100] = {0};
+        float mom_bin[100] = {0};
+        int ctr_eta = 0;
+        int ctr_mom = 0;
+        fstream f_conf;
+        double val = 0;
+        string sval;
+	string config_filename = argv[5];
+        f_conf.open("config/"+config_filename);
+        if(!f_conf){cout << "Could not find config file: '" << config_filename << "'. Bailing out!" <<  endl; exit(0);}
+	bool reached_end_of_line = false;
+        while(!(f_conf.eof())){
+                f_conf >> sval;
+                if(sval=="\\") reached_end_of_line = true;
+                else{
+                        val = stod(sval);
+                        if(!reached_end_of_line){
+                                eta_bin[ctr_eta] = val;
+                                ctr_eta++;
+                        }
+                        else{
+                                mom_bin[ctr_mom] = val;
+                                ctr_mom++;
+                        }
+                }
+        }
+        ctr_mom--;
+	f_conf.close();
+	const int size_eta_bin = ctr_eta;
+	const int size_mom_bin = ctr_mom;
 
 	TVectorT<double> TVT_eta_bin(size_eta_bin);	for(int i = 0 ; i < size_eta_bin ; i++) TVT_eta_bin[i] = eta_bin[i];
 	TVectorT<double> TVT_mom_bin(size_mom_bin);	for(int i = 0 ; i < size_mom_bin ; i++) TVT_mom_bin[i] = mom_bin[i];
@@ -101,10 +129,10 @@ int main(int argc, char ** argv) {
 	int nEntries = T -> GetEntries();
 	// -------------------------------------------------------------
 	fstream tab;
-	float approx_sig_dpp [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dth [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dph [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dppT[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_sig_dpp [100][100] = {{0}};
+	float approx_sig_dth [100][100] = {{0}};
+	float approx_sig_dph [100][100] = {{0}};
+	float approx_sig_dppT[100][100] = {{0}};
 	TString temp_str;
 	if(use_widths){
 		tab.open(tab_name);
@@ -119,10 +147,10 @@ int main(int argc, char ** argv) {
 		tab.close();
 	}
 
-	float approx_sig_dpp_3_0 [size_eta_bin-1][size_mom_bin-1] = {{0}};	float approx_sig_dpp_1_1 [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dth_3_0 [size_eta_bin-1][size_mom_bin-1] = {{0}};	float approx_sig_dth_1_1 [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dph_3_0 [size_eta_bin-1][size_mom_bin-1] = {{0}};	float approx_sig_dph_1_1 [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dppT_3_0[size_eta_bin-1][size_mom_bin-1] = {{0}};	float approx_sig_dppT_1_1[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_sig_dpp_3_0 [100][100] = {{0}};	float approx_sig_dpp_1_1 [100][100] = {{0}};
+	float approx_sig_dth_3_0 [100][100] = {{0}};	float approx_sig_dth_1_1 [100][100] = {{0}};
+	float approx_sig_dph_3_0 [100][100] = {{0}};	float approx_sig_dph_1_1 [100][100] = {{0}};
+	float approx_sig_dppT_3_0[100][100] = {{0}};	float approx_sig_dppT_1_1[100][100] = {{0}};
 
 	for(int et = 0 ; et < size_eta_bin-1 ; et++){
 		for(int p = 0 ; p < size_mom_bin-1 ; p++){
@@ -184,21 +212,21 @@ int main(int argc, char ** argv) {
 	TH1F ** h1_dppT_v_et_pT_bins = new TH1F*[size_mom_bin-1];
 
 	for(int p = 0 ; p < size_mom_bin-1 ; p++){
-		h1_dpp_v_et_p_bins  [p] = new TH1F(Form("h1_dpp_v_et_p_bins_%i"  ,p),";#eta;dp/p [%]"        ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dpp_v_et_p_bins[p] , 50+p*2 , 20 , 0. , 10. );
-		h1_dth_v_et_p_bins  [p] = new TH1F(Form("h1_dth_v_et_p_bins_%i"  ,p),";#eta;d#theta [mrad]"  ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dth_v_et_p_bins[p] , 50+p*2 , 20 , 0. , 1.  );
-		h1_dph_v_et_p_bins  [p] = new TH1F(Form("h1_dph_v_et_p_bins_%i"  ,p),";#eta;d#phi [mrad]"    ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dph_v_et_p_bins[p] , 50+p*2 , 20 , 0. , 25. );
-		h1_dppT_v_et_pT_bins[p] = new TH1F(Form("h1_dppT_v_et_pT_bins_%i",p),";#eta;dp_{T}/p_{T} [%]",size_eta_bin-1,eta_bin);	prettyTH1F( h1_dph_v_et_p_bins[p] , 50+p*2 , 20 , 0. , 10. );
+		h1_dpp_v_et_p_bins  [p] = new TH1F(Form("h1_dpp_v_et_p_bins_%i"  ,p),";#eta;dp/p [%]"        ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dpp_v_et_p_bins  [p] , 50+p*2 , 20 , 0. , 10. );
+		h1_dth_v_et_p_bins  [p] = new TH1F(Form("h1_dth_v_et_p_bins_%i"  ,p),";#eta;d#theta [mrad]"  ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dth_v_et_p_bins  [p] , 50+p*2 , 20 , 0. , 1.  );
+		h1_dph_v_et_p_bins  [p] = new TH1F(Form("h1_dph_v_et_p_bins_%i"  ,p),";#eta;d#phi [mrad]"    ,size_eta_bin-1,eta_bin);	prettyTH1F( h1_dph_v_et_p_bins  [p] , 50+p*2 , 20 , 0. , 25. );
+		h1_dppT_v_et_pT_bins[p] = new TH1F(Form("h1_dppT_v_et_pT_bins_%i",p),";#eta;dp_{T}/p_{T} [%]",size_eta_bin-1,eta_bin);	prettyTH1F( h1_dppT_v_et_pT_bins[p] , 50+p*2 , 20 , 0. , 10. );
 	}
 	// -------------------------------------------------------------
 	// Declaring other useful variables and functions
-	float width_dpp [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float error_dpp [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float width_dth [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float error_dth [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float width_dph [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float error_dph [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float width_dppT[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float error_dppT[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float width_dpp [100][100] = {{0}};
+	float error_dpp [100][100] = {{0}};
+	float width_dth [100][100] = {{0}};
+	float error_dth [100][100] = {{0}};
+	float width_dph [100][100] = {{0}};
+	float error_dph [100][100] = {{0}};
+	float width_dppT[100][100] = {{0}};
+	float error_dppT[100][100] = {{0}};
 
 	TF1 *** f_gaus_dpp  = new TF1**[size_eta_bin-1];
 	TF1 *** f_gaus_dth  = new TF1**[size_eta_bin-1];
@@ -415,7 +443,7 @@ int main(int argc, char ** argv) {
 	c1 -> cd(3); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
 	h1_dph_v_p_et_bins[0] -> Draw();
 	for(int et = 0 ; et < size_eta_bin-1 ; et++) h1_dph_v_p_et_bins[et] -> Draw("same");
-	c1 -> cd(4);
+	c1 -> cd(4); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
 	h1_dppT_v_pT_et_bins[0] -> Draw();
 	for(int et = 0 ; et < size_eta_bin-1 ; et++) h1_dppT_v_pT_et_bins[et] -> Draw("same");
 	c1 -> cd(5); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
@@ -427,7 +455,7 @@ int main(int argc, char ** argv) {
 	c1 -> cd(7); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
 	h1_dph_v_et_p_bins[0] -> Draw();
 	for(int p = 0 ; p < size_mom_bin-1 ; p++) h1_dph_v_et_p_bins[p] -> Draw("same");
-	c1 -> cd(8);
+	c1 -> cd(8); gPad -> SetRightMargin(0.04); gPad -> SetTopMargin(0.04); gPad ->SetLeftMargin(0.15); gPad -> SetLogy();
 	h1_dppT_v_et_pT_bins[0] -> Draw();
 	for(int p = 0 ; p < size_mom_bin-1 ; p++) h1_dppT_v_et_pT_bins[p] -> Draw("same");
 
@@ -439,7 +467,7 @@ int main(int argc, char ** argv) {
 	TLegend * leg2 = new TLegend(0.20,0.5,0.65,0.95);
 	leg2 -> SetLineColor(0);
 	for(int p = 0 ; p < size_mom_bin-1 ; p++) leg2 -> AddEntry(h1_dph_v_et_p_bins[p],Form("%.1f < p < %.1f GeV/c",mom_bin[p],mom_bin[p+1]));
-	c1 -> cd(4);
+	c1 -> cd(8);
 	leg2 -> Draw("same");
 	c1 -> Modified();
 	c1 -> Update();
