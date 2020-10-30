@@ -17,6 +17,7 @@
 #include "TLegend.h"
 #include "TVectorT.h"
 #include "TGraphErrors.h"
+#include "TLatex.h"
 
 namespace fs = std::filesystem;
 using namespace std;
@@ -33,13 +34,15 @@ int main(int argc, char ** argv) {
 #else
 	TApplication *myapp = new TApplication("myapp",0,0);
 #endif
-
+	gStyle->SetTitleSize(0.08,"t");
 	//gStyle->SetErrorX(0.0001);
 	// ------------------------------------------------------------------------------
 	// List paths to files that will be loaded
 	TString fnames[] = {
 		"../../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det2_10x10_sPHENIX_FastTrackingEvalsigma_eta_16_p_16_.root",
 		"../../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det2_10x10_Beast_FastTrackingEvalsigma_eta_16_p_16_.root"
+		//"../../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det2_10x10_sPHENIX_FastTrackingEvalsigma_eta_16_p_26_.root",
+		//"../../output/output_vtx_res_skimmed_combined_vtx_new_pi-_det2_10x10_Beast_FastTrackingEvalsigma_eta_16_p_26_.root"
 	};
 	// #######################################################################################################################################
 	// YOU SHOULDN'T NEED TO MODIFY ANYTHING IN THE BLOCK OF CODE BELOW AND UNTIL AFTER THE NEXT LINE WITH ###...
@@ -181,26 +184,56 @@ int main(int argc, char ** argv) {
 		leg_dvt_p[i] -> AddEntry(h1_dvt_v_p_et_bins[0][i],Form("1.4T, A = %.1f, B = %.2f",f_dvt_p_10um_sPHENIX[i]->GetParameter(0),abs(f_dvt_p_10um_sPHENIX[i]->GetParameter(1))));
 	}
 	// -----------------------------------
+	TLatex ** tex_3_0_T_par_DCAz = new TLatex * [num_eta_bin[0]];
+        TLatex ** tex_1_4_T_par_DCAz = new TLatex * [num_eta_bin[0]];
+	double tex_y_3_0_DCAz[] = {36,90,90,180,630,1080,2250,3800};
+        double tex_y_1_4_DCAz[] = {31,77,77,155,540,930.,1930,3250};
+
 	TLegend ** leg_dvl_pT = new TLegend*[num_eta_bin[0]];
 	for(int i = 8 ; i < num_eta_bin[0] ; i++){
-		leg_dvl_pT[i] = new TLegend(0.35,0.7,0.96,0.89);
+		leg_dvl_pT[i] = new TLegend(0.30,0.7,0.6,0.89);
 		leg_dvl_pT[i] -> SetLineColor(0);
-		leg_dvl_pT[i] -> SetHeader("#sigma(DCA_{z}) = #frac{A}{p_{T}} #oplus B","C");
-		leg_dvl_pT[i] -> AddEntry(h1_dvl_v_pT_et_bins[1][i],Form("3.0T, A = %.1f, B = %.2f",f_dvl_pT_10um_Beast  [i]->GetParameter(0),abs(f_dvl_pT_10um_Beast  [i]->GetParameter(1))));
-		leg_dvl_pT[i] -> AddEntry(h1_dvl_v_pT_et_bins[0][i],Form("1.4T, A = %.1f, B = %.2f",f_dvl_pT_10um_sPHENIX[i]->GetParameter(0),abs(f_dvl_pT_10um_sPHENIX[i]->GetParameter(1))));
+		//leg_dvl_pT[i] -> SetHeader("#sigma(DCA_{z}) = #frac{A}{p_{T}} #oplus B","C");
+		leg_dvl_pT[i] -> AddEntry(h1_dvl_v_pT_et_bins[1][i]," ");//Form("3.0T, A = %.1f, B = %.2f",f_dvl_pT_10um_Beast  [i]->GetParameter(0),abs(f_dvl_pT_10um_Beast  [i]->GetParameter(1))));
+		leg_dvl_pT[i] -> AddEntry(h1_dvl_v_pT_et_bins[0][i]," ");//Form("1.4T, A = %.1f, B = %.2f",f_dvl_pT_10um_sPHENIX[i]->GetParameter(0),abs(f_dvl_pT_10um_sPHENIX[i]->GetParameter(1))));
+	
+		tex_3_0_T_par_DCAz[i] = new TLatex(2.65,tex_y_3_0_DCAz[i-8],Form("#bf{3.0T, A = %.0f, B = %.1f}",f_dvl_pT_10um_Beast  [i]->GetParameter(0),abs(f_dvl_pT_10um_Beast  [i]->GetParameter(1))));
+		tex_1_4_T_par_DCAz[i] = new TLatex(2.65,tex_y_1_4_DCAz[i-8],Form("#bf{1.4T, A = %.0f, B = %.1f}",f_dvl_pT_10um_sPHENIX[i]->GetParameter(0),abs(f_dvl_pT_10um_sPHENIX[i]->GetParameter(1))));
+
+		tex_3_0_T_par_DCAz[i] -> SetTextSize(0.06);
+		tex_1_4_T_par_DCAz[i] -> SetTextSize(0.06);
 	}
 	// -----------------------------------
+	TLatex ** tex_3_0_T_par_DCAt = new TLatex * [num_eta_bin[0]];
+        TLatex ** tex_1_4_T_par_DCAt = new TLatex * [num_eta_bin[0]];
+	double tex_y_3_0_DCAt[] = {36,72,90,135,135,180,225,270};
+        double tex_y_1_4_DCAt[] = {31,62,77,115,115,154,192,230};
+
 	TLegend ** leg_dvt_pT = new TLegend*[num_eta_bin[0]];
 	for(int i = 8 ; i < num_eta_bin[0] ; i++){
-		leg_dvt_pT[i] = new TLegend(0.35,0.7,0.96,0.89);
+		leg_dvt_pT[i] = new TLegend(0.30,0.7,0.6,0.89);
 		leg_dvt_pT[i] -> SetLineColor(0);
-		leg_dvt_pT[i] -> SetHeader("#sigma(DCA_{T}) = #frac{A}{p_{T}} #oplus B","C");
-		leg_dvt_pT[i] -> AddEntry(h1_dvt_v_pT_et_bins[1][i],Form("3.0T, A = %.1f, B = %.2f",f_dvt_pT_10um_Beast  [i]->GetParameter(0),abs(f_dvt_pT_10um_Beast  [i]->GetParameter(1))));
-		leg_dvt_pT[i] -> AddEntry(h1_dvt_v_pT_et_bins[0][i],Form("1.4T, A = %.1f, B = %.2f",f_dvt_pT_10um_sPHENIX[i]->GetParameter(0),abs(f_dvt_pT_10um_sPHENIX[i]->GetParameter(1))));
+		//leg_dvt_pT[i] -> SetHeader("#sigma(DCA_{T}) = #frac{A}{p_{T}} #oplus B","C");
+		
+		leg_dvt_pT[i] -> AddEntry(h1_dvt_v_pT_et_bins[1][i]," ");//Form("3.0T, A = %.0f, B = %.1f",f_dvt_pT_10um_Beast  [i]->GetParameter(0),abs(f_dvt_pT_10um_Beast  [i]->GetParameter(1))));
+		leg_dvt_pT[i] -> AddEntry(h1_dvt_v_pT_et_bins[0][i]," ");//Form("1.4T, A = %.0f, B = %.1f",f_dvt_pT_10um_sPHENIX[i]->GetParameter(0),abs(f_dvt_pT_10um_sPHENIX[i]->GetParameter(1))));
+	
+		tex_3_0_T_par_DCAt[i] = new TLatex(2.65,tex_y_3_0_DCAt[i-8],Form("#bf{3.0T, A = %.0f, B = %.1f}",f_dvt_pT_10um_Beast  [i]->GetParameter(0),abs(f_dvt_pT_10um_Beast  [i]->GetParameter(1))));
+		tex_1_4_T_par_DCAt[i] = new TLatex(2.65,tex_y_1_4_DCAt[i-8],Form("#bf{1.4T, A = %.0f, B = %.1f}",f_dvt_pT_10um_sPHENIX[i]->GetParameter(0),abs(f_dvt_pT_10um_sPHENIX[i]->GetParameter(1))));
+
+		tex_3_0_T_par_DCAt[i] -> SetTextSize(0.06);
+		tex_1_4_T_par_DCAt[i] -> SetTextSize(0.06);
 	}
+
 	// ------------------------------------------------------------------------------
+	// Pad limits
+        double lowx[] = {0.00,0.25,0.50,0.75,0.00,0.25,0.50,0.75};
+        double lowy[] = {0.50,0.50,0.50,0.50,0.00,0.00,0.00,0.00};
+        double higx[] = {0.25,0.50,0.75,1.00,0.25,0.50,0.75,1.00};
+        double higy[] = {1.00,1.00,1.00,1.00,0.50,0.50,0.50,0.50};
+        // ------------------------------------------------------------------------------
 	// Plotting graphs
-	TCanvas * c1 = new TCanvas("c1","c1",1400,900);
+	TCanvas * c1 = new TCanvas("c1","c1",1400,800);
 	c1 -> Divide(4,2);
 	for(int i = 8 ; i < num_eta_bin[0] ; i++){
 		c1 -> cd(i-7);
@@ -212,7 +245,7 @@ int main(int argc, char ** argv) {
 	c1 -> Modified();
 	c1 -> Update();
 	// -----------------------------------
-	TCanvas * c2 = new TCanvas("c2","c2",1400,900);
+	TCanvas * c2 = new TCanvas("c2","c2",1400,800);
 	c2 -> Divide(4,2);
 	for(int i = 8 ; i < num_eta_bin[0] ; i++){
 		c2 -> cd(i-7);
@@ -224,36 +257,48 @@ int main(int argc, char ** argv) {
 	c2 -> Modified();
 	c2 -> Update();
 	// -----------------------------------
-	TCanvas * c3 = new TCanvas("c3","c3",1400,900);
+	TVirtualPad ** pad1 = new TVirtualPad*[num_eta_bin[0]];
+	TCanvas * c3 = new TCanvas("c3","c3",1400,800);
 	c3 -> Divide(4,2);
 	for(int i = 8 ; i < num_eta_bin[0] ; i++){
-		c3 -> cd(i-7);
-		gPad -> SetRightMargin(0.01); gPad -> SetLeftMargin(0.24); gPad -> SetBottomMargin(0.17);
+		//c3 -> cd(i-7);
+		pad1[i-8] = c3 -> cd(i-7);
+                pad1[i-8] -> SetPad(Form("pad1_%i",i-8),Form("pad1_%i",i-8),lowx[i-8],lowy[i-8],higx[i-8],higy[i-8],kWhite, 0, 0);
+		gPad -> SetRightMargin(0.01); gPad -> SetLeftMargin(0.25); gPad -> SetBottomMargin(0.17);
 		h1_dvl_v_pT_et_bins[1][i] -> Draw();
 		h1_dvl_v_pT_et_bins[0][i] -> Draw("same");
 		leg_dvl_pT[i] -> Draw("same");
+	
+		tex_3_0_T_par_DCAz[i] -> Draw("same");
+		tex_1_4_T_par_DCAz[i] -> Draw("same");
 	}
 	c3 -> Modified();
 	c3 -> Update();
 	// -----------------------------------
-	TCanvas * c4 = new TCanvas("c4","c4",1400,900);
+	TVirtualPad ** pad2 = new TVirtualPad*[num_eta_bin[0]];
+	TCanvas * c4 = new TCanvas("c4","c4",1400,800);
 	c4 -> Divide(4,2);
 	for(int i = 8 ; i < num_eta_bin[0] ; i++){
-		c4 -> cd(i-7);
+		//c4 -> cd(i-7);
+		pad2[i-8] = c4 -> cd(i-7);
+                pad2[i-8] -> SetPad(Form("pad2_%i",i-8),Form("pad2_%i",i-8),lowx[i-8],lowy[i-8],higx[i-8],higy[i-8],kWhite, 0, 0);
 		gPad -> SetRightMargin(0.01); gPad -> SetLeftMargin(0.24); gPad -> SetBottomMargin(0.17);
 		h1_dvt_v_pT_et_bins[1][i] -> Draw(); 
 		h1_dvt_v_pT_et_bins[0][i] -> Draw("same");
 		leg_dvt_pT[i] -> Draw("same");
+		
+		tex_3_0_T_par_DCAt[i] -> Draw("same");
+                tex_1_4_T_par_DCAt[i] -> Draw("same");
 	}
 	c4 -> Modified();
-	c4 -> Update();
+	c4 -> Update();	
 	// ------------------------------------------------------------------------------
 	// Saving results to pdf files
 	c1 -> Print("results_vtx_res_fits.pdf(");
 	c2 -> Print("results_vtx_res_fits.pdf" );
 	c3 -> Print("results_vtx_res_fits.pdf" );
 	c4 -> Print("results_vtx_res_fits.pdf)");
-
+	
 	myapp -> Run();
 	return 0;
 }
@@ -271,6 +316,8 @@ void prettyTH1F( TH1F * h1 , int color , int marker , float min , float max ){
 	h1 -> GetXaxis() -> SetNdivisions(108); // to draw less tick marks
 	h1 -> GetYaxis() -> CenterTitle();
 	h1 -> GetYaxis() -> SetNdivisions(108); // to draw less tick marks
+
+	h1 -> GetYaxis() -> SetTitleOffset(1.7);
 
 	h1 -> SetMinimum(0.001);
 }
@@ -296,14 +343,15 @@ void prettyTH1( TH1F * h1 , int color , int marker , float min , float max ){
 	h1->SetLineWidth(1);
 
 	h1->GetXaxis()->SetNdivisions(108);
-	h1->GetXaxis()->SetTitleSize(0.06);
-	h1->GetXaxis()->SetLabelSize(0.06);
+	h1->GetXaxis()->SetTitleSize(0.07);
+	h1->GetXaxis()->SetLabelSize(0.07);
 	h1->GetXaxis()->CenterTitle();
 
 	h1->GetYaxis()->SetNdivisions(108);
-	h1->GetYaxis()->SetTitleSize(0.06);
-	h1->GetYaxis()->SetLabelSize(0.06);
+	h1->GetYaxis()->SetTitleSize(0.07);
+	h1->GetYaxis()->SetLabelSize(0.07);
 	h1->GetYaxis()->CenterTitle();
+	h1 -> GetYaxis() -> SetTitleOffset(1.7);
 
 	if(min!=999) h1 -> SetMinimum(min);
 	if(max!=999) h1 -> SetMaximum(max);

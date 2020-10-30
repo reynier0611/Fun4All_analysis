@@ -17,6 +17,7 @@
 #include "TLegend.h"
 #include "TVectorT.h"
 #include "TGraphErrors.h"
+#include "TLatex.h"
 
 namespace fs = std::filesystem;
 using namespace std;
@@ -113,10 +114,10 @@ int main(int argc, char ** argv) {
                 h1_dpp_v_p_et_bins[2][i] -> SetTitle(Form("%.1f < #eta < %.1f",(*TVT_eta_bin[0])[i],(*TVT_eta_bin[0])[i+1]));
                 h1_dpp_v_p_et_bins[3][i] -> SetTitle(Form("%.1f < #eta < %.1f",(*TVT_eta_bin[0])[i],(*TVT_eta_bin[0])[i+1])); 
 
-		prettyTH1( h1_dpp_v_p_et_bins[0][i] ,  2 , 24 , 999 , max[i] );
+		prettyTH1( h1_dpp_v_p_et_bins[0][i] ,  2 , 21 , 999 , max[i] );
 		prettyTH1( h1_dpp_v_p_et_bins[1][i] , 96 , 20 , 999 , max[i] );
-		prettyTH1( h1_dpp_v_p_et_bins[2][i] ,  4 , 24 , 999 , max[i] );
-		prettyTH1( h1_dpp_v_p_et_bins[3][i] , 62 , 20 , 999 , max[i] );
+		prettyTH1( h1_dpp_v_p_et_bins[2][i] ,  4 , 22 , 999 , max[i] );
+		prettyTH1( h1_dpp_v_p_et_bins[3][i] , 62 , 24 , 999 , max[i] );
         }
 	// ------------------------------------------------------------------------------
 	// Doing fits
@@ -143,24 +144,48 @@ int main(int argc, char ** argv) {
 	}
 	// ------------------------------------------------------------------------------
 	// Legend
+	double tex_y_3_0[] = {1.80,1.80,1.80,1.80,2.69,6.27,11.55,25.86};
+	double tex_y_1_4[] = {1.55,1.55,1.55,1.55,2.31,5.42,10.00,22.48};
+	
 	TLegend ** leg = new TLegend*[num_eta_bin[0]];
+	TLatex ** tex_3_0_T_par = new TLatex * [num_eta_bin[0]];
+	TLatex ** tex_1_4_T_par = new TLatex * [num_eta_bin[0]];
+
 	for(int i = 8 ; i < num_eta_bin[0] ; i++){
-		leg[i] = new TLegend(0.20,0.7,0.96,0.89);
+		//leg[i] = new TLegend(0.20,0.7,0.96,0.89);
+		leg[i] = new TLegend(0.20,0.7,0.5,0.89);
 		leg[i] -> SetLineColor(0);
-		leg[i] -> SetHeader("dp/p = Ap #oplus B","C");
-		leg[i] -> AddEntry(h1_dpp_v_p_et_bins[1][i],Form("3.0T, A = %.3f, B = %.3f",f_dpp_10um_30T[i]->GetParameter(0),f_dpp_10um_30T[i]->GetParameter(1)));
-		leg[i] -> AddEntry(h1_dpp_v_p_et_bins[3][i],Form("1.4T, A = %.3f, B = %.3f",f_dpp_10um_14T[i]->GetParameter(0),f_dpp_10um_14T[i]->GetParameter(1)));
+		//leg[i] -> SetHeader("dp/p = Ap #oplus B","C");
+		leg[i] -> AddEntry(h1_dpp_v_p_et_bins[1][i]," ");//Form("3.0T, A = %.3f, B = %.3f",f_dpp_10um_30T[i]->GetParameter(0),f_dpp_10um_30T[i]->GetParameter(1)));
+		leg[i] -> AddEntry(h1_dpp_v_p_et_bins[3][i]," ");//Form("1.4T, A = %.3f, B = %.3f",f_dpp_10um_14T[i]->GetParameter(0),f_dpp_10um_14T[i]->GetParameter(1)));
+
+		tex_3_0_T_par[i] = new TLatex(3.5,tex_y_3_0[i-8],Form("#bf{3.0T, A = %.3f, B = %.3f}",f_dpp_10um_30T[i]->GetParameter(0),f_dpp_10um_30T[i]->GetParameter(1)));
+		tex_1_4_T_par[i] = new TLatex(3.5,tex_y_1_4[i-8],Form("#bf{1.4T, A = %.3f, B = %.3f}",f_dpp_10um_14T[i]->GetParameter(0),f_dpp_10um_14T[i]->GetParameter(1)));
+
+		tex_3_0_T_par[i] -> SetTextSize(0.06);
+		tex_1_4_T_par[i] -> SetTextSize(0.06);
 	}
+	// ------------------------------------------------------------------------------
+	// Pad limits
+	double lowx[] = {0.00,0.25,0.50,0.75,0.00,0.25,0.50,0.75};
+        double lowy[] = {0.50,0.50,0.50,0.50,0.00,0.00,0.00,0.00};
+        double higx[] = {0.25,0.50,0.75,1.00,0.25,0.50,0.75,1.00};
+        double higy[] = {1.00,1.00,1.00,1.00,0.50,0.50,0.50,0.50};
 	// ------------------------------------------------------------------------------
 	// Plotting graphs
 	TCanvas * c1 = new TCanvas("c1","c1",1400,900);
 	c1 -> Divide(4,2);
+	TVirtualPad ** pad1 = new TVirtualPad * [num_eta_bin[0]];
 	for(int i = 8 ; i < num_eta_bin[0] ; i++){
-		c1 -> cd(i-7);
-		gPad -> SetRightMargin(0.01); gPad -> SetLeftMargin(0.16); gPad -> SetBottomMargin(0.17);
+		//c1 -> cd(i-7);
+		pad1[i-8] = c1 -> cd(i-7);
+                pad1[i-8] -> SetPad(Form("pad1_%i",i-8),Form("pad1_%i",i-8),lowx[i-8],lowy[i-8],higx[i-8],higy[i-8],kWhite, 0, 0);
+		gPad -> SetRightMargin(0.044); gPad -> SetLeftMargin(0.19); gPad -> SetBottomMargin(0.17);
 		h1_dpp_v_p_et_bins[1][i] -> Draw(      ); // 10um pixel, 3.0T
 		h1_dpp_v_p_et_bins[3][i] -> Draw("same"); // 10um pixel, 1.4T
 		leg[i] -> Draw("same");
+		tex_3_0_T_par[i] -> Draw("same");
+		tex_1_4_T_par[i] -> Draw("same");
 	}
 	c1 -> Modified();
 	c1 -> Update();
@@ -210,13 +235,13 @@ void prettyTH1( TH1F * h1 , int color , int marker , float min , float max ){
 	h1->SetLineWidth(1);
 
 	h1->GetXaxis()->SetNdivisions(108);
-	h1->GetXaxis()->SetTitleSize(0.06);
-	h1->GetXaxis()->SetLabelSize(0.06);
+	h1->GetXaxis()->SetTitleSize(0.07);
+	h1->GetXaxis()->SetLabelSize(0.07);
 	h1->GetXaxis()->CenterTitle();
 
 	h1->GetYaxis()->SetNdivisions(108);
-	h1->GetYaxis()->SetTitleSize(0.06);
-	h1->GetYaxis()->SetLabelSize(0.06);
+	h1->GetYaxis()->SetTitleSize(0.07);
+	h1->GetYaxis()->SetLabelSize(0.07);
 	h1->GetYaxis()->CenterTitle();
 
 	if(min!=999) h1 -> SetMinimum(min);
