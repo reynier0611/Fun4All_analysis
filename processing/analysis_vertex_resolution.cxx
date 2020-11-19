@@ -31,11 +31,12 @@ int main(int argc, char ** argv) {
 	TApplication *myapp = new TApplication("myapp",0,0);
 #endif
 
-	if(argc!=5){
-		cout << "Run this code as:\n\033[1;32m./analysis_vertex_resolution A B C filename.root\033[0m\n";
+	if(argc!=6){
+		cout << "Run this code as:\n\033[1;32m./analysis_vertex_resolution A B C filename.root config.txt\033[0m\n";
 		cout << "where:\nA = 1 -> Widths from table will be used\n  = 2 -> Widths from table \033[1;31mwon't\033[0m be used\n";
 		cout << "B = 1 -> Table will be updated\n  = 2 -> Table \033[1;31mwon't\033[0m be updated\n";
 		cout << "C = 1 -> Run code and quit\n  = 2 -> Run code and show plots\n";
+		cout << "The files 'filename.root' and 'config.txt' are expected to be in the directories '../data' and 'config' respectively\n";
 		exit(0);
 	}
 
@@ -51,6 +52,8 @@ int main(int argc, char ** argv) {
 
 	cout << "\033[1;31m********************************************************************\nUSEFUL INFO:\033[0m\nWill be loading data from file: '" << argv[4] << "' assumed to be in directory 'data'" << endl;
 
+	cout << "Will be loading configuration from file: '" << argv[5] << "' assumed to be in directory 'config'" << endl;
+
 	if     (atoi(argv[1])==1){use_widths = true ;	cout << "Will be using widths from table\n" ;}
 	else if(atoi(argv[1])==2){use_widths = false;	cout << "Won't be using widths from table\n";}
 	else{cout << "Something wrong with your election of input parameter 'A'. Bailing out!\n"; exit(0);}
@@ -65,11 +68,36 @@ int main(int argc, char ** argv) {
 
 	// -------------------------
 	// Binning
-	float eta_bin[] = {-4.0,-3.5,-3.0,-2.5,-2.0,-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0};
-	float mom_bin[] = {0.,0.5,1.,1.5,2.,2.5,3.,3.5,4.,4.5,5.,6.,7.,8.,9.,10.,15.};
-
-	const int size_eta_bin = sizeof(eta_bin)/sizeof(*eta_bin);
-	const int size_mom_bin = sizeof(mom_bin)/sizeof(*mom_bin);
+	float eta_bin[100] = {0};
+        float mom_bin[100] = {0};
+        int ctr_eta = 0;
+        int ctr_mom = 0;
+        fstream f_conf;
+        double val = 0;
+        string sval;
+	string config_filename = argv[5];
+        f_conf.open("config/"+config_filename);
+        if(!f_conf){cout << "Could not find config file: '" << config_filename << "'. Bailing out!" <<  endl; exit(0);}
+	bool reached_end_of_line = false;
+        while(!(f_conf.eof())){
+                f_conf >> sval;
+                if(sval=="\\") reached_end_of_line = true;
+                else{
+                        val = stod(sval);
+                        if(!reached_end_of_line){
+                                eta_bin[ctr_eta] = val;
+                                ctr_eta++;
+                        }
+                        else{
+                                mom_bin[ctr_mom] = val;
+                                ctr_mom++;
+                        }
+                }
+        }
+        ctr_mom--;
+	f_conf.close();
+	const int size_eta_bin = ctr_eta;
+	const int size_mom_bin = ctr_mom;	
 
 	TVectorT<double> TVT_eta_bin(size_eta_bin);	for(int i = 0 ; i < size_eta_bin ; i++) TVT_eta_bin[i] = eta_bin[i];
 	TVectorT<double> TVT_mom_bin(size_mom_bin);	for(int i = 0 ; i < size_mom_bin ; i++) TVT_mom_bin[i] = mom_bin[i];
@@ -104,10 +132,10 @@ int main(int argc, char ** argv) {
 	int nEntries = T -> GetEntries();
 	// -------------------------------------------------------------
 	fstream tab;
-	float approx_sig_dvl_p [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dvt_p [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dvl_pT[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dvt_pT[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_sig_dvl_p [100][100] = {{0}};
+	float approx_sig_dvt_p [100][100] = {{0}};
+	float approx_sig_dvl_pT[100][100] = {{0}};
+	float approx_sig_dvt_pT[100][100] = {{0}};
 	TString temp_str;
 	if(use_widths){
 		tab.open(tab_name);
@@ -122,10 +150,10 @@ int main(int argc, char ** argv) {
 		tab.close();
 	}
 
-	float approx_sig_dvl_p_3_0 [size_eta_bin-1][size_mom_bin-1] = {{0}};	float approx_sig_dvl_p_1_1 [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dvt_p_3_0 [size_eta_bin-1][size_mom_bin-1] = {{0}};	float approx_sig_dvt_p_1_1 [size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dvl_pT_3_0[size_eta_bin-1][size_mom_bin-1] = {{0}};	float approx_sig_dvl_pT_1_1[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float approx_sig_dvt_pT_3_0[size_eta_bin-1][size_mom_bin-1] = {{0}};	float approx_sig_dvt_pT_1_1[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float approx_sig_dvl_p_3_0 [100][100] = {{0}};	float approx_sig_dvl_p_1_1 [100][100] = {{0}};
+	float approx_sig_dvt_p_3_0 [100][100] = {{0}};	float approx_sig_dvt_p_1_1 [100][100] = {{0}};
+	float approx_sig_dvl_pT_3_0[100][100] = {{0}};	float approx_sig_dvl_pT_1_1[100][100] = {{0}};
+	float approx_sig_dvt_pT_3_0[100][100] = {{0}};	float approx_sig_dvt_pT_1_1[100][100] = {{0}};
 
 	for(int et = 0 ; et < size_eta_bin-1 ; et++){
 		for(int p = 0 ; p < size_mom_bin-1 ; p++){
@@ -188,10 +216,10 @@ int main(int argc, char ** argv) {
 	}
 	// -------------------------------------------------------------
 	// Declaring other useful variables and functions
-	float width_dvl_p[size_eta_bin-1][size_mom_bin-1] = {{0}};	float width_dvl_pT[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float error_dvl_p[size_eta_bin-1][size_mom_bin-1] = {{0}};	float error_dvl_pT[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float width_dvt_p[size_eta_bin-1][size_mom_bin-1] = {{0}};	float width_dvt_pT[size_eta_bin-1][size_mom_bin-1] = {{0}};
-	float error_dvt_p[size_eta_bin-1][size_mom_bin-1] = {{0}};	float error_dvt_pT[size_eta_bin-1][size_mom_bin-1] = {{0}};
+	float width_dvl_p[100][100] = {{0}};	float width_dvl_pT[100][100] = {{0}};
+	float error_dvl_p[100][100] = {{0}};	float error_dvl_pT[100][100] = {{0}};
+	float width_dvt_p[100][100] = {{0}};	float width_dvt_pT[100][100] = {{0}};
+	float error_dvt_p[100][100] = {{0}};	float error_dvt_pT[100][100] = {{0}};
 
 	TF1 *** f_gaus_dvl_p = new TF1**[size_eta_bin-1];	TF1 *** f_gaus_dvl_pT = new TF1**[size_eta_bin-1];
 	TF1 *** f_gaus_dvt_p = new TF1**[size_eta_bin-1];	TF1 *** f_gaus_dvt_pT = new TF1**[size_eta_bin-1];
