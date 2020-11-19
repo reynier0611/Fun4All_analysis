@@ -27,6 +27,7 @@ analysis/others/vertex_resolution_comparisons
 analysis/others/vtx_res_detector_vs_requirements
 processing/analysis_momentum_resolution
 processing/analysis_vertex_resolution
+processing/analysis_surface_projection
 processing/copy
 processing/ch_jet_analysis_theta-energy_resolution
 data/
