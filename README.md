@@ -9,8 +9,7 @@ The first step is done in this repository. Codes here loop over root files expec
 The codes here should be run the following way:
 
 ```
-Run this code as:
-./analysis_momentum_resolution A B C filename.root config.txt
+./code_name A B C filename.root config.txt
 where:
 A = 1 -> Widths from table will be used
   = 2 -> Widths from table won't be used
