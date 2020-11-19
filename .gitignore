@@ -17,6 +17,7 @@ analysis/mom_res_B_field_comp
 processing/analysis_momentum_resolution
 processing/analysis_vertex_resolution
 processing/copy
+processing/ch_jet_analysis_theta-energy_resolution
 data/
 output/
 tables/
