@@ -179,16 +179,16 @@ int main(int argc, char ** argv) {
 		h1_dppT_pt_et_bins[et] = new TH1F*[size_mom_bin-1];
 		for(int p = 0 ; p < size_mom_bin-1 ; p++){
 			if(use_widths){
-				h1_dpp_p_et_bins  [et][p] = new TH1F(Form("h1_dpp_p_et_bins_%i_%i"  ,et,p),";dp/p;Counts"         ,60,-approx_sig_dpp_3_0 [et][p],approx_sig_dpp_3_0 [et][p]);
-				h1_dth_p_et_bins  [et][p] = new TH1F(Form("h1_dth_p_et_bins_%i_%i"  ,et,p),";d#theta [rad];Counts",60,-approx_sig_dth_3_0 [et][p],approx_sig_dth_3_0 [et][p]);
-				h1_dph_p_et_bins  [et][p] = new TH1F(Form("h1_dph_p_et_bins_%i_%i"  ,et,p),";d#phi [rad];Counts"  ,60,-approx_sig_dph_3_0 [et][p],approx_sig_dph_3_0 [et][p]);
-				h1_dppT_pt_et_bins[et][p] = new TH1F(Form("h1_dppT_pt_et_bins_%i_%i",et,p),";dpT/pT;Counts"       ,60,-approx_sig_dppT_3_0[et][p],approx_sig_dppT_3_0[et][p]);
+				h1_dpp_p_et_bins  [et][p] = new TH1F(Form("h1_dpp_p_et_bins_%i_%i"  ,et,p),";dp/p;Counts"         ,30,-approx_sig_dpp_3_0 [et][p],approx_sig_dpp_3_0 [et][p]);
+				h1_dth_p_et_bins  [et][p] = new TH1F(Form("h1_dth_p_et_bins_%i_%i"  ,et,p),";d#theta [rad];Counts",30,-approx_sig_dth_3_0 [et][p],approx_sig_dth_3_0 [et][p]);
+				h1_dph_p_et_bins  [et][p] = new TH1F(Form("h1_dph_p_et_bins_%i_%i"  ,et,p),";d#phi [rad];Counts"  ,30,-approx_sig_dph_3_0 [et][p],approx_sig_dph_3_0 [et][p]);
+				h1_dppT_pt_et_bins[et][p] = new TH1F(Form("h1_dppT_pt_et_bins_%i_%i",et,p),";dpT/pT;Counts"       ,30,-approx_sig_dppT_3_0[et][p],approx_sig_dppT_3_0[et][p]);
 			}
 			else{
-				h1_dpp_p_et_bins  [et][p] = new TH1F(Form("h1_dpp_p_et_bins_%i_%i"  ,et,p),";dp/p;Counts"         ,60,-0.15  ,0.15  );
-				h1_dth_p_et_bins  [et][p] = new TH1F(Form("h1_dth_p_et_bins_%i_%i"  ,et,p),";d#theta [rad];Counts",60,-0.0014,0.0014);
-				h1_dph_p_et_bins  [et][p] = new TH1F(Form("h1_dph_p_et_bins_%i_%i"  ,et,p),";d#phi [rad];Counts"  ,60,-0.04  ,0.04  );
-				h1_dppT_pt_et_bins[et][p] = new TH1F(Form("h1_dppT_pt_et_bins_%i_%i",et,p),";dpT/pT;Counts"       ,60,-0.15  ,0.15  );
+				h1_dpp_p_et_bins  [et][p] = new TH1F(Form("h1_dpp_p_et_bins_%i_%i"  ,et,p),";dp/p;Counts"         ,30,-0.15  ,0.15  );
+				h1_dth_p_et_bins  [et][p] = new TH1F(Form("h1_dth_p_et_bins_%i_%i"  ,et,p),";d#theta [rad];Counts",30,-0.0014,0.0014);
+				h1_dph_p_et_bins  [et][p] = new TH1F(Form("h1_dph_p_et_bins_%i_%i"  ,et,p),";d#phi [rad];Counts"  ,30,-0.04  ,0.04  );
+				h1_dppT_pt_et_bins[et][p] = new TH1F(Form("h1_dppT_pt_et_bins_%i_%i",et,p),";dpT/pT;Counts"       ,30,-0.15  ,0.15  );
 			}
 
 			h1_dpp_p_et_bins  [et][p] -> SetTitle(Form("%.1f < |#eta| < %.1f, %.1f < p < %.1f GeV/c" ,eta_bin[et],eta_bin[et+1],mom_bin[p],mom_bin[p+1]));
@@ -289,6 +289,7 @@ int main(int argc, char ** argv) {
 
 		// Filling histograms
 		for(int et = 0 ; et < size_eta_bin-1 ; et++){
+			//if( abs(geta) >  eta_bin[et] &&  abs(geta) <= eta_bin[et+1] ){
 			if( geta >  eta_bin[et] &&  geta <= eta_bin[et+1] ){
 				for(int p = 0 ; p < size_mom_bin-1 ; p++){
 					if( p_truth > mom_bin[p] && p_truth <= mom_bin[p+1] ){
@@ -323,25 +324,25 @@ int main(int argc, char ** argv) {
 			c_fits_p [et] -> cd(p+1);
 			h1_dpp_p_et_bins[et][p] -> Draw();	h1_dpp_p_et_bins[et][p] -> Fit(Form("f_gaus_dpp_%i_%i",et,p),"RQ");
 			width_dpp[et][p] = f_gaus_dpp[et][p] -> GetParameter(2);
-			error_dpp[et][p] = (f_gaus_dpp[et][p] -> GetParError(2))*(f_gaus_dpp[et][p] -> GetChisquare())/(f_gaus_dpp[et][p] -> GetNDF());
+			error_dpp[et][p] = (f_gaus_dpp[et][p] -> GetParError(2));//*(f_gaus_dpp[et][p] -> GetChisquare())/(f_gaus_dpp[et][p] -> GetNDF());
 
 			// Theta resolution
 			c_fits_th[et] -> cd(p+1);
 			h1_dth_p_et_bins[et][p] -> Draw();	h1_dth_p_et_bins[et][p] -> Fit(Form("f_gaus_dth_%i_%i",et,p),"RQ");
 			width_dth[et][p] = f_gaus_dth[et][p] -> GetParameter(2);
-			error_dth[et][p] = (f_gaus_dth[et][p] -> GetParError(2))*(f_gaus_dth[et][p] -> GetChisquare())/(f_gaus_dth[et][p] -> GetNDF());
+			error_dth[et][p] = (f_gaus_dth[et][p] -> GetParError(2));//*(f_gaus_dth[et][p] -> GetChisquare())/(f_gaus_dth[et][p] -> GetNDF());
 
 			// Phi resolution
 			c_fits_ph[et] -> cd(p+1);
 			h1_dph_p_et_bins[et][p] -> Draw();	h1_dph_p_et_bins[et][p] -> Fit(Form("f_gaus_dph_%i_%i",et,p),"RQ");
 			width_dph[et][p] = f_gaus_dph[et][p] -> GetParameter(2);
-			error_dph[et][p] = (f_gaus_dph[et][p] -> GetParError(2))*(f_gaus_dph[et][p] -> GetChisquare())/(f_gaus_dph[et][p] -> GetNDF());
+			error_dph[et][p] = (f_gaus_dph[et][p] -> GetParError(2));//*(f_gaus_dph[et][p] -> GetChisquare())/(f_gaus_dph[et][p] -> GetNDF());
 
 			// pT resolutions
 			c_fits_pT[et] -> cd(p+1);
 			h1_dppT_pt_et_bins[et][p] -> Draw();	h1_dppT_pt_et_bins[et][p] -> Fit(Form("f_gaus_dppT_%i_%i",et,p),"RQ");
                         width_dppT[et][p] = f_gaus_dppT[et][p] -> GetParameter(2);
-                        error_dppT[et][p] = (f_gaus_dppT[et][p] -> GetParError(2))*(f_gaus_dppT[et][p] -> GetChisquare())/(f_gaus_dppT[et][p] -> GetNDF());
+                        error_dppT[et][p] = (f_gaus_dppT[et][p] -> GetParError(2));//*(f_gaus_dppT[et][p] -> GetChisquare())/(f_gaus_dppT[et][p] -> GetNDF());
 
 			// ----
 			// If enough statistics, add info to final histogram
