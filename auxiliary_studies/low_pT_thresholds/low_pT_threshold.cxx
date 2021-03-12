@@ -110,7 +110,7 @@ int main(int argc, char ** argv) {
 	// -------------------------------------------------------------
 	// Loop over entries of the tree
 	for(int file = 0 ; file < size_fname ; file++){
-		cout << "Looping over file: '" << fname[file] << "'\n";
+		cout << endl << "Looping over file: '" << fname[file] << "'\n";
 		//nEntries[file] = 1000000;
 		for(int ev = 0 ; ev < nEntries[file] ; ev++){
 			T[file] -> GetEntry(ev);
@@ -191,6 +191,20 @@ int main(int argc, char ** argv) {
 		if(file%2!=0) max_y = 800;
 		prettyTGraph( g_pTthresh_v_eta[file] , color[file] , 20+file , 0 , max_y , "#eta" , "p_{T} [MeV/#it{c}]" , "" );
 	}
+	// ------------------------
+	// Ratios
+	double threshold_rat_B[size_fname/2][n_eta_bins] = {{0}};
+	TGraph ** g_pTthresh_rat_v_eta = new TGraph * [size_fname/2];
+	int ctr = 0;
+	for(int file = 0 ; file < size_fname ; file+=2){
+		for(int et = 0 ; et < n_eta_bins ; et++){
+			threshold_rat_B[ctr][et] = pT_at_50percent[file][et]/pT_at_50percent[file+1][et];	
+		}
+		g_pTthresh_rat_v_eta[ctr] = new TGraph(n_eta_bins,avg_eta,threshold_rat_B[ctr]);
+		prettyTGraph( g_pTthresh_rat_v_eta[ctr] , color[file] , 20+file , 0 , 4 , "#eta" , "p_{T} [MeV/#it{c}]" , "" );
+		ctr++;
+	}
+	
 	// -------------------------------------------------------------
         // Comparison to results from hybrid detector
         double hyb_eta    [] = {-3,-2.25,-1.75,-1.25,0,1.25,1.75,2.25,3};
@@ -204,8 +218,15 @@ int main(int argc, char ** argv) {
         TGraph * g_hyb_pT_1_4T = new TGraph(9,hyb_eta,hyb_pT_1_4T);
         g_hyb_pT_3_0T -> SetLineColor(1);       g_hyb_pT_3_0T -> SetLineStyle(2);
         g_hyb_pT_1_4T -> SetLineColor(2);       g_hyb_pT_1_4T -> SetLineStyle(2);
+	
 	// -------------------------------------------------------------
 	// Plotting histograms
+	TCanvas * c0 = new TCanvas("c0","c0",1300,900);
+        gPad->SetRightMargin(0.13); gPad->SetLeftMargin(0.13); gPad->SetBottomMargin(0.13);
+        h2_pT_eta_rat_finer[0] -> Draw("colz");
+        c0 -> Modified();
+        c0 -> Update();
+        // ------------------------
 	TCanvas * c1 = new TCanvas("c1","c1",1300,900);
 	c1 -> Divide(3,size_fname);
 	for(int file = 0 ; file < size_fname ; file++){
@@ -312,6 +333,16 @@ int main(int argc, char ** argv) {
         // -----
         c6 -> Modified();
         c6 -> Update();
+	// ------------------------
+        TCanvas * c7 = new TCanvas("c7","c7",1300,900); 
+        gPad -> SetRightMargin(0.03); gPad -> SetTopMargin(0.03);
+	g_pTthresh_rat_v_eta[0] -> Draw("AL");
+	for(int i = 0 ; i < ctr ; i++){
+		g_pTthresh_rat_v_eta[i] -> Draw("sameL");
+	}
+	// -----
+        c7 -> Modified();
+        c7 -> Update();
 
 	// -------------------------------------------------------------
 	// Saving results as pdfs
