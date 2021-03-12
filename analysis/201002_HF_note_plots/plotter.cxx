@@ -168,7 +168,8 @@ int main(int argc, char ** argv) {
 		//g_dvl_v_p_Babar[i] = graph_from_histo(h1_dvl_v_p_et_bins[1][selected_bins_vtx[i]], vtx_color[i],21,2,100);	g_dvl_v_p_Babar[i] -> GetYaxis() -> SetMoreLogLabels();
 	
 		g_dvt_v_p_Beast[i] = graph_from_histo(h1_dvt_v_p_et_bins[0][selected_bins_vtx[i]], vtx_color[i],vtx_marker[i],4,100);  g_dvt_v_p_Beast[i] -> GetYaxis() -> SetMoreLogLabels();
-                //g_dvt_v_p_Babar[i] = graph_from_histo(h1_dvt_v_p_et_bins[1][selected_bins_vtx[i]],  2,21,2,100);  g_dvt_v_p_Babar[i] -> GetYaxis() -> SetMoreLogLabels();
+                g_dvt_v_p_Beast[i] -> GetYaxis() -> SetTitle("#sigma(DCA_{r#phi}) [#mum]");
+		//g_dvt_v_p_Babar[i] = graph_from_histo(h1_dvt_v_p_et_bins[1][selected_bins_vtx[i]],  2,21,2,100);  g_dvt_v_p_Babar[i] -> GetYaxis() -> SetMoreLogLabels();
 
 		//g_dvl_v_p_Beast[i] -> SetTitle(Form("3.0 T, %.1f < |#eta| < %.1f, "+mat_bud+"%% X/X_{0}, "+pix_size+"#mum pixel",(*TVT_eta_bin_vtx[0])[selected_bins_vtx[i]],(*TVT_eta_bin_vtx[0])[selected_bins_vtx[i]+1])); 
 
