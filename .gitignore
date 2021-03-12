@@ -30,6 +30,7 @@ processing/analysis_vertex_resolution
 processing/analysis_surface_projection
 processing/copy
 processing/ch_jet_analysis_theta-energy_resolution
+auxiliary_studies/low_pT_threshold
 data/
 output/
 tables/
