@@ -33,30 +33,21 @@ int main(int argc, char ** argv) {
 #else
 	TApplication *myapp = new TApplication("myapp",0,0);
 #endif
-
+	TString mag_field = "3.0";
 	TString mat_bud = "0.05";
 	TString pix_size = "10";
 	gStyle->SetErrorX(0.0001);
 	// ------------------------------------------------------------------------------
 	// List paths to files that will be loaded
 	TString fnames[] = {
-		/*
-		"../../output/output_vtx_res_skimmed_combined_vtx_111_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_13_.root",
-		"../../output/output_vtx_res_skimmed_combined_vtx_101_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_13_.root",
-		"../../output/output_vtx_res_skimmed_combined_vtx_110_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_13_.root",
-		"../../output/output_vtx_res_skimmed_combined_vtx_011_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_13_.root",
-		"../../output/output_vtx_res_skimmed_combined_vtx_100_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_13_.root",
-		"../../output/output_vtx_res_skimmed_combined_vtx_010_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_13_.root",
-		"../../output/output_vtx_res_skimmed_combined_vtx_001_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_13_.root"
-		*/
-		"../../output/output_vtx_res_skimmed_vtx_111_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_18_.root",
-                "../../output/output_vtx_res_skimmed_vtx_101_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_18_.root",
-                "../../output/output_vtx_res_skimmed_vtx_110_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_18_.root",
-                "../../output/output_vtx_res_skimmed_vtx_011_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_18_.root",
-                "../../output/output_vtx_res_skimmed_vtx_100_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_18_.root",
-                "../../output/output_vtx_res_skimmed_vtx_010_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_18_.root",
-                "../../output/output_vtx_res_skimmed_vtx_001_"+mat_bud+"XX0_"+pix_size+"um_FastSimEval_BPsigma_eta_1_p_18_.root"
-	};
+                "../../output/output_vtx_res_skimmed_combined_vtx_111_B_"+mag_field+"T_vtx_"+mat_bud+"XX0_"+pix_size+"um_FastSimEvalsigma_eta_3_p_27_.root",
+                "../../output/output_vtx_res_skimmed_combined_vtx_101_B_"+mag_field+"T_vtx_"+mat_bud+"XX0_"+pix_size+"um_FastSimEvalsigma_eta_3_p_27_.root",
+                "../../output/output_vtx_res_skimmed_combined_vtx_110_B_"+mag_field+"T_vtx_"+mat_bud+"XX0_"+pix_size+"um_FastSimEvalsigma_eta_3_p_27_.root",
+                "../../output/output_vtx_res_skimmed_combined_vtx_011_B_"+mag_field+"T_vtx_"+mat_bud+"XX0_"+pix_size+"um_FastSimEvalsigma_eta_3_p_27_.root",
+                "../../output/output_vtx_res_skimmed_combined_vtx_100_B_"+mag_field+"T_vtx_"+mat_bud+"XX0_"+pix_size+"um_FastSimEvalsigma_eta_3_p_27_.root",
+                "../../output/output_vtx_res_skimmed_combined_vtx_010_B_"+mag_field+"T_vtx_"+mat_bud+"XX0_"+pix_size+"um_FastSimEvalsigma_eta_3_p_27_.root",
+                "../../output/output_vtx_res_skimmed_combined_vtx_001_B_"+mag_field+"T_vtx_"+mat_bud+"XX0_"+pix_size+"um_FastSimEvalsigma_eta_3_p_27_.root"
+        };
 	// #######################################################################################################################################
 	// YOU SHOULDN'T NEED TO MODIFY ANYTHING IN THE BLOCK OF CODE BELOW AND UNTIL AFTER THE NEXT LINE WITH ###...
 	const int size_loaded = sizeof(fnames)/sizeof(*fnames);
