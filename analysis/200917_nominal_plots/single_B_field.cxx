@@ -41,6 +41,7 @@ int main(int argc, char ** argv) {
 	// List paths to files that will be loaded
 	TString fnames[] = {
 		"../../output/output_skimmed_pi-_det2_10x10_Beast_FastTrackingEval.root"
+		//"../../output/output_skimmed_pi-_det2_10x10_sPHENIX_FastTrackingEval.root"
 	};
 	// #######################################################################################################################################
 	// YOU SHOULDN'T NEED TO MODIFY ANYTHING IN THE BLOCK OF CODE BELOW AND UNTIL AFTER THE NEXT LINE WITH ###...
@@ -162,9 +163,44 @@ int main(int argc, char ** argv) {
 	// ------------
 	c1 -> Modified();
 	c1 -> Update();	
+	// --------------------------------------------------
+	TCanvas * c2 = new TCanvas("c2","c2",1200,900);
+        gPad -> SetRightMargin(0.02); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.13);
+	g_dpp_v_et_p_bins[num_mom_bin[0]-1] -> Draw("APL");
+        for(int p = 0 ; p < num_mom_bin[0] ; p++){
+                g_dpp_v_et_p_bins[p] -> Draw("samePL");
+        }
+	leg1 -> Draw("same");
+	// ------------
+        c2 -> Modified();
+        c2 -> Update();
+	// --------------------------------------------------
+        TCanvas * c3 = new TCanvas("c3","c3",1200,900);
+        gPad -> SetRightMargin(0.02); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.13); gPad -> SetLogy();
+        g_dth_v_p_et_bins[14] -> Draw("APL");
+        for(int et = 14 ; et < num_eta_bin[0] ; et++){
+                g_dth_v_p_et_bins[et] -> Draw("samePL");
+        }
+	leg2 -> Draw("same");
+	// ------------
+        c3 -> Modified();
+        c3 -> Update();
+	// --------------------------------------------------
+        TCanvas * c4 = new TCanvas("c4","c4",1200,900);
+        gPad -> SetRightMargin(0.02); gPad -> SetBottomMargin(0.13); gPad -> SetLeftMargin(0.13); gPad -> SetLogy();
+        g_dph_v_p_et_bins[14] -> Draw("APL");
+        for(int et = 15 ; et < num_eta_bin[0] ; et++){
+                g_dph_v_p_et_bins[et] -> Draw("samePL");
+        }
+	// ------------
+        c4 -> Modified();
+        c4 -> Update();
 	// ------------------------------------------------------------------------------
 	// Saving results to pdf files
-	c1 -> Print("single_B_field.pdf");
+	c1 -> Print("single_B_field.pdf(");
+	c2 -> Print("single_B_field.pdf" );
+	c3 -> Print("single_B_field.pdf" );
+	c4 -> Print("single_B_field.pdf)");
 
 	myapp -> Run();
 	return 0;
@@ -227,7 +263,7 @@ TGraphErrors * graph_from_histo( TH1F * h1 , int color , int marker , float min 
 	g_l1->SetLineColor(color);
 	g_l1->SetMarkerColor(color);
 	g_l1->SetMarkerStyle(marker);
-	g_l1->SetMarkerSize(1.4);
+	g_l1->SetMarkerSize(2.2);
 	g_l1->SetLineWidth(2);
 
 	g_l1->GetXaxis()->SetTitle(xax);
