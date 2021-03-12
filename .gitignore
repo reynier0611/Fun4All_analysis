@@ -1,5 +1,6 @@
 analysis/simple_vtx_res_comparisons
 analysis/200921_resolution_fits/test
+analysis/201119_Resolutions_at_PID/res_at_PID
 analysis/200918_fullSim_vs_required/mom_res_detector_vs_requirements
 analysis/200921_resolution_fits/mom_res_fits
 analysis/200921_resolution_fits/vtx_res_fits
