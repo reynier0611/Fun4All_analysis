@@ -128,6 +128,7 @@ int main(int argc, char ** argv) {
 
 		g_dpp_v_et_selected_20um_Beast_si[i] -> SetTitle("#pi^{-}, 20x20 #mum pixel tracker");
 		g_dpp_v_et_selected_10um_Beast_si[i] -> SetTitle("#pi^{-}, 10x10 #mum pixel tracker");
+		g_dpp_v_et_selected_10um_Beast_si[i] -> SetTitle(" ");
 
 		g_dpp_v_et_selected_20um_Beast_si[i] -> SetMaximum(20);
 		g_dpp_v_et_selected_20um_Beast_si[i] -> GetXaxis() -> SetRangeUser(0,4);
@@ -159,7 +160,7 @@ int main(int argc, char ** argv) {
         leg1 -> Draw("same");
 	tex_30 -> Draw("same");
 	tex_15 -> Draw("same");
-	l1 -> Draw("same");
+	//l1 -> Draw("same");
 	// ------------
 	c1 -> Modified();
 	c1 -> Update();	
@@ -182,7 +183,7 @@ int main(int argc, char ** argv) {
 	leg2 -> Draw("same");
 	tex_30 -> Draw("same");
         tex_15 -> Draw("same");
-	l1 -> Draw("same");
+	//l1 -> Draw("same");
 	// ------------
 	c2 -> Modified();
         c2 -> Update();
@@ -190,6 +191,8 @@ int main(int argc, char ** argv) {
 	// Saving results to pdf files
 	c1 -> Print("results_mom_res_B_field_comp.pdf(");
 	c2 -> Print("results_mom_res_B_field_comp.pdf)");
+
+	c2 -> Print("B_field_comp_10um.pdf");
 	
 	myapp -> Run();
 	return 0;
@@ -252,7 +255,7 @@ TGraphErrors * graph_from_histo( TH1F * h1 , int color , int marker , float min 
 	g_l1->SetLineColor(color);
 	g_l1->SetMarkerColor(color);
 	g_l1->SetMarkerStyle(marker);
-	g_l1->SetMarkerSize(2.0);
+	g_l1->SetMarkerSize(2.2);
 	g_l1->SetLineWidth(3);
 
 	g_l1->GetXaxis()->SetTitle(xax);
