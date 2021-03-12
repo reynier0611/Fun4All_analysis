@@ -179,7 +179,7 @@ int main(int argc, char ** argv) {
 	for(int i = 8 ; i < num_eta_bin[0] ; i++){
 		leg_dvt_p[i] = new TLegend(0.35,0.7,0.96,0.89);
 		leg_dvt_p[i] -> SetLineColor(0);
-		leg_dvt_p[i] -> SetHeader("#sigma(DCA_{T}) = #frac{A}{p} #oplus B","C");
+		leg_dvt_p[i] -> SetHeader("#sigma(DCA_{r#phi}) = #frac{A}{p} #oplus B","C");
 		leg_dvt_p[i] -> AddEntry(h1_dvt_v_p_et_bins[1][i],Form("3.0T, A = %.1f, B = %.2f",f_dvt_p_10um_Beast  [i]->GetParameter(0),abs(f_dvt_p_10um_Beast  [i]->GetParameter(1))));
 		leg_dvt_p[i] -> AddEntry(h1_dvt_v_p_et_bins[0][i],Form("1.4T, A = %.1f, B = %.2f",f_dvt_p_10um_sPHENIX[i]->GetParameter(0),abs(f_dvt_p_10um_sPHENIX[i]->GetParameter(1))));
 	}
@@ -250,6 +250,7 @@ int main(int argc, char ** argv) {
 	for(int i = 8 ; i < num_eta_bin[0] ; i++){
 		c2 -> cd(i-7);
 		gPad -> SetRightMargin(0.01); gPad -> SetLeftMargin(0.24); gPad -> SetBottomMargin(0.17);
+		h1_dvt_v_p_et_bins[1][i] -> GetYaxis() -> SetTitle("#sigma(DCA_{r#phi}) [#mum]");
 		h1_dvt_v_p_et_bins[1][i] -> Draw();
 		h1_dvt_v_p_et_bins[0][i] -> Draw("same");
 		leg_dvt_p[i] -> Draw("same");
@@ -283,6 +284,7 @@ int main(int argc, char ** argv) {
 		pad2[i-8] = c4 -> cd(i-7);
                 pad2[i-8] -> SetPad(Form("pad2_%i",i-8),Form("pad2_%i",i-8),lowx[i-8],lowy[i-8],higx[i-8],higy[i-8],kWhite, 0, 0);
 		gPad -> SetRightMargin(0.01); gPad -> SetLeftMargin(0.24); gPad -> SetBottomMargin(0.17);
+		h1_dvt_v_pT_et_bins[1][i] -> GetYaxis() -> SetTitle("#sigma(DCA_{r#phi}) [#mum]");
 		h1_dvt_v_pT_et_bins[1][i] -> Draw(); 
 		h1_dvt_v_pT_et_bins[0][i] -> Draw("same");
 		leg_dvt_pT[i] -> Draw("same");
