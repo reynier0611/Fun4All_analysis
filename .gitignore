@@ -37,6 +37,8 @@ analysis/201123_particle_comparison/particle_comp
 analysis/210331_barrel_DIRC_GEM/code
 analysis/210405_old_vs_new_material_budget/code
 auxiliary_studies/low_pT_thresholds/low_pT_threshold
+analysis/210331_barrel_DIRC_GEM/code_newer
+analysis/210405_old_vs_new_material_budget/code_FOR_DREW
 data/
 output/
 tables/

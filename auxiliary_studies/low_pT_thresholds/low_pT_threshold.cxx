@@ -43,28 +43,26 @@ int main(int argc, char ** argv) {
 	// -------------------------------------------------------------
 	// Loading all the needed info from the root file
 	TString fname[] = {
-		//"out_flat_pT_pi-_det2_10x10_Beast_FastTrackingEval.root",		// Realistic geometry,  (v,b,d) = (0.30,0.30,0.30) % X0, Beast
-		//"out_flat_pT_pi-_det2_10x10_sPHENIX_FastTrackingEval.root",		// Realistic geometry,  (v,b,d) = (0.30,0.30,0.30) % X0, sPHENIX
-		"combined_simp_geom_v2_vbd_0.3_0.3_0.3_Beast_FastSimEval.root",		// Simplified geometry, (v,b,d) = (0.30,0.30,0.30) % X0, Beast
-		"combined_simp_geom_v2_vbd_0.3_0.3_0.3_sPHENIX_FastSimEval.root",	// Simplified geometry, (v,b,d) = (0.30,0.30,0.30) % X0, sPHENIX
-		"combined_simp_geom_v2_vbd_0.05_0.55_0.24_Beast_FastSimEval.root",	// Simplified geometry, (v,b,d) = (0.05,0.55,0.24) % X0, Beast
-		"combined_simp_geom_v2_vbd_0.05_0.55_0.24_sPHENIX_FastSimEval.root",	// Simplified geometry, (v,b,d) = (0.05,0.55,0.24) % X0, sPHENIX
-		"combined_simp_geom_3vtx_vbd_0.05_0.55_0.24_Beast_FastSimEval.root",	// Simplified geometry, (v,b,d) = (0.05,0.55,0.24) % X0, Beast  , 3 vtx layers
-		"combined_simp_geom_3vtx_vbd_0.05_0.55_0.24_sPHENIX_FastSimEval.root",	// Simplified geometry, (v,b,d) = (0.05,0.55,0.24) % X0, sPHENIX, 3 vtx layers
+		//"out_flat_pT_pi-_det2_10x10_Beast_FastTrackingEval.root",				// Realistic geometry,  (v,b,d) = (0.30,0.30,0.30) % X0, Beast
+		//"out_flat_pT_pi-_det2_10x10_sPHENIX_FastTrackingEval.root",				// Realistic geometry,  (v,b,d) = (0.30,0.30,0.30) % X0, sPHENIX
+		"combined_simp_geom_v2_vbd_0.3_0.3_0.3_Beast_FastSimEval.root",				// Simplified geometry, (v,b,d) = (0.30,0.30,0.30) % X0, Beast
+		"combined_simp_geom_v2_vbd_0.3_0.3_0.3_sPHENIX_FastSimEval.root",			// Simplified geometry, (v,b,d) = (0.30,0.30,0.30) % X0, sPHENIX
+		"combined_simp_geom_v2_vbd_0.05_0.55_0.24_Beast_FastSimEval.root",			// Simplified geometry, (v,b,d) = (0.05,0.55,0.24) % X0, Beast
+		"combined_simp_geom_v2_vbd_0.05_0.55_0.24_sPHENIX_FastSimEval.root",			// Simplified geometry, (v,b,d) = (0.05,0.55,0.24) % X0, sPHENIX
+		"combined_simp_geom_3vtx_vbd_0.05_0.55_0.24_Beast_FastSimEval.root",			// Simplified geometry, (v,b,d) = (0.05,0.55,0.24) % X0, Beast  , 3 vtx layers
+		"combined_simp_geom_3vtx_vbd_0.05_0.55_0.24_sPHENIX_FastSimEval.root"			// Simplified geometry, (v,b,d) = (0.05,0.55,0.24) % X0, sPHENIX, 3 vtx layers
 	};
-	//"combined_simp_geom_3vtx_vbd_0.3_0.3_0.3_Beast_FastSimEval.root"
-	//"combined_simp_geom_3vtx_vbd_0.3_0.3_0.3_sPHENIX_FastSimEval.root"
-
 	const int size_fname = sizeof(fname)/sizeof(*fname);
-	TString B_field[] = {
+	
+	TString B_field[size_fname] = {
 		"(0.30,0.30,0.30), 3.0 T",
 		"(0.30,0.30,0.30), 1.4 T",
 		"(0.05,0.55,0.24), 3.0 T",
 		"(0.05,0.55,0.24), 1.4 T",
 		"(0.05,0.55,0.24), 3.0 T (3 vtx)",
-                "(0.05,0.55,0.24), 1.4 T (3 vtx)"
+                "(0.05,0.55,0.24), 1.4 T (3 vtx)"	
 	};
-
+	
 	TFile ** F = new TFile * [size_fname];
 	TTree ** T = new TTree * [size_fname];
 
@@ -93,7 +91,8 @@ int main(int argc, char ** argv) {
 	TH2D ** h2_pT_eta_rat_coarse = new TH2D * [size_fname];
 
 	//double eta_bin[] = {-3.5,-2.5,-1.5,-0.5,0.5,1.5,2.5,3.5};
-	double eta_bin[] = {-3.5,-3,-2.5,-2,-1.5,-1,-0.5,-0.3,0.3,0.5,1,1.5,2,2.5,3,3.5};
+	//double eta_bin[] = {-3.5,-3,-2.5,-2,-1.5,-1,-0.5,-0.3,0.3,0.5,1,1.5,2,2.5,3,3.5};
+	double eta_bin[] = {-3.75,-3.5,-3.25,-3,-2.75,-2.5,-2.25,-2,-1.75,-1.5,-1.25,-1,-.75,-.5,-.25,0,.25,.5,.75,1,1.25,1.5,1.75,2,2.25,2.5,2.75,3,3.25,3.5,3.75}; 
 	const int n_eta_bins = sizeof(eta_bin)/sizeof(*eta_bin) - 1;
 	cout << "eta binning used: ";
 	for(int i = 0 ; i < n_eta_bins ; i++) cout << eta_bin[i] << ", ";
@@ -103,8 +102,8 @@ int main(int argc, char ** argv) {
 		h2_pT_eta_num_finer [file] = new TH2D(Form("h2_pT_eta_num_finer_%i" ,file),B_field[file]+", only reconstructed;#eta;p_{T} [GeV/#it{c}]",100,-4,4,100,0,3);
 		h2_pT_eta_den_finer [file] = new TH2D(Form("h2_pT_eta_den_finer_%i" ,file),B_field[file]+", all generated;#eta;p_{T} [GeV/#it{c}]"     ,100,-4,4,100,0,3);
 
-		h2_pT_eta_num_coarse[file] = new TH2D(Form("h2_pT_eta_num_coarse_%i",file),B_field[file]+", only reconstructed;#eta;p_{T} [GeV/#it{c}]",  n_eta_bins,eta_bin,20,0,2.5);
-		h2_pT_eta_den_coarse[file] = new TH2D(Form("h2_pT_eta_den_coarse_%i",file),B_field[file]+", all generated;#eta;p_{T} [GeV/#it{c}]"     ,  n_eta_bins,eta_bin,20,0,2.5);
+		h2_pT_eta_num_coarse[file] = new TH2D(Form("h2_pT_eta_num_coarse_%i",file),B_field[file]+", only reconstructed;#eta;p_{T} [GeV/#it{c}]",  n_eta_bins,eta_bin,40,0,2);
+		h2_pT_eta_den_coarse[file] = new TH2D(Form("h2_pT_eta_den_coarse_%i",file),B_field[file]+", all generated;#eta;p_{T} [GeV/#it{c}]"     ,  n_eta_bins,eta_bin,40,0,2);
 	}
 
 	// -------------------------------------------------------------
@@ -157,14 +156,13 @@ int main(int argc, char ** argv) {
 		h1_eff_pT[file] = new TH1D * [n_eta_bins];
 		f_sigmoid[file] = new TF1 * [n_eta_bins];
 		for(int et = 0 ; et < n_eta_bins ; et++){
-			int clr = 51 + et*50/n_eta_bins;
-			cout << clr << endl;
+			int clr = 51 + et*50/n_eta_bins;	
 			h1_eff_pT[file][et] = h2_pT_eta_rat_coarse[file] -> ProjectionY(Form("h1_eff_pT_%i_%i",file,et),et+1,et+1,"e");		
 			prettyTH1D( h1_eff_pT[file][et] , clr , 20 , 0 , 1.1 );
 			f_sigmoid[file][et] = new TF1(Form("f_sigm_%i_%i",file,et), "[0]/(1+ TMath::Exp(-[1]*(x-[2])))", 0, 3);
 			f_sigmoid[file][et] -> SetParameters(1,10,.5);
 			f_sigmoid[file][et] -> SetLineColor(clr);
-			h1_eff_pT[file][et] -> Fit(Form("f_sigm_%i_%i",file,et));
+			h1_eff_pT[file][et] -> Fit(Form("f_sigm_%i_%i",file,et),"Q");
 		}
 	}
 	// ------------------------
@@ -174,7 +172,7 @@ int main(int argc, char ** argv) {
 	double avg_eta[n_eta_bins] = {0};
 	for(int et = 0 ; et < n_eta_bins ; et++) avg_eta[et] = (eta_bin[et+1]+eta_bin[et])/2.;
 
-	int color[] = {2,62,96,4,93,8,50,51};
+	int color[] = {96,62,4,8,51,2,1,93,50};
 
 	TGraph ** g_pTthresh_v_eta = new TGraph * [size_fname];
 	for(int file = 0 ; file < size_fname ; file++){
@@ -223,7 +221,7 @@ int main(int argc, char ** argv) {
 	// Plotting histograms
 	TCanvas * c0 = new TCanvas("c0","c0",1300,900);
         gPad->SetRightMargin(0.13); gPad->SetLeftMargin(0.13); gPad->SetBottomMargin(0.13);
-        h2_pT_eta_rat_finer[0] -> Draw("colz");
+        h2_pT_eta_rat_finer[1] -> Draw("colz");
         c0 -> Modified();
         c0 -> Update();
         // ------------------------
@@ -347,9 +345,9 @@ int main(int argc, char ** argv) {
 	// -------------------------------------------------------------
 	// Saving results as pdfs
 	TString res_fname = "results.pdf";
-	c1 -> Print( res_fname + "(" );
-	c2 -> Print( res_fname );
-	c3 -> Print( res_fname );
+	//c1 -> Print( res_fname + "(" );
+	//c2 -> Print( res_fname );
+	c3 -> Print( res_fname + "(" );
 	c4 -> Print( res_fname );
 	c5 -> Print( res_fname );
 	c6 -> Print( res_fname + ")" );
