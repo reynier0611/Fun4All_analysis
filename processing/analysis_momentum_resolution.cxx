@@ -493,10 +493,10 @@ int main(int argc, char ** argv) {
 		TString fname = out_pdf;
 		if(et == 0) fname+="(";
 		else if(et == size_eta_bin-2) fname+=")";
-		c_fits_p [et] -> Print("fits/dpp_" +fname);
-		c_fits_th[et] -> Print("fits/dth_" +fname);
-		c_fits_ph[et] -> Print("fits/dph_" +fname);
-		c_fits_pT[et] -> Print("fits/dppT_"+fname);
+		c_fits_p [et] -> Print("fits/momentum/dpp_" +fname);
+		c_fits_th[et] -> Print("fits/theta/dth_" +fname);
+		c_fits_ph[et] -> Print("fits/phi/dph_" +fname);
+		c_fits_pT[et] -> Print("fits/transverse_mom/dppT_"+fname);
 	}
 
 	// -------------------------------------------------------------
