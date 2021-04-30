@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <filesystem>
+#include <Riostream.h>
 
 // Root includes
 #include <TROOT.h>
