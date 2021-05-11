@@ -4,8 +4,10 @@
 #include <cmath>
 #include <iostream>
 #include <filesystem>
+#include <Riostream.h>
 
 // Root includes
+#include <TROOT.h>
 #include <TROOT.h>
 #include "TRint.h"
 #include "TH1.h"

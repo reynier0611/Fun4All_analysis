@@ -55,7 +55,9 @@ int main(int argc, char ** argv) {
 		"../../output/output_mom_res_skimmed_out_simp_geom_vbd_0.05_0.55_0.24_10um_pix_barrelR_75cm_Beast_FastSimEvalsigma_eta_6_p_15_.root",
 		"../../output/output_mom_res_skimmed_out_simp_geom_vbd_0.05_0.55_0.24_10um_pix_barrelR_75cm_sPHENIX_FastSimEvalsigma_eta_6_p_15_.root",
 		"../../output/output_mom_res_skimmed_out_simp_geom_vbd_0.05_0.55_0.24_10um_pix_GEM_DIRC_GEM_Beast_FastSimEvalsigma_eta_6_p_15_.root",
-		"../../output/output_mom_res_skimmed_out_simp_geom_vbd_0.05_0.55_0.24_10um_pix_GEM_DIRC_GEM_sPHENIX_FastSimEvalsigma_eta_6_p_15_.root"
+		"../../output/output_mom_res_skimmed_out_simp_geom_vbd_0.05_0.55_0.24_10um_pix_GEM_DIRC_GEM_sPHENIX_FastSimEvalsigma_eta_6_p_15_.root",
+		"../../output/output_mom_res_skimmed_out_simp_geom_vbd_0.05_0.55_0.24_10um_pix_GEM_XX0_2.4_perc_DIRC_GEM_Beast_FastSimEvalsigma_eta_6_p_15_.root",
+		"../../output/output_mom_res_skimmed_out_simp_geom_vbd_0.05_0.55_0.24_10um_pix_GEM_XX0_2.4_perc_DIRC_GEM_sPHENIX_FastSimEvalsigma_eta_6_p_15_.root"
 	};
 
 	bool plotme[] = {
@@ -71,8 +73,10 @@ int main(int argc, char ** argv) {
 		false,	// 1.4T - all-si + small radius DIRC + GEM (sigma=50um) @ R = 60 cm
 		false,	// 3.0T - all-si with outer two layers centered at R = 75 cm and middle two layers centered at R = 75/2 cm
 		false,	// 1.4T - all-si with outer two layers centered at R = 75 cm and middle two layers centered at R = 75/2 cm
-		true,	// 3.0T - all-si with outer two layers replaced with a GEM (sigma=50um) + DIRC + GEM (sigma=50um) @ R = 92 cm
-		true	// 1.4T - all-si with outer two layers replaced with a GEM (sigma=50um) + DIRC + GEM (sigma=50um) @ R = 92 cm
+		true,	// 3.0T - all-si with outer two layers replaced with a GEM (sigma=50um, X/X0=0.69%) + DIRC + GEM (sigma=50um) @ R = 92 cm
+		true,	// 1.4T - all-si with outer two layers replaced with a GEM (sigma=50um, X/X0=0.69%) + DIRC + GEM (sigma=50um) @ R = 92 cm
+		true,	// 3.0T - all-si with outer two layers replaced with a GEM (sigma=50um, X/X0=2.40%) + DIRC + GEM (sigma=50um) @ R = 92 cm
+		true	// 1.4T - all-si with outer two layers replaced with a GEM (sigma=50um, X/X0=2.40%) + DIRC + GEM (sigma=50um) @ R = 92 cm
 	};
 
 	TString labels[] = {
@@ -88,8 +92,10 @@ int main(int argc, char ** argv) {
 		"all-si + DIRC (R=49 cm) + GEM (R=60 cm, #sigma=50 #mum)",
 		"all-si (barrel R = 75 cm)",
 		"all-si (barrel R = 75 cm)",
-		"all-si outer two layers replaced with GEM (#sigma=50 #mum) + DIRC + GEM (#sigma=50 #mum) R = 92 cm",
-		"all-si outer two layers replaced with GEM (#sigma=50 #mum) + DIRC + GEM (#sigma=50 #mum) R = 92 cm"
+		"all-si outer two layers replaced with GEM (#sigma=50 #mum, X/X0=0.69%) + DIRC + GEM (#sigma=50 #mum) R = 92 cm",
+		"all-si outer two layers replaced with GEM (#sigma=50 #mum, X/X0=0.69%) + DIRC + GEM (#sigma=50 #mum) R = 92 cm",
+		"all-si outer two layers replaced with GEM (#sigma=50 #mum, X/X0=2.40%) + DIRC + GEM (#sigma=50 #mum) R = 92 cm",
+		"all-si outer two layers replaced with GEM (#sigma=50 #mum, X/X0=2.40%) + DIRC + GEM (#sigma=50 #mum) R = 92 cm"
 	};
 
 	// #######################################################################################################################################
@@ -158,8 +164,8 @@ int main(int argc, char ** argv) {
 	// #######################################################################################################################################
         // EDIT THE CODE BELOW DEPENDING ON WHAT YOU WANT TO PLOT
 	// ------------------------------------------------------------------------------
-	int color[] = {1,1,2,2,62,62,8,8,94,94,50,50,210,210};
-	int marker[] = {20,20,21,21,22,22,21,21,22,22,23,23,24,24};
+	int color[] = {1,1,2,2,62,62,8,8,94,94,50,50,210,210,52,52};
+	int marker[] = {20,20,21,21,22,22,21,21,22,22,23,23,24,24,25,25};
 
 	TGraphErrors *** g_dpp_v_p_et_bins   = new TGraphErrors ** [size_loaded];
 	TGraphErrors *** g_dppT_v_pT_et_bins = new TGraphErrors ** [size_loaded];
