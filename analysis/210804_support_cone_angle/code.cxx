@@ -27,7 +27,7 @@ using namespace std;
 // Forward-declaring functions
 void prettyTH1F( TH1F * h1 , int color , int marker , float min , float max );
 int idx_from_vector( double value , TVectorT<double> * vec );
-TGraphErrors * graph_from_histo( TH1F * h1 , int color , int marker , float min , float max, double pretty_axis_graph );
+TGraphErrors * graph_from_histo( TH1F * h1 , int color , int marker , float min , float max, double text_size );
 void pretty_axis_graph( TGraph * g, TString xtit, TString ytit, double pmin, double pmax, TString Bfield , double miny, double maxy, double text_size );
 // ============================================================================================================================================
 int main(int argc, char ** argv) {
@@ -43,6 +43,7 @@ int main(int argc, char ** argv) {
 	// ------------------------------------------------------------------------------
 	// List paths to files that will be loaded
 	TString fnames[] = {	
+		/*
 		"../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_36.5_degsigma_eta_14_p_12_.root",
 		"../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_20_degsigma_eta_14_p_12_.root",
 		"../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_24_degsigma_eta_14_p_12_.root",
@@ -51,6 +52,7 @@ int main(int argc, char ** argv) {
 		"../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_34_degsigma_eta_14_p_12_.root",
 		"../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_40_degsigma_eta_14_p_12_.root",
 		"../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_42_degsigma_eta_14_p_12_.root"
+		*/
 		/*
 		"../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_36.5_degsigma_eta_35_p_12_.root",
                 "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_20_degsigma_eta_35_p_12_.root",
@@ -61,6 +63,24 @@ int main(int argc, char ** argv) {
                 "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_40_degsigma_eta_35_p_12_.root",
                 "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_42_degsigma_eta_35_p_12_.root"
 		*/
+		/*
+		"../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_36.5_degsigma_eta_30_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_20_degsigma_eta_30_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_24_degsigma_eta_30_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_28_degsigma_eta_30_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_32_degsigma_eta_30_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_34_degsigma_eta_30_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_40_degsigma_eta_30_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_42_degsigma_eta_30_p_6_.root"
+		*/
+		"../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_36.5_degsigma_eta_46_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_20_degsigma_eta_46_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_24_degsigma_eta_46_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_28_degsigma_eta_46_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_32_degsigma_eta_46_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_34_degsigma_eta_46_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_40_degsigma_eta_46_p_6_.root",
+                "../../output/output_mom_res_skimmed_simp_geom_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507_FastSimEval_theta_cone_42_degsigma_eta_46_p_6_.root"
 	};
 	TString labels[] = {
 		"#theta_{C} = 36.5^{o}",
@@ -75,6 +95,8 @@ int main(int argc, char ** argv) {
 	double angle_C[] = {36.5,20,24,28,32,34,40,42};
 	double eta_C[sizeof(angle_C)/sizeof(*angle_C)] = {0};
 	for(int i = 0 ; i < sizeof(angle_C)/sizeof(*angle_C) ; i++) eta_C[i] = -TMath::Log(TMath::Tan(angle_C[i]*3.14159/180./2.));
+	double min_for_ratio = 0.55;
+	double max_for_ratio = 3.60;
 	// #######################################################################################################################################
 	// YOU SHOULDN'T NEED TO MODIFY ANYTHING IN THE BLOCK OF CODE BELOW AND UNTIL AFTER THE NEXT LINE WITH ###...
 	const int size_loaded = sizeof(fnames)/sizeof(*fnames);
@@ -138,7 +160,8 @@ int main(int argc, char ** argv) {
 	// ------------------------------------------------------------------------------
 	// Copying and editing histograms
 	int color [] = { 1, 2,62, 8,93,50,51,13};
-	int marker[] = {20,24,24,24,24,24,24,24};
+	//int marker[] = {20,24,24,24,24,24,24,24};
+	int marker[] = {20,1,1,1,1,1,1,1};
 
 	TGraphErrors *** g_dpp_v_p_et_bins = new TGraphErrors ** [size_loaded];
 	TGraphErrors *** g_dpp_v_et_p_bins = new TGraphErrors ** [size_loaded];
@@ -163,7 +186,7 @@ int main(int argc, char ** argv) {
 			h1_ratio_dpp_v_p_et_bins[f][et] = (TH1F*) h1_dpp_v_p_et_bins[f][et] -> Clone();
 			h1_ratio_dpp_v_p_et_bins[f][et] -> SetName(Form("h1_ratio_dpp_v_et_p_bis_%i_%i",f,et));
 			h1_ratio_dpp_v_p_et_bins[f][et] -> Divide(h1_dpp_v_p_et_bins[0][et]);
-			g_ratio_dpp_v_p_et_bins[f][et] = graph_from_histo( h1_ratio_dpp_v_p_et_bins[f][et],color[f],marker[f],0.75,1.9,0.09);
+			g_ratio_dpp_v_p_et_bins[f][et] = graph_from_histo( h1_ratio_dpp_v_p_et_bins[f][et],color[f],marker[f],min_for_ratio,max_for_ratio,0.09);
 			g_ratio_dpp_v_p_et_bins[f][et] -> GetYaxis() -> SetTitle("ratio to "+labels[0]);
 		}
 
@@ -174,7 +197,7 @@ int main(int argc, char ** argv) {
 			h1_ratio_dpp_v_et_p_bins[f][p] = (TH1F*) h1_dpp_v_et_p_bins[f][p] -> Clone();
 			h1_ratio_dpp_v_et_p_bins[f][p] -> SetName(Form("h1_ratio_dpp_v_et_p_bins_%i_%i",f,p));
 			h1_ratio_dpp_v_et_p_bins[f][p] -> Divide(h1_dpp_v_et_p_bins[0][p]);
-			g_ratio_dpp_v_et_p_bins[f][p] = graph_from_histo( h1_ratio_dpp_v_et_p_bins[f][p],color[f],marker[f],0.75,1.9,0.09);
+			g_ratio_dpp_v_et_p_bins[f][p] = graph_from_histo( h1_ratio_dpp_v_et_p_bins[f][p],color[f],marker[f],min_for_ratio,max_for_ratio,0.09);
 			g_ratio_dpp_v_et_p_bins[f][p] -> GetYaxis() -> SetTitle("ratio to "+labels[0]);
 		}
 	}
@@ -191,7 +214,7 @@ int main(int argc, char ** argv) {
 	TLine ** t_v2 = new TLine*[size_loaded];
 	for(int f = 0 ; f < size_loaded ; f++){
 		t_v1[f] = new TLine(eta_C[f],0.00,eta_C[f],1.9);	t_v1[f] -> SetLineStyle(7);	t_v1[f] -> SetLineColor(color[f]);
-		t_v2[f] = new TLine(eta_C[f],0.75,eta_C[f],1.9);	t_v2[f] -> SetLineStyle(7);	t_v2[f] -> SetLineColor(color[f]);
+		t_v2[f] = new TLine(eta_C[f],min_for_ratio,eta_C[f],max_for_ratio);	t_v2[f] -> SetLineStyle(7);	t_v2[f] -> SetLineColor(color[f]);
 	}
 	// ------------------------------------------------------------------------------
 	// Plotting graphs
@@ -208,16 +231,16 @@ int main(int argc, char ** argv) {
 		gPad -> SetRightMargin(0.02); gPad -> SetBottomMargin(0.0); gPad -> SetLeftMargin(0.18);
 		g_dpp_v_et_p_bins[0][i] -> Draw("ALP");
 		for(int f = 0 ; f < size_loaded ; f++){
-			g_dpp_v_et_p_bins[f][i] -> Draw("sameLP");
-			t_v1[f] -> Draw("same");
+			g_dpp_v_et_p_bins[f][i] -> Draw("sameL");
+			//t_v1[f] -> Draw("same");
 		}
 		pad4b[i] = c4[i] -> cd(2);
 		pad4b[i] -> SetPad(Form("pad4b_%i",i),"",0,0,1,0.4,kWhite,0,0);
 		gPad -> SetRightMargin(0.02); gPad -> SetTopMargin(0.0); gPad -> SetLeftMargin(0.18); gPad -> SetBottomMargin(0.17);
-                g_ratio_dpp_v_et_p_bins[1][i] -> Draw("ALP");
+                g_ratio_dpp_v_et_p_bins[1][i] -> Draw("AL");
 		for(int f = 1 ; f < size_loaded ; f++){
-                        g_ratio_dpp_v_et_p_bins[f][i] -> Draw("sameLP");
-			t_v2[f] -> Draw("same");
+                        g_ratio_dpp_v_et_p_bins[f][i] -> Draw("sameL");
+			//t_v2[f] -> Draw("same");
 		}
 		l1 -> Draw("same");
 
@@ -272,7 +295,7 @@ int idx_from_vector( double value , TVectorT<double> * vec ){
 	return idx;
 }
 // ============================================================================================================================================
-TGraphErrors * graph_from_histo( TH1F * h1 , int color , int marker , float min , float max , double pretty_axis_graph){
+TGraphErrors * graph_from_histo( TH1F * h1 , int color , int marker , float min , float max , double text_size){
 	// Gathering information from histogram
 	float yval[500] = {0};
 	float xval[500] = {0};
@@ -301,18 +324,18 @@ TGraphErrors * graph_from_histo( TH1F * h1 , int color , int marker , float min 
 	//g_l1->SetFillColorAlpha(color,0.2);
 	g_l1->SetMarkerStyle(marker);
 	g_l1->SetMarkerSize(1.4);
-	g_l1->SetLineWidth(2);
+	g_l1->SetLineWidth(3);
 
 	g_l1->GetXaxis()->SetTitle(xax);
 	g_l1->GetXaxis()->SetNdivisions(108);
-	g_l1->GetXaxis()->SetTitleSize(pretty_axis_graph);
-	g_l1->GetXaxis()->SetLabelSize(pretty_axis_graph);
+	g_l1->GetXaxis()->SetTitleSize(text_size);
+	g_l1->GetXaxis()->SetLabelSize(text_size);
 	g_l1->GetXaxis()->CenterTitle();
 
 	g_l1->GetYaxis()->SetTitle(yax);
 	g_l1->GetYaxis()->SetNdivisions(108);
-	g_l1->GetYaxis()->SetTitleSize(pretty_axis_graph);
-	g_l1->GetYaxis()->SetLabelSize(pretty_axis_graph);
+	g_l1->GetYaxis()->SetTitleSize(text_size);
+	g_l1->GetYaxis()->SetLabelSize(text_size);
 	g_l1->GetYaxis()->CenterTitle();
 
 	g_l1->SetTitle(tit);
