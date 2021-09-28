@@ -53,7 +53,10 @@ int main(int argc, char ** argv) {
 	// ------------------------------------------------------------------------------
 	// List paths to files that will be loaded
 	TString fnames[] = {
-		"output_vtx_res_combined_fun4all_to_comp_to_dd4hep_first_eta_0_005_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507sigma_eta_7_p_8_.root"
+		//"output_vtx_res_combined_fun4all_to_comp_to_dd4hep_first_eta_0_005_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507sigma_eta_7_p_8_.root",
+		//"output_vtx_res_combined_fun4all_to_comp_to_dd4hep_first_eta_0_005_including_beampipe_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507sigma_eta_7_p_8_.root"
+		"output_vtx_res_combined_fun4all_to_comp_to_dd4hep_first_eta_0_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507sigma_eta_7_p_8_.root",
+                "output_vtx_res_combined_fun4all_to_comp_to_dd4hep_first_eta_0_0001_including_beampipe_AllSi_vbd_0.05_0.55_0.24_B_ATHENA_210507sigma_eta_7_p_8_.root"
 	};
 
 	TString label[] = {
@@ -134,63 +137,64 @@ int main(int argc, char ** argv) {
 		g_dvt_v_et_p_bins  [f] = new TGraphErrors * [num_mom_bin[f]];
 
 		for(int et = 0 ; et < num_eta_bin[f] ; et++){
-			g_dvl_v_p_et_bins  [f][et] = graph_from_histo( h1_dvl_v_p_et_bins  [f][et] , 62 , 20 , 0.0 , max_dpp );
-			g_dvt_v_p_et_bins  [f][et] = graph_from_histo( h1_dvt_v_p_et_bins  [f][et] , 62 , 20 , 2e-2, 100 );
+			g_dvl_v_p_et_bins  [f][et] = graph_from_histo( h1_dvl_v_p_et_bins[f][et] , f==0?62:8 , f==0?22:20 , 0.0 , max_dpp );
+			g_dvt_v_p_et_bins  [f][et] = graph_from_histo( h1_dvt_v_p_et_bins[f][et] , f==0?62:8 , f==0?22:20 , 2e-2, 100 );
 		}
 
 		for(int p = 0 ; p < num_mom_bin[f] ; p++){
-			g_dvl_v_et_p_bins  [f][p] = graph_from_histo( h1_dvl_v_et_p_bins  [f][p] , 51 + p*5 , 20 , 0.0 , max_dpp );
-			g_dvt_v_et_p_bins  [f][p] = graph_from_histo( h1_dvt_v_et_p_bins  [f][p] , 51 + p*5 , 20 , 2e-2, 100 );
+			g_dvl_v_et_p_bins  [f][p] = graph_from_histo( h1_dvl_v_et_p_bins[f][p] , 51 + p*5 , 20 , 0.0 , max_dpp );
+			g_dvt_v_et_p_bins  [f][p] = graph_from_histo( h1_dvt_v_et_p_bins[f][p] , 51 + p*5 , 20 , 2e-2, 100 );
 		}
 	}
 	// ------------------------------------------------------------------------------
 	// Results from fast simulations (Ernst Sichtermann)
-	/*
-	double fast_p[] = {1,5,10,15,20,30,40,50};
-	double fast_dpp[5][8] = {
-		{0.3049,0.5241,0.6117,0.6618,0.7072,0.8027,0.9108,1.028 },
-		{0.3112,0.5319,0.6290,0.6822,0.7229,0.8027,0.8904,0.9890},
-		{0.3519,0.5413,0.6697,0.7339,0.7793,0.8434,0.9014,0.9609},
-		{0.4082,0.4207,0.4380,0.4646,0.4975,0.5804,0.6791,0.7871},
-		{0.5068,0.4755,0.4912,0.5022,0.5162,0.5491,0.5898,0.6368}
-	};
-	TGraph ** g_fast_dvl_v_p = new TGraph*[5];
-	for(int i = 0 ; i < 5 ; i++){
-		g_fast_dvl_v_p[i] = new TGraph(8,fast_p,fast_dpp[i]);
-		g_fast_dvl_v_p[i] -> SetLineColor(1);
-		g_fast_dvl_v_p[i] -> SetLineStyle(2);
-		g_fast_dvl_v_p[i] -> SetLineWidth(3);
+	TFile * F_fast_wo_beampipe = new TFile("Ernst_fast_sim/fast_sim_performance_wo_beampipe.root");	
+	TFile * F_fast_w_beampipe  = new TFile("Ernst_fast_sim/fast_sim_performance_w_beampipe.root" );
+	
+	TGraph ** g_fast_DCAt_v_mom_wo_beampipe = new TGraph * [7];
+	TGraph ** g_fast_DCAz_v_mom_wo_beampipe = new TGraph * [7];
+
+	g_fast_DCAt_v_mom_wo_beampipe[0] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAt_v_mom_eta_0_000");
+	g_fast_DCAt_v_mom_wo_beampipe[1] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAt_v_mom_eta_0_509");
+	g_fast_DCAt_v_mom_wo_beampipe[2] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAt_v_mom_eta_1_011");
+	g_fast_DCAt_v_mom_wo_beampipe[3] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAt_v_mom_eta_1_506");
+	g_fast_DCAt_v_mom_wo_beampipe[4] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAt_v_mom_eta_2_028");
+	g_fast_DCAt_v_mom_wo_beampipe[5] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAt_v_mom_eta_2_542");
+	g_fast_DCAt_v_mom_wo_beampipe[6] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAt_v_mom_eta_3_131");
+
+	g_fast_DCAz_v_mom_wo_beampipe[0] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAz_v_mom_eta_0_000");
+        g_fast_DCAz_v_mom_wo_beampipe[1] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAz_v_mom_eta_0_509");
+        g_fast_DCAz_v_mom_wo_beampipe[2] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAz_v_mom_eta_1_011");
+        g_fast_DCAz_v_mom_wo_beampipe[3] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAz_v_mom_eta_1_506");
+        g_fast_DCAz_v_mom_wo_beampipe[4] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAz_v_mom_eta_2_028");
+        g_fast_DCAz_v_mom_wo_beampipe[5] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAz_v_mom_eta_2_542");
+        g_fast_DCAz_v_mom_wo_beampipe[6] = (TGraph*) F_fast_wo_beampipe -> Get("g_DCAz_v_mom_eta_3_131");	
+
+	for(int i = 0 ; i < 7 ; i++){
+		g_fast_DCAt_v_mom_wo_beampipe[i] -> SetMarkerStyle(22);
+		g_fast_DCAz_v_mom_wo_beampipe[i] -> SetMarkerStyle(22);
 	}
-	*/
-	// ------------------------------------------------------------------------------
-        // Results from dd4hep (Shujie Li)
-	/*
-	double dd4hep_p[] = {1,2,5,10,20,30,50};
-	double dd4hep_dpp[5][7] = {
-		{0.4609,0.5234,0.6429,0.7132,0.7176,0.7812,0.9487},
-		{0.4609,0.5212,0.6652,0.6797,0.7388,0.8158,1.0090},
-		{0.5569,0.5324,0.6663,0.8683,0.8705,0.8415,1.0100},
-		{0.6116,0.5915,0.4520,0.4342,0.5458,0.5513,0.8281},
-		{0.9743,0.8683,0.6585,0.6217,0.6138,0.6205,0.6752}
-	};
-	TGraph ** g_dd4hep_dvl_v_p = new TGraph*[5];
-        for(int i = 0 ; i < 5 ; i++){
-                g_dd4hep_dvl_v_p[i] = new TGraph(7,dd4hep_p,dd4hep_dpp[i]);
-                g_dd4hep_dvl_v_p[i] -> SetLineColor(2);
-		g_dd4hep_dvl_v_p[i] -> SetMarkerColor(2);
-		g_dd4hep_dvl_v_p[i] -> SetMarkerStyle(21);
-        }
-	*/
-	/*
-	load_DD4HEP_Shujie("tracker_only_1.2sigma_211.txt");
-	TGraphErrors ** g_dd4hep_dvl_v_p = new TGraphErrors*[7];
-        for(int i = 0 ; i < 7 ; i++){
-                g_dd4hep_dvl_v_p[i] = new TGraphErrors(7,mom_DD4HEP,dpp_DD4HEP[i],0,E_dpp_DD4HEP[i]);
-                g_dd4hep_dvl_v_p[i] -> SetLineColor(2);
-                g_dd4hep_dvl_v_p[i] -> SetMarkerColor(2);
-                g_dd4hep_dvl_v_p[i] -> SetMarkerStyle(21);
-        }
-	*/
+
+	
+        TGraph ** g_fast_DCAt_v_mom_w_beampipe = new TGraph * [7];
+        TGraph ** g_fast_DCAz_v_mom_w_beampipe = new TGraph * [7];
+
+        g_fast_DCAt_v_mom_w_beampipe[0] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAt_v_mom_eta_0_000");
+        g_fast_DCAt_v_mom_w_beampipe[1] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAt_v_mom_eta_0_509");
+        g_fast_DCAt_v_mom_w_beampipe[2] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAt_v_mom_eta_1_011");
+        g_fast_DCAt_v_mom_w_beampipe[3] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAt_v_mom_eta_1_506");
+        g_fast_DCAt_v_mom_w_beampipe[4] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAt_v_mom_eta_2_028");
+        g_fast_DCAt_v_mom_w_beampipe[5] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAt_v_mom_eta_2_542");
+        g_fast_DCAt_v_mom_w_beampipe[6] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAt_v_mom_eta_3_131");
+
+        g_fast_DCAz_v_mom_w_beampipe[0] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAz_v_mom_eta_0_000");
+        g_fast_DCAz_v_mom_w_beampipe[1] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAz_v_mom_eta_0_509");
+        g_fast_DCAz_v_mom_w_beampipe[2] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAz_v_mom_eta_1_011");
+        g_fast_DCAz_v_mom_w_beampipe[3] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAz_v_mom_eta_1_506");
+        g_fast_DCAz_v_mom_w_beampipe[4] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAz_v_mom_eta_2_028");
+        g_fast_DCAz_v_mom_w_beampipe[5] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAz_v_mom_eta_2_542");
+        g_fast_DCAz_v_mom_w_beampipe[6] = (TGraph*) F_fast_w_beampipe -> Get("g_DCAz_v_mom_eta_3_131");
+
 	// ------------------------------------------------------------------------------
 	// Plotting graphs
 	TLegend * leg = new TLegend(0,0.2,1,0.8);
@@ -198,75 +202,53 @@ int main(int argc, char ** argv) {
 	//leg -> AddEntry( g_fast_dvl_v_p[0]       ,"fast"   );
 	//leg -> AddEntry((TObject*)0, "" , "");
 	leg -> AddEntry((TObject*)0, "B = ATHENA 05/07", "");
-	leg -> AddEntry( g_dvl_v_p_et_bins[0][0] ,"Fun4All");
+	leg -> AddEntry( g_dvl_v_p_et_bins[0][0] ,"Fun4All (w/o beampipe)");
+	leg -> AddEntry( g_dvl_v_p_et_bins[1][0] ,"Fun4All (w/ beampipe)");
 	//leg -> AddEntry( g_dd4hep_dvl_v_p[0]     ,"DD4HEP" );
 	// ------------------------------------------------------------------------------
-	TCanvas ** c1 = new TCanvas*[size_loaded];
-
-	for(int f = 0 ; f < size_loaded ; f++){
-                c1[f] = new TCanvas(Form("c1_%i",f),Form("c1_%i",f),1300,900);
-		c1[f] -> Divide(4,2);
-	
-		for(int et = 0 ; et < num_eta_bin[f] ; et++){
-                	c1[f] -> cd(et+1); gPad -> SetLeftMargin(0.25); gPad -> SetRightMargin(0.05); gPad -> SetBottomMargin(0.17);
-			g_dvl_v_p_et_bins[f][et] -> SetMaximum(1.2*max_val_hist(h1_dvl_v_p_et_bins[f][et]));
-			g_dvl_v_p_et_bins[f][et] -> SetMinimum(0);
-			g_dvl_v_p_et_bins[f][et] -> SetTitle("#eta = "+eta_vals[et]);
-			g_dvl_v_p_et_bins[f][et] -> Draw("APL");
-                }
-		// ------------
-		/*
-		for(int i = 0 ; i < 7 ; i++){
-                        c1[f] -> cd(i+1);
-			if(i<5) g_fast_dvl_v_p[i] -> Draw("same");
-                        g_dd4hep_dvl_v_p[i] -> Draw("samePL");
-                }
-		*/
-		c1[f] -> cd(8);
-		leg -> Draw();
-		// ------------
-                c1[f] -> Modified();
-                c1[f] -> Update();
+        TCanvas * c1 = new TCanvas("c1","c1",1300,900);
+	c1 -> Divide(4,2);	
+	for(int et = 0 ; et < num_eta_bin[0] ; et++){
+        	c1 -> cd(et+1); gPad -> SetLeftMargin(0.25); gPad -> SetRightMargin(0.05); gPad -> SetBottomMargin(0.17);
+		g_dvl_v_p_et_bins[1][et] -> SetMaximum(2.2*max_val_hist(h1_dvl_v_p_et_bins[0][et]));
+		g_dvl_v_p_et_bins[1][et] -> SetMinimum(0);
+		g_dvl_v_p_et_bins[1][et] -> SetTitle("#eta = "+eta_vals[et]);
+		g_dvl_v_p_et_bins[1][et] -> Draw("APL");
+        	for(int f = 0 ; f < size_loaded ; f++){
+			g_dvl_v_p_et_bins[f][et] -> Draw("samePL");
+			g_fast_DCAz_v_mom_wo_beampipe[et] -> Draw("sameP");
+			g_fast_DCAz_v_mom_w_beampipe [et] -> Draw("sameP");
+		}
 	}
-
+	c1 -> cd(8);
+	leg -> Draw();
+	// ------------
+        c1 -> Modified();
+        c1 -> Update();
 	// ------------------------------------------------------------------------------
-        TCanvas ** c2 = new TCanvas*[size_loaded];
-
-        for(int f = 0 ; f < size_loaded ; f++){
-                c2[f] = new TCanvas(Form("c2_%i",f),Form("c2_%i",f),1300,900);
-                c2[f] -> Divide(4,2);
-
-                for(int et = 0 ; et < num_eta_bin[f] ; et++){
-                        c2[f] -> cd(et+1); gPad -> SetLeftMargin(0.25); gPad -> SetRightMargin(0.05); gPad -> SetBottomMargin(0.17);
-                        g_dvt_v_p_et_bins[f][et] -> SetMaximum(1.2*max_val_hist(h1_dvt_v_p_et_bins[f][et]));
-                        g_dvt_v_p_et_bins[f][et] -> SetMinimum(0);
-                        g_dvt_v_p_et_bins[f][et] -> SetTitle("#eta = "+eta_vals[et]);
-                        g_dvt_v_p_et_bins[f][et] -> Draw("APL");
-                }
-                // ------------
-                /*
-                for(int i = 0 ; i < 7 ; i++){
-                        c2[f] -> cd(i+1);
-                        if(i<5) g_fast_dvl_v_p[i] -> Draw("same");
-                        g_dd4hep_dvl_v_p[i] -> Draw("samePL");
-                }
-                */
-                c2[f] -> cd(8);
-                leg -> Draw();
-                // ------------
-                c2[f] -> Modified();
-                c2[f] -> Update();
-        }
+        TCanvas * c2 = new TCanvas("c2","c2",1300,900);
+        c2 -> Divide(4,2);
+        for(int et = 0 ; et < num_eta_bin[0] ; et++){
+                c2 -> cd(et+1); gPad -> SetLeftMargin(0.25); gPad -> SetRightMargin(0.05); gPad -> SetBottomMargin(0.17);
+                g_dvt_v_p_et_bins[1][et] -> SetMaximum(2.2*max_val_hist(h1_dvt_v_p_et_bins[0][et]));
+                g_dvt_v_p_et_bins[1][et] -> SetMinimum(0);
+                g_dvt_v_p_et_bins[1][et] -> SetTitle("#eta = "+eta_vals[et]);
+                g_dvt_v_p_et_bins[1][et] -> Draw("APL");
+		for(int f = 0 ; f < size_loaded ; f++){
+			g_dvt_v_p_et_bins[f][et] -> Draw("samePL");
+        		g_fast_DCAt_v_mom_wo_beampipe[et] -> Draw("sameP");
+                        g_fast_DCAt_v_mom_w_beampipe [et] -> Draw("sameP");
+		}
+	}
+        c2 -> cd(8);
+        leg -> Draw();
+        // ------------
+        c2 -> Modified();
+        c2 -> Update();
 	// ------------------------------------------------------------------------------
 	// Saving results to pdf files
-	if(size_loaded==1){
-		c1[0] -> Print("results_dca_z.pdf");
-		c2[0] -> Print("results_dca_t.pdf");
-	}
-	else{
-		cout << "IMPLEMENT THIS! Bailing out!" << endl;
-		exit(0);
-	}
+	c1 -> Print("results_dca_z.pdf");
+	c2 -> Print("results_dca_t.pdf");
 
 	myapp -> Run();
 	return 0;
@@ -331,7 +313,7 @@ TGraphErrors * graph_from_histo( TH1F * h1 , int color , int marker , float min 
 
 			err[ctr] = h1 -> GetBinError(i+1);
 
-			//cout << xval[ctr] << "\t" << yval[ctr] << "\t" << err[ctr] << endl;
+			cout << xval[ctr] << "\t" << yval[ctr] << "\t" << err[ctr] << endl;
 			ctr++;
 		}
 	}
