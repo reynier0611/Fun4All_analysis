@@ -160,10 +160,10 @@ int main(int argc, char ** argv) {
 
 	for(int et = 0 ; et < size_eta_bin-1 ; et++){
 		for(int p = 0 ; p < size_mom_bin-1 ; p++){
-			approx_sig_dpp_3_0 [et][p] = 3.0*approx_sig_dpp [et][p];	approx_sig_dpp_1_1 [et][p] = 1.1*approx_sig_dpp [et][p];
-			approx_sig_dth_3_0 [et][p] = 3.0*approx_sig_dth [et][p];	approx_sig_dth_1_1 [et][p] = 1.1*approx_sig_dth [et][p];
-			approx_sig_dph_3_0 [et][p] = 3.0*approx_sig_dph [et][p];	approx_sig_dph_1_1 [et][p] = 1.1*approx_sig_dph [et][p];
-			approx_sig_dppT_3_0[et][p] = 3.0*approx_sig_dppT[et][p];	approx_sig_dppT_1_1[et][p] = 1.1*approx_sig_dppT[et][p];
+			approx_sig_dpp_3_0 [et][p] = 3.0*approx_sig_dpp [et][p];	approx_sig_dpp_1_1 [et][p] = 2.0*approx_sig_dpp [et][p];
+			approx_sig_dth_3_0 [et][p] = 3.0*approx_sig_dth [et][p];	approx_sig_dth_1_1 [et][p] = 2.0*approx_sig_dth [et][p];
+			approx_sig_dph_3_0 [et][p] = 3.0*approx_sig_dph [et][p];	approx_sig_dph_1_1 [et][p] = 2.0*approx_sig_dph [et][p];
+			approx_sig_dppT_3_0[et][p] = 3.0*approx_sig_dppT[et][p];	approx_sig_dppT_1_1[et][p] = 2.0*approx_sig_dppT[et][p];
 		}
 	}
 	// -------------------------------------------------------------
